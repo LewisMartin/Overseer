@@ -1,0 +1,419 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto+Slab);
+
+*, body, html 
+{
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	font-family: 'Roboto Slab', serif;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+html
+{
+	display:block;
+}
+
+body
+{
+	min-height:100%;
+	background-color: #e4e7ea;
+	padding: 50px 0 0 160px;
+	display:block;
+	-webkit-transition: all 400ms ease;
+    -moz-transition: all 400ms ease;
+    -o-transition: all 400ms ease;
+    transition: all 400ms ease;
+}
+
+i
+{
+	cursor: pointer;
+}
+
+ @media screen{
+  body>div#Dashboard-Header{
+   position:fixed;
+  }
+  body>div#Dashboard-Nav{
+   position:fixed;
+  }
+ }
+
+/* ---------- Bootstrap Overrides ---------- */
+#Dashboard-Nav a {
+    color: #fff;
+    text-decoration: none;
+}
+#Dashboard-Nav a:active
+{
+    color: #fff;
+    text-decoration: none;
+}
+#Dashboard-Nav a:link 
+{
+    color: #fff;
+    text-decoration: none;
+}
+#Dashboard-Nav a:visited
+{
+    color: #fff;
+    text-decoration: none;
+}
+
+/* ---------- Header Styles ---------- */
+#Dashboard-Header
+{
+    position:fixed;
+}
+.main-header
+{
+    z-index:1000;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 50px;
+	line-height:50px;
+	text-align: center;
+	background-color: #34373c;
+	color: #9da4ac;
+}
+.header-content
+{
+  	position: relative;
+  	font-size: 18px;
+}
+.header-content #Nav-Toggle {
+   position: absolute;
+   display: none;
+   /*top: -9999px;
+   left: -9999px;*/
+   /* For mobile, it's typically better to position checkbox on top of clickable
+      area and turn opacity to 0 instead. */
+}
+.header-left
+{
+	float: left;
+}
+#site-title
+{
+	display: inline-block;
+	width:160px;
+	line-height:50px;
+	text-align: center;
+	background-color: #222222;
+}
+#toggle-nav
+{
+	display: inline-block;
+	width:30px;
+	line-height:50px;
+	text-align: center;
+}
+.header-right
+{
+	float: right;
+}
+#User-Area
+{
+	width: auto;
+	height:auto;
+	background-color: #34373c;
+}
+#User-Area:hover
+{
+	cursor:pointer;
+}
+#User-Area>label
+{
+    display:block;
+	width:100%;
+	padding:0 14px;
+    margin: 0;
+	font-size:14px;
+    line-height:50px;
+}
+#User-Area>label:hover
+{
+	cursor:pointer;
+}
+#User-Area-Toggle
+{
+	display:none;
+}
+#User-Area-Toggle:checked ~ ul
+{
+	height:54px;
+}
+#User-Area>ul
+{
+	height:0px;
+	overflow: hidden;
+	-webkit-transition: all 400ms ease;
+    -moz-transition: all 400ms ease;
+    -o-transition: all 400ms ease;
+    transition: all 400ms ease;
+}
+#User-Area>ul>li
+{
+	height:27px;
+	font-size: 12px;
+	line-height:27px;
+	text-align:left;
+	padding-left:15px;
+}
+#User-Area>ul>li:hover
+{
+	background-color: #222222;
+}
+/* ---------- Sidebar Navigation Styles ---------- */
+#Dashboard-Nav
+{
+	position: fixed;
+    z-index:1000;
+	top: 50px;
+	left: 0px;
+	background-color: #b12024;
+	color: #f8f8f8;
+	width: 160px;
+	height: calc(100% - 50px);
+	-webkit-transition: all 400ms ease;
+    -moz-transition: all 400ms ease;
+    -o-transition: all 400ms ease;
+    transition: all 400ms ease;
+}
+nav>ul
+{
+	position: relative;
+}
+nav>ul>li
+{
+	width:100%;
+	height: auto;
+}
+nav>ul>li div
+{
+	height: 100%;
+	position: relative;
+}
+nav>ul>li:hover
+{
+	background-color: #9d1d20;
+	cursor: pointer;
+}
+nav>ul>li>label 
+{
+    width:100%;
+    height:50px;
+    margin:0px;
+    padding:0px;
+    font-weight: normal;
+}
+nav>ul>li>label:hover
+{
+	cursor: pointer;
+}
+nav>ul>li div
+{
+	font-size: 12px;
+	vertical-align: middle;
+	line-height: 50px;
+	height:50px;
+}
+nav i 
+{
+	margin-left:20px;
+	margin-right:10px;
+}
+/* Sub-menu navigation checkbox styles */
+.sub-nav-toggle
+{
+	display: none;
+}
+.sub-nav-toggle:checked ~ .nav-sub-menu
+{
+	height:auto;
+	max-height: 100px;
+	-webkit-transition: all 400ms ease;
+    -moz-transition: all 400ms ease;
+    -o-transition: all 400ms ease;
+    transition: all 400ms ease;
+}
+.sub-nav-toggle:checked ~ label>div, .sub-nav-toggle:checked ~ ul
+{
+	background-color: #9d1d20;
+}
+.nav-sub-menu
+{
+	max-height:0px;
+	width: 100%;
+	font-size:11px;
+	overflow: hidden;
+	-webkit-transition: all 400ms ease;
+    -moz-transition: all 400ms ease;
+    -o-transition: all 400ms ease;
+    transition: all 400ms ease;
+}
+.nav-sub-menu>li
+{
+	line-height:30px;
+	padding-left:55px;
+	width:100%;
+	height:30px;
+}
+.nav-sub-menu>li:hover
+{
+	background-color: #87181b;
+}
+
+
+/* ---------- Dashboard Main Content Styles ---------- */
+#Main-Content
+{
+	/* Pretty sure the problem was missing display: block; */
+	display:block;
+	height:100%;
+}
+#Page-Content
+{
+	padding:20px;
+}
+#Page-Content>section
+{
+	background-color: #ffffff;
+	height:540px;
+	width:100%;
+    padding:14px;
+}
+
+footer
+{
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 30px;
+  width:100%;
+  background-color: #ffffff;
+  text-align: right;
+  padding-right:10px;
+  line-height: 30px;
+  font-size: 10px;
+  color: #b12024;
+}
+
+
+/* ---------- Login Screen Content Styles ---------- */
+.form-window
+{
+    width:300px;
+    height:auto;
+    position:absolute;
+    left:calc(50% - 150px);
+}
+.form-win-login
+{
+    top: calc(50% - 114px);
+}
+.form-win-reg
+{
+    top: calc(50% - 226px);
+}
+.reg-notif 
+{
+    background-color: #ffffff;
+    color: #107b10;
+    margin-bottom: 15px;
+    font-size: 13px;
+    padding: 4px 8px;
+}
+.form-container
+{
+    padding-top:20px;
+    background-color:#ffffff;
+}
+.form-container input[type=text], input[type=password], select
+{
+    width:240px;
+    height:30px;
+    border: 1px solid #e6e7e9;
+    padding-left:8px;
+    color:#9aa1a9;
+    font-family: 'Roboto Slab', serif;
+}
+.login-reg-link
+{
+    padding-right:10px;
+    font-size:12px;
+}
+.login-reg-link i
+{
+    margin-left:4px;
+}
+.login-reg-link a {
+    color: #9da4ac;
+    text-decoration: none;
+}
+.login-reg-link a:active
+{
+    color: #9da4ac;
+    text-decoration: none;
+}
+.login-reg-link a:link 
+{
+    color: #9da4ac;
+    text-decoration: none;
+}
+.login-reg-link a:visited
+{
+    color: #9da4ac;
+    text-decoration: none;
+}
+.form-footer
+{
+    text-align:right;
+}
+.submit-button
+{
+    color: #ffffff;
+    background-color: #b12024;
+    font-size:14px;
+    height:32px;
+    width:130px;
+    border:none;
+}
+.submit-button:hover
+{
+    cursor: pointer;
+    background-color: #9d1d20;
+}
+.center-input
+{
+    text-align:center;
+    margin-bottom:15px;
+    position:relative;
+}
+.icon-margin
+{
+    margin: 0 4px;
+}
+.form-val
+{
+    width:100%;
+    height:20px;
+    overflow:hidden;
+}
+.form-val-msg
+{
+    font-size: 13px;
+    background-color: #ffffff;
+    color: #b12024;
+    position:absolute;
+    top: 0;
+    left: 0;
+    max-height:20px;
+    width:100%;
+    text-align:center;
+    overflow:hidden;
+}

@@ -1,0 +1,105 @@
+﻿@model envSeer.ViewModels.UserAccount.RegisterViewModel
+
+@{
+    ViewBag.Title = "Register";
+}
+
+
+
+<section class="form-window form-win-reg">
+    @if (ViewData["RegSuccess"] != null)
+    {
+        // notification to display if new user was just successfully registered
+        <div class="reg-notif"><i class="fa fa-check icon-margin"></i>@ViewData["RegSuccess"].ToString()</div>
+    }
+    <header class="main-header">
+        <div class="header-content">
+            <div class="header-left">
+                <div id="site-title">
+                    envenvSeer
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="login-reg-link">
+                    <a href="@Url.Action("Login","UserAccount")">
+                        Login<i class="fa fa-arrow-right icon-margin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="form-container">
+        @using (Html.BeginForm("Register", "UserAccount"))
+        {
+            // use anti forgery token on this form
+
+            // first name field
+            <div class="center-input">
+                @Html.TextBoxFor(m => m.FirstName, new { placeholder = "First Name" })
+            </div>
+
+            // last name field
+            <div class="center-input">
+                @Html.TextBoxFor(m => m.LastName, new { placeholder = "Last Name" })
+            </div>
+
+            // username field
+            <div class="center-input">
+                @Html.TextBoxFor(m => m.UserName, new { placeholder = "Username" })
+            </div>
+
+            // email field
+            <div class="center-input">
+                @Html.TextBoxFor(m => m.EmailAddress, new { placeholder = "Corporate Email" })
+            </div>
+
+            // role choice field
+            <div class="center-input">
+                @Html.DropDownListFor(m => m.ChosenRoleID, Model.RoleChoices, "Choose a role..") 
+            </div>
+
+            // password field
+            <div class="center-input">
+                @Html.PasswordFor(m => m.Password, new { placeholder = "Password" })
+            </div>
+
+            // confirm password field
+            <div class="center-input">
+                @Html.PasswordFor(m => m.ConfirmPassword, new { placeholder = "Confirm Password" })
+            </div>
+
+            // validation error messages
+            <div class="center-input form-val">
+                <div class="form-val-msg">
+                    @Html.ValidationMessageFor(m => m.FirstName, "")
+                </div>
+                <div class="form-val-msg">
+                    @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" }) 
+                </div>
+                <div class="form-val-msg">
+                    @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-val-msg">
+                    @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-val-msg">
+                    @Html.ValidationMessageFor(m => m.EmailAddress, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-val-msg">
+                    @Html.ValidationMessageFor(m => m.ChosenRoleID, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-val-msg">
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-val-msg">
+                    @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
+                </div>   
+            </div>
+
+            // submit button
+            <div class="form-footer">
+                <input type="submit" value="Register" class="submit-button" />
+            </div>
+        }
+    </div>
+</section>

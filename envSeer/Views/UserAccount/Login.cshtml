@@ -1,0 +1,59 @@
+﻿@model envSeer.ViewModels.UserAccount.LoginViewModel
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<section class="form-window form-win-login">
+    <header class="main-header">
+        <div class="header-content">
+            <div class="header-left">
+                <div id="site-title">
+                    envenvSeer
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="login-reg-link">
+                    <a href="@Url.Action("Register","UserAccount")">
+                       Register<i class="fa fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="form-container">
+        @using (Html.BeginForm("Login", "UserAccount"))
+        {
+            // use anti forgery token on this form
+            @Html.AntiForgeryToken()
+
+            // username field
+            <div class="center-input">
+                @Html.TextBoxFor(m => m.Username, new { placeholder = "Username" })
+            </div>
+
+            // password field
+            <div class="center-input">
+                @Html.PasswordFor(m => m.Password, new { placeholder = "Password" })
+            </div>
+
+            // validation error messages
+            <div class="center-input form-val">
+                <div class="form-val-msg">
+                    @Html.ValidationMessageFor(m => m.Username, "")
+                </div>
+                <div class="form-val-msg">
+                    @Html.ValidationMessageFor(m => m.Password, "")
+                </div>
+                <div class="form-val-msg">
+                    @Html.ValidationMessage("LoginError", "")
+                </div>
+            </div>
+
+            // submit button
+            <div class="form-footer">
+                <input type="submit" value="Login" class="submit-button" />
+            </div>
+        }
+    </div>
+</section>
