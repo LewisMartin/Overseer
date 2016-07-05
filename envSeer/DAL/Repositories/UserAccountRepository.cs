@@ -1,11 +1,11 @@
 ﻿using envSeer.DAL.Core;
-using envSeer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Data.Entity;
 using envSeer.DAL;
+using envSeer.DAL.DomainModels;
 
 namespace envSeer.DAL.Repositories
 {

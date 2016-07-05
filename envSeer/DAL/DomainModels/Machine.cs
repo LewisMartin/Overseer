@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
-namespace envSeer.Models
+namespace envSeer.DAL.DomainModels
 {
     public class Machine
     {

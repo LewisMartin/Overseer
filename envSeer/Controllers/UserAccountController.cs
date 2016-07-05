@@ -6,7 +6,7 @@ using System.Security.Claims;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using System.Web;
-using envSeer.Models;
+using envSeer.DAL.DomainModels;
 using System.Collections.Generic;
 using System.Collections;
 using System;
