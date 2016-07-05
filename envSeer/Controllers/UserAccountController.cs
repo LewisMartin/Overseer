@@ -10,11 +10,22 @@ using envSeer.Models;
 using System.Collections.Generic;
 using System.Collections;
 using System;
+using envSeer.DAL.Core;
+using envSeer.DAL.Repositories;
 
 namespace envSeer.Controllers
 {
     public class UserAccountController : Controller
     {
+        // instantiating a private unit of work for any database work carried out within this controller
+        private readonly IUnitOfWork _unitOfWork;
+
+        // User Account Controller Constructor - simply instantiates the UnitOfWork class (need to look into dependancy injection at some point)
+        public UserAccountController()
+        {
+            _unitOfWork = new UnitOfWork(new envSeerDBContext());
+        }
+
         // GET: UserAccount
         public ActionResult Index()
         {
@@ -205,6 +216,16 @@ namespace envSeer.Controllers
 
             // return the list
             return UserRoleListItems;
+        }
+
+
+        // overriding dispose method to dispose of UnitOfWork
+        protected override void Dispose(bool disposing)
+        {
+            // adding the dispose of UnitOfWork, which will in turn dispose the DbContext#
+            _unitOfWork.Dispose();
+
+            base.Dispose(disposing);
         }
     }
 }

@@ -180,13 +180,19 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UserAccountController.cs" />
+    <Compile Include="DAL\Core\IRepository.cs" />
+    <Compile Include="DAL\Core\IUnitOfWork.cs" />
+    <Compile Include="DAL\Repositories\Repository.cs" />
+    <Compile Include="DAL\Core\IUserAccountRepository.cs" />
+    <Compile Include="DAL\Core\UnitOfWork.cs" />
+    <Compile Include="DAL\Repositories\UserAccountRepository.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\TestEnvironment.cs" />
     <Compile Include="Models\Machine.cs" />
-    <Compile Include="DAL\SeerDBContext.cs" />
-    <Compile Include="DAL\SeerDBInitializer.cs" />
+    <Compile Include="DAL\envSeerDBContext.cs" />
+    <Compile Include="DAL\envSeerDBInitializer.cs" />
     <Compile Include="Models\UserAccount.cs" />
     <Compile Include="Models\UserRole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -247,8 +253,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\Images\" />
-    <Folder Include="DAL\Core\" />
-    <Folder Include="DAL\Repositories\" />
     <Folder Include="ViewModels\Home\" />
   </ItemGroup>
   <ItemGroup>

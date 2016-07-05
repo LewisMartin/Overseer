@@ -10,7 +10,7 @@ namespace envSeer.DAL
     public class envSeerDBContext : DbContext
     {
         // We're going to set it to recreate the db each time we run whilst we're building the model
-        public envSeerDBContext() : base("envSeerDBContext")
+        public envSeerDBContext() : base("name=envSeerDBContext")
         {
             Database.SetInitializer<envSeerDBContext>(new envSeerDBInitializer());
             //Database.SetInitializer<envSeerDBContext>(new CreateDatabaseIfNotExists<envSeerDBContext>());
