@@ -16,6 +16,7 @@ namespace envSeer.DAL.Repositories
         // constructor
         public UserAccountRepository(envSeerDBContext context) : base(context)
         {
+            // calling base constructor
         }
 
         // implementation of model specific operation (IUserAccountRepository)

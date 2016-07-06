@@ -182,10 +182,12 @@
     <Compile Include="Controllers\UserAccountController.cs" />
     <Compile Include="DAL\Core\IRepository.cs" />
     <Compile Include="DAL\Core\IUnitOfWork.cs" />
+    <Compile Include="DAL\Core\IUserRoleRepository.cs" />
     <Compile Include="DAL\Repositories\Repository.cs" />
     <Compile Include="DAL\Core\IUserAccountRepository.cs" />
     <Compile Include="DAL\Core\UnitOfWork.cs" />
     <Compile Include="DAL\Repositories\UserAccountRepository.cs" />
+    <Compile Include="DAL\Repositories\UserRoleRepository.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

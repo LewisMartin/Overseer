@@ -162,27 +162,26 @@ namespace envSeer.Controllers
 
             // THIS NEEDS TO BE REPLACED WITH A REPOSITORY
             // pull the user data from the database
-            using(envSeerDBContext db = new envSeerDBContext())
-            {
-                // get the user from the table by username
-                var matchedUser = db.Users.FirstOrDefault(u => u.UserName == userName);
 
-                // if a user is matched in the db
-                if(matchedUser != null)
+            // getting user via user repository
+            var matchedUser = _unitOfWork.Users.GetUserByUsername(userName);
+
+            // if a user is matched in the db
+            if (matchedUser != null)
+            {
+                // if the password within the database matches that posted via ViewModel
+                if (matchedUser.Password == crypto.Compute(userSecret, matchedUser.PasswordSalt))
                 {
-                    // if the password within the database matches that posted via ViewModel
-                    if(matchedUser.Password == crypto.Compute(userSecret, matchedUser.PasswordSalt))
-                    {
-                        // the password has been validated
-                        valid = true;
-                    }
-                    else
-                    {
-                        // adding error message to modelstate to be returned to view (arg 1 could link the error to a particular property of the model if we wanted)
-                        ModelState.AddModelError("", "Username of password is not correct");
-                    } 
+                    // the password has been validated
+                    valid = true;
+                }
+                else
+                {
+                    // adding error message to modelstate to be returned to view (arg 1 could link the error to a particular property of the model if we wanted)
+                    ModelState.AddModelError("", "Username of password is not correct");
                 }
             }
+
             return valid;
         }
 
@@ -200,19 +199,16 @@ namespace envSeer.Controllers
             List<SelectListItem> UserRolesList = new List<SelectListItem>();
 
             // get all user role database records
-            using (envSeerDBContext db = new envSeerDBContext())
-            {
-                // getting all the entires from this table (that aren't the admin role)
-                var UserRoles = db.UserRoles.Where(r => r.RoleName != "Administrator");
+            var UserRoles = _unitOfWork.UserRoles.GetNonAdminRoles();
 
-                // for each role in the db create a new list item using the roleID & roleName
-                foreach (UserRole role in UserRoles)
-                {
-                    UserRolesList.Add(new SelectListItem() { Value = role.RoleID.ToString(), Text = role.RoleName});
-                }
+            // for each role in the db create a new list item using the roleID & roleName
+            foreach (UserRole role in UserRoles)
+            {
+                UserRolesList.Add(new SelectListItem() { Value = role.RoleID.ToString(), Text = role.RoleName });
             }
 
             IEnumerable<SelectListItem> UserRoleListItems = UserRolesList;
+            
 
             // return the list
             return UserRoleListItems;
