@@ -1,0 +1,12 @@
+﻿@{
+    ViewBag.Title = "Admin Actions";
+}
+
+<div>
+    You can access the 'Admin Actions' page because your role is: 
+        @{
+            var ClaimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+
+            @ClaimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Role).Value.ToString();
+        }
+</div>

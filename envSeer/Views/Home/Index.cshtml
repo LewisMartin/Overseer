@@ -31,3 +31,12 @@
     </div>
 </div>
 -->
+
+<div>
+    Your Role:
+        @{
+            var ClaimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+
+            @ClaimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Role).Value.ToString();
+        }
+</div>

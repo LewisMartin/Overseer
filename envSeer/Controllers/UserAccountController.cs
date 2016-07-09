@@ -61,8 +61,8 @@ namespace envSeer.Controllers
                             // add username to claimm
                             new Claim(ClaimTypes.Name, userCreds.Username),
 
-                            // add roles to claim (reading these from the database)
-                            new Claim(ClaimTypes.Role, GetUserRole()),
+                            // add role to claim (getting it from the database using the username to search)
+                            new Claim(ClaimTypes.Role, GetUserRole(userCreds.Username)), // note this is just for use with 'Authorize' attribute - if we need to get the user role in the view we need to pass it to the appropriate ViewModel
                         },
                     DefaultAuthenticationTypes.ApplicationCookie);
 
@@ -114,36 +114,32 @@ namespace envSeer.Controllers
                 // instantiate our hashing provider
                 var crypto = new SimpleCrypto.PBKDF2();
 
-                // THIS SHOULD BE REPLACED BY USE OF A REPOSITORY
-                // add the new user to our user database
-                using(envSeerDBContext db = new envSeerDBContext())
-                {
-                    // generate a new salt to use for this user
-                    crypto.GenerateSalt();
+                // new repository based implementation
+                // generate a new salt to use for this user
+                crypto.GenerateSalt();
 
-                    // generate a new entity that we'll persist to the database
-                    var newUser = db.Users.Create();
+                // generate a new eUserAccount ntity that we'll add to the database
+                UserAccount newUser = new UserAccount();
 
-                    // populate the new user object with the data from our ViewModel
-                    newUser.UserName = newUserDetails.UserName;
-                    newUser.FirstName = newUserDetails.FirstName;
-                    newUser.LastName = newUserDetails.LastName;
-                    newUser.Email = newUserDetails.EmailAddress;
-                    newUser.UserRoleID = Int32.Parse(newUserDetails.ChosenRoleID);
-                    newUser.Password = crypto.Compute(newUserDetails.Password);
-                    newUser.PasswordSalt = crypto.Salt;
+                // populate the new user object with the data from our ViewModel
+                newUser.UserName = newUserDetails.UserName;
+                newUser.FirstName = newUserDetails.FirstName;
+                newUser.LastName = newUserDetails.LastName;
+                newUser.Email = newUserDetails.EmailAddress;
+                newUser.UserRoleID = Int32.Parse(newUserDetails.ChosenRoleID);
+                newUser.Password = crypto.Compute(newUserDetails.Password);
+                newUser.PasswordSalt = crypto.Salt;
 
-                    // add & persist the new user to the user db
-                    db.Users.Add(newUser);
-                    db.SaveChanges();
+                // add the user & save changes via unit of work
+                _unitOfWork.Users.Add(newUser);
+                _unitOfWork.Save();
 
-                    // model validation passed, login complete - clear modelstate, add additional success message to viewdata and return blank registration form
-                    ModelState.Clear();
-                    ViewData["RegSuccess"] = "Registration Successful for " + newUser.UserName.ToString() + "!";
-                    // populate the 'RoleChoices' property with contents of UserRole db
-                    var RegisterGetModel = new RegisterViewModel() { RoleChoices = GetAllUserRoles() };
-                    return View(RegisterGetModel);
-                }
+                // model validation passed, login complete - clear modelstate, add additional success message to viewdata and return blank registration form
+                ModelState.Clear();
+                ViewData["RegSuccess"] = "Registration Successful for " + newUser.UserName.ToString() + "!";
+                // populate the 'RoleChoices' property with contents of UserRole db
+                var RegisterGetModel = new RegisterViewModel() { RoleChoices = GetAllUserRoles() };
+                return View(RegisterGetModel);
             }
 
             // model validation failed - pass model back to view   
@@ -186,13 +182,20 @@ namespace envSeer.Controllers
         }
 
 
-        // MOVE TO REPOSITORY method to get the role of a user during login we will take the username to find the user record, find their roleId and then query the userrole table using role id to find the role name
-        public string GetUserRole()
+        // method to get the role of a user during login we will take the username to find the user record, find their roleId and then query the userrole table using role id to find the role name
+        public string GetUserRole(string userName)
         {
-            return "QA";
+            // get the user from the database
+            var user = _unitOfWork.Users.GetUserByUsername(userName);
+
+            // get their role using the UserRoleID foreign key
+            var role = _unitOfWork.UserRoles.Get(user.UserRoleID);
+
+            // return the name of the role
+            return role.RoleName.ToString();
         }
 
-        // MOVE TO REPOSITORY method to get all roles from the database
+        // method to get all roles from the database
         public IEnumerable<SelectListItem> GetAllUserRoles()
         {
             // an IEnumerable list of SelectList items
@@ -209,13 +212,12 @@ namespace envSeer.Controllers
 
             IEnumerable<SelectListItem> UserRoleListItems = UserRolesList;
             
-
             // return the list
             return UserRoleListItems;
         }
 
 
-        // overriding dispose method to dispose of UnitOfWork
+        // overriding dispose method to add disposal of UnitOfWork class
         protected override void Dispose(bool disposing)
         {
             // adding the dispose of UnitOfWork, which will in turn dispose the DbContext#
