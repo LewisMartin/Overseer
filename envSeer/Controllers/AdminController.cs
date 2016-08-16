@@ -15,5 +15,17 @@ namespace envSeer.Controllers
         {
             return View();
         }
+
+        // get request for admin - site page
+        public ActionResult Site()
+        {
+            return View();
+        }
+
+        // get request for admin - users page
+        public ActionResult Users()
+        {
+            return View();
+        }
     }
 }

@@ -1,16 +1,17 @@
-﻿@{
-    ViewBag.Title = "Admin Actions";
+﻿
+@{
+    ViewBag.Title = "Site Actions";
 }
 
 <div id="Page-Title">
     <div class="fl-left">
-        <i class="fa fa-home a-fw" aria-hidden="true"></i>&nbsp Home
+        <i class="fa fa-cogs a-fw" aria-hidden="true"></i>&nbsp Admin Actions<i class="fa fa-angle-right a-fw breadcrumb-spacer" aria-hidden="true"></i>Site
     </div>
 </div>
 <div id="Page-Content">
     <section>
         <div class="content-area default-area">
-            You can access the 'Admin Actions' page because your role is:
+            You can access the 'Site Actions' page because your role is:
             @{
                 var ClaimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
 
@@ -19,3 +20,4 @@
         </div>
     </section>
 </div>
+

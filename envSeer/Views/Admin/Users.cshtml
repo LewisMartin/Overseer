@@ -1,0 +1,95 @@
+﻿
+@{
+    ViewBag.Title = "User Actions";
+}
+
+<div id="Page-Title">
+    <div class="fl-left">
+        <i class="fa fa-cogs a-fw" aria-hidden="true"></i>&nbsp Admin Actions<i class="fa fa-angle-right a-fw breadcrumb-spacer" aria-hidden="true"></i>Users
+    </div>
+</div>
+<div id="Page-Content">
+    <section>
+        <div class="ctrl-bar upper">
+            <div class="fl-left content-area result-filter">
+                <select class="filter-drpdwn">
+                    <option>10</option>
+                    <option>25</option>
+                    <option>50</option>
+                </select>
+                <span>results per page</span>
+            </div>
+            <div class="fl-right content-area user-search">
+                @using (Html.BeginForm("Users", "Admin"))
+                {
+                    <div class="usr-srch-trm">
+                        @Html.TextBox("UserQueryString")
+                    </div>
+                    <button type="submit" class="usr-srch-btn">
+                        <i class="fa fa-search a-fw" aria-hidden="true"></i>
+                    </button>
+                }
+            </div>
+        </div>
+        <div class="content-area">
+            <header>
+                <h3>Current Users</h3>
+            </header>
+            <table class="seer-tbl" cellpadding="0" cellspacing="0">
+                <tr>
+                    <th>ID</th>
+                    <th>User Name</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>User Role</th>
+                    <th>Actions</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>HimalGurung1</td>
+                    <td>Himal Gurung</td>
+                    <td>himalgurung@acme.com</td>
+                    <td>Developer</td>
+                    <td>edit del</td>
+                </tr>
+                <tr class="tr-alt">
+                    <td>2</td>
+                    <td>Michael_Harrington</td>
+                    <td>Michael Harrington</td>
+                    <td>michaelharrington@acme.co.uk</td>
+                    <td>QA</td>
+                    <td>edit del</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>LewisJMartin</td>
+                    <td>Lewis James Martin</td>
+                    <td>lmartin@acme.com</td>
+                    <td>Developer</td>
+                    <td>edit del</td>
+                </tr>
+            </table>
+        </div>
+        <div class="ctrl-bar lower content-area pag-bar">
+            <div>
+                <span class="fl-left">3 of 55</span>
+            </div>
+            <div class="fl-right">
+                @using (Html.BeginForm("Users", "Admin"))
+                {
+                    <span>page</span>
+                    <select class="filter-drpdwn">
+                        <option>10</option>
+                        <option>25</option>
+                        <option>50</option>
+                    </select>
+                    <button type="submit" class="pag-btn">
+                        GO
+                    </button>
+                }
+            </div>
+        </div>
+    </section>
+</div>
+
+
