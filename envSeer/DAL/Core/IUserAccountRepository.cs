@@ -11,5 +11,8 @@ namespace envSeer.DAL.Core
     {
         // here we declare any additional data access methods unique to the UserAccount table
         UserAccount GetUserByUsername(string name);
+
+        // gets a range from user table - ideally this should be made generic and moved to 'IRepository' class.
+        IEnumerable<UserAccount> GetRange(int startPos, int range);
     }
 }

@@ -24,5 +24,11 @@ namespace envSeer.DAL.Repositories
         {
             return dbContext.Users.FirstOrDefault(u => u.UserName == name);
         }
+
+        // gets a range from user table - ideally this should be made generic and moved to 'IRepository' class.
+        public IEnumerable<UserAccount> GetRange(int startPos, int range)
+        {
+            return dbContext.Users.OrderBy(t => t.UserID).Skip(startPos).Take(range).ToList();
+        }
     }
 }

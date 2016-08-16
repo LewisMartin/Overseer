@@ -1,4 +1,5 @@
-﻿
+﻿@model envSeer.ViewModels.Admin.UserAdminViewModel
+
 @{
     ViewBag.Title = "User Actions";
 }
@@ -13,9 +14,9 @@
         <div class="ctrl-bar upper">
             <div class="fl-left content-area result-filter">
                 <select class="filter-drpdwn">
-                    <option>10</option>
-                    <option>25</option>
-                    <option>50</option>
+                    <option @(Model.resultsPerPage == 10 ? "selected" : "")>10</option>
+                    <option @(Model.resultsPerPage == 25 ? "selected" : "")>25</option>
+                    <option @(Model.resultsPerPage == 50 ? "selected" : "")>50</option>
                 </select>
                 <span>results per page</span>
             </div>
@@ -44,35 +45,25 @@
                     <th>User Role</th>
                     <th>Actions</th>
                 </tr>
-                <tr>
-                    <td>1</td>
-                    <td>HimalGurung1</td>
-                    <td>Himal Gurung</td>
-                    <td>himalgurung@acme.com</td>
-                    <td>Developer</td>
-                    <td>edit del</td>
-                </tr>
-                <tr class="tr-alt">
-                    <td>2</td>
-                    <td>Michael_Harrington</td>
-                    <td>Michael Harrington</td>
-                    <td>michaelharrington@acme.co.uk</td>
-                    <td>QA</td>
-                    <td>edit del</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>LewisJMartin</td>
-                    <td>Lewis James Martin</td>
-                    <td>lmartin@acme.com</td>
-                    <td>Developer</td>
-                    <td>edit del</td>
-                </tr>
+                @foreach (var result in Model.userAccountData)
+                {
+                    <tr>
+                        <td>@result.UserId</td>
+                        <td>@result.UserName</td>
+                        <td>@result.FullName</td>
+                        <td>@result.Email</td>
+                        <td>@result.UserRole</td>
+                        <td>
+                            <i class="fa fa-pencil a-fw" aria-hidden="true"></i>
+                            <i class="fa fa-trash-o a-fw" aria-hidden="true"></i>
+                        </td>
+                    </tr>
+                }
             </table>
         </div>
         <div class="ctrl-bar lower content-area pag-bar">
             <div>
-                <span class="fl-left">3 of 55</span>
+                <span class="fl-left">@Model.currentPage of @Model.totalPages</span>
             </div>
             <div class="fl-right">
                 @using (Html.BeginForm("Users", "Admin"))

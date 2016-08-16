@@ -12,11 +12,9 @@ namespace envSeer.DAL.Core
     {
         // method to get an entity by it's Id (primary key)
         TEntity Get(int id);
-        // method to get a range of entities - returns an IEnumerable
-        IEnumerable<TEntity> GetAll();
 
-        // method that will allow us to find entities using lambda expressions
-        IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate);
+        // method to get all entities - returns an IEnumerable
+        IEnumerable<TEntity> GetAll();
 
         // method to add an entity to the collection
         void Add(TEntity entity);

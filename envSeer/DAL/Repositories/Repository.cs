@@ -44,11 +44,5 @@ namespace envSeer.DAL.Repositories
         {
             return dbContext.Set<TEntity>().ToList();
         }
-
-        // get entities via a predicate (a LINQ lambda expression passed to this method)
-        public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
-        {
-            return dbContext.Set<TEntity>().Where(predicate);
-        }
     }
 }

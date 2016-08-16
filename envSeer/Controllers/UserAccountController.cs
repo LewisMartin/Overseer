@@ -15,17 +15,8 @@ using envSeer.DAL.Repositories;
 
 namespace envSeer.Controllers
 {
-    public class UserAccountController : Controller
+    public class UserAccountController : BaseController
     {
-        // instantiating a private unit of work for any database work carried out within this controller
-        private readonly IUnitOfWork _unitOfWork;
-
-        // User Account Controller Constructor - simply instantiates the UnitOfWork class (need to look into dependancy injection at some point)
-        public UserAccountController()
-        {
-            _unitOfWork = new UnitOfWork(new envSeerDBContext());
-        }
-
         // GET: UserAccount
         public ActionResult Index()
         {
@@ -180,7 +171,6 @@ namespace envSeer.Controllers
 
             return valid;
         }
-
 
         // method to get the role of a user during login we will take the username to find the user record, find their roleId and then query the userrole table using role id to find the role name
         public string GetUserRole(string userName)
