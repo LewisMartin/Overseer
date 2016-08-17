@@ -50,6 +50,24 @@ namespace envSeer.DAL
             // add the default Admin user to the db
             context.Users.Add(defaultAdmin);
 
+            UserAccount testUser;
+
+            // add 60 test users
+            for (int i = 0; i < 60; i++)
+            {
+                testUser = new UserAccount();
+
+                testUser.UserName = "TestUser" + i.ToString();
+                testUser.FirstName = "Test";
+                testUser.LastName = "User " + i.ToString();
+                testUser.UserRoleID = Int32.Parse("2");
+                testUser.Email = "TestUser" + i.ToString() + "@envseer.local";
+                testUser.Password = crypto.Compute("password");
+                testUser.PasswordSalt = crypto.Salt;
+
+                context.Users.Add(testUser);
+            }
+
             // save changes after adding default user
             context.SaveChanges();
 

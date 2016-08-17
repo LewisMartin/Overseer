@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace envSeer.ViewModels.Admin
 {
@@ -18,15 +19,10 @@ namespace envSeer.ViewModels.Admin
         // the current page
         public int currentPage;
 
+        // list to populate 'results per page' dropdown
+        public List<SelectListItem> resultsPerPageOptions;
 
-        //POST/GET: used in both/either GET or POST request
-        // the current 'results per page' setting
-        public int resultsPerPage;
-
-        // a search term to query users by
-        public string searchTerm;
-
-        // page number
-        public int selectedPage;
+        // list to populate 'pages' dropdown
+        public List<SelectListItem> pageSelectOptions;
     }
 }

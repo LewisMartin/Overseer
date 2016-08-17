@@ -16,6 +16,9 @@ namespace envSeer.DAL.Core
         // method to get all entities - returns an IEnumerable
         IEnumerable<TEntity> GetAll();
 
+        // method to count all rows of a database
+        int CountRows();
+
         // method to add an entity to the collection
         void Add(TEntity entity);
 

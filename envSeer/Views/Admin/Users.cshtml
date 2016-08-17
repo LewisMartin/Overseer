@@ -11,75 +11,64 @@
 </div>
 <div id="Page-Content">
     <section>
-        <div class="ctrl-bar upper">
-            <div class="fl-left content-area result-filter">
-                <select class="filter-drpdwn">
-                    <option @(Model.resultsPerPage == 10 ? "selected" : "")>10</option>
-                    <option @(Model.resultsPerPage == 25 ? "selected" : "")>25</option>
-                    <option @(Model.resultsPerPage == 50 ? "selected" : "")>50</option>
-                </select>
-                <span>results per page</span>
-            </div>
-            <div class="fl-right content-area user-search">
-                @using (Html.BeginForm("Users", "Admin"))
-                {
+        @using (Html.BeginForm())
+        {
+            <div class="ctrl-bar upper">
+                <div class="fl-left content-area result-filter">
+                    @Html.DropDownList("resPerPage", Model.resultsPerPageOptions, new { @class= "filter-drpdwn", onchange = "this.form.submit();" })
+                    <span>results per page</span>
+                </div>
+                <div class="fl-right content-area user-search">
                     <div class="usr-srch-trm">
-                        @Html.TextBox("UserQueryString")
+                        @Html.TextBox("searchTerm")
                     </div>
                     <button type="submit" class="usr-srch-btn">
                         <i class="fa fa-search a-fw" aria-hidden="true"></i>
                     </button>
-                }
+                </div>
             </div>
-        </div>
-        <div class="content-area">
-            <header>
-                <h3>Current Users</h3>
-            </header>
-            <table class="seer-tbl" cellpadding="0" cellspacing="0">
-                <tr>
-                    <th>ID</th>
-                    <th>User Name</th>
-                    <th>Full Name</th>
-                    <th>Email</th>
-                    <th>User Role</th>
-                    <th>Actions</th>
-                </tr>
-                @foreach (var result in Model.userAccountData)
-                {
+            <div class="content-area">
+                <header>
+                    <h3>Current Users</h3>
+                </header>
+                <table class="seer-tbl" cellpadding="0" cellspacing="0">
                     <tr>
-                        <td>@result.UserId</td>
-                        <td>@result.UserName</td>
-                        <td>@result.FullName</td>
-                        <td>@result.Email</td>
-                        <td>@result.UserRole</td>
-                        <td>
-                            <i class="fa fa-pencil a-fw" aria-hidden="true"></i>
-                            <i class="fa fa-trash-o a-fw" aria-hidden="true"></i>
-                        </td>
+                        <th>ID</th>
+                        <th>User Name</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>User Role</th>
+                        <th>Actions</th>
                     </tr>
-                }
-            </table>
-        </div>
-        <div class="ctrl-bar lower content-area pag-bar">
-            <div>
-                <span class="fl-left">@Model.currentPage of @Model.totalPages</span>
+                    @foreach (var result in Model.userAccountData)
+                    {
+                        <tr>
+                            <td>@result.UserId</td>
+                            <td>@result.UserName</td>
+                            <td>@result.FullName</td>
+                            <td>@result.Email</td>
+                            <td>@result.UserRole</td>
+                            <td>
+                                <i class="fa fa-pencil a-fw" aria-hidden="true"></i>
+                                <i class="fa fa-trash-o a-fw" aria-hidden="true"></i>
+                            </td>
+                        </tr>
+                    }
+                </table>
             </div>
-            <div class="fl-right">
-                @using (Html.BeginForm("Users", "Admin"))
-                {
-                    <span>page</span>
-                    <select class="filter-drpdwn">
-                        <option>10</option>
-                        <option>25</option>
-                        <option>50</option>
-                    </select>
-                    <button type="submit" class="pag-btn">
-                        GO
-                    </button>
-                }
+            <div class="ctrl-bar lower content-area pag-bar">
+                <div>
+                    <span class="fl-left">@Model.currentPage of @Model.totalPages</span>
+                </div>
+                <div class="fl-right">
+                        <span>page</span>
+                        @Html.DropDownList("selectedPage", Model.pageSelectOptions, new { @class = "filter-drpdwn" })
+                        <button type="submit" class="pag-btn">
+                            GO
+                        </button>
+                </div>
             </div>
-        </div>
+        }
     </section>
 </div>
 

@@ -44,5 +44,11 @@ namespace envSeer.DAL.Repositories
         {
             return dbContext.Set<TEntity>().ToList();
         }
+
+        // count total rows
+        public int CountRows()
+        {
+            return dbContext.Set<TEntity>().Count();
+        }
     }
 }
