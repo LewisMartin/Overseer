@@ -19,6 +19,9 @@ namespace envSeer.ViewModels.Admin
         // the current page
         public int currentPage;
 
+        // value of applied search filter
+        public string searchFilter;
+
         // list to populate 'results per page' dropdown
         public List<SelectListItem> resultsPerPageOptions;
 

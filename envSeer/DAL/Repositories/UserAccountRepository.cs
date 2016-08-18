@@ -26,9 +26,30 @@ namespace envSeer.DAL.Repositories
         }
 
         // gets a range from user table - ideally this should be made generic and moved to 'IRepository' class.
-        public IEnumerable<UserAccount> GetRange(int startPos, int range)
+        public IEnumerable<UserAccount> GetRangeUsers(int startPos, int range)
         {
-            return dbContext.Users.OrderBy(t => t.UserID).Skip(startPos).Take(range).ToList();
+            return dbContext.Users.OrderBy(k => k.UserID).Skip(startPos).Take(range).ToList();
+        }
+
+        public IEnumerable<UserAccount> GetUserMatches(string searchTerm)
+        {
+            return dbContext.Users.Where(q => q.UserName.Contains(searchTerm) 
+                                        || q.FirstName.Contains(searchTerm) 
+                                        || q.LastName.Contains(searchTerm)).OrderBy(k => k.UserID).ToList();
+        }
+
+        public int CountUserMatches(string searchTerm)
+        {
+            return dbContext.Users.Where(q => q.UserName.Contains(searchTerm)
+                            || q.FirstName.Contains(searchTerm)
+                            || q.LastName.Contains(searchTerm)).OrderBy(k => k.UserID).Count();
+        }
+
+        public IEnumerable<UserAccount> GetRangeUserMatches(int startPos, int range, string searchTerm)
+        {
+            return dbContext.Users.Where(q => q.UserName.Contains(searchTerm)
+                                        || q.FirstName.Contains(searchTerm)
+                                        || q.LastName.Contains(searchTerm)).OrderBy(k => k.UserID).Skip(startPos).Take(range).ToList();
         }
     }
 }

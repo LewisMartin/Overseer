@@ -15,21 +15,31 @@
         {
             <div class="ctrl-bar upper">
                 <div class="fl-left content-area result-filter">
-                    @Html.DropDownList("resPerPage", Model.resultsPerPageOptions, new { @class= "filter-drpdwn", onchange = "this.form.submit();" })
+                    @Html.DropDownList("resPerPage", Model.resultsPerPageOptions, new { @class = "filter-drpdwn", onchange = "this.form.submit();" })
                     <span>results per page</span>
                 </div>
                 <div class="fl-right content-area user-search">
                     <div class="usr-srch-trm">
+                        <input type="hidden" name="persistedSearchTerm" value="@Model.searchFilter"/>
                         @Html.TextBox("searchTerm")
                     </div>
-                    <button type="submit" class="usr-srch-btn">
+                    <button name="button" value="search" type="submit" class="usr-srch-btn">
                         <i class="fa fa-search a-fw" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>
             <div class="content-area">
                 <header>
-                    <h3>Current Users</h3>
+                    <h3>
+                        @if (Model.searchFilter == "")
+                        {
+                            @:All Users
+                        }
+                        else
+                        {
+                            @:Filter: ' @Model.searchFilter '
+                        }
+                    </h3>
                 </header>
                 <table class="seer-tbl" cellpadding="0" cellspacing="0">
                     <tr>
@@ -63,7 +73,7 @@
                 <div class="fl-right">
                         <span>page</span>
                         @Html.DropDownList("selectedPage", Model.pageSelectOptions, new { @class = "filter-drpdwn" })
-                        <button type="submit" class="pag-btn">
+                        <button name="button" value="pagination" type="submit" class="pag-btn">
                             GO
                         </button>
                 </div>

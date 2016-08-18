@@ -34,7 +34,7 @@ namespace envSeer.Controllers
         public ActionResult Users()
         {
             // getting the top 10 users by default
-            IEnumerable<UserAccount> returnedUsers = _unitOfWork.Users.GetRange(0, 10);
+            IEnumerable<UserAccount> returnedUsers = _unitOfWork.Users.GetRangeUsers(0, 10);
 
             List<UserAccountData> viewModelUsers = new List<UserAccountData>();
 
@@ -76,7 +76,8 @@ namespace envSeer.Controllers
                 resultsPerPageOptions = resPerPageOps,
                 pageSelectOptions = pageSelectionOps,
                 totalPages = ((_unitOfWork.Users.CountRows() + 10 - 1)/10), // Note: integer division always rounds down
-                currentPage = 1,
+                searchFilter = "",
+                currentPage = 1
             };
 
             return View(viewModel);
@@ -84,18 +85,62 @@ namespace envSeer.Controllers
 
         // POST method for 'Users' page
         [HttpPost]
-        public ActionResult Users(int resPerPage, string searchTerm, int selectedPage)
+        public ActionResult Users(string button, int resPerPage, string persistedSearchTerm, string searchTerm, int selectedPage)
         {
-            // if the 'results per page' value has been upped we reset to the first page of results
-            if ((resPerPage * (selectedPage - 1)) >= _unitOfWork.Users.CountRows())
+            IEnumerable<UserAccount> returnedUsers; // collection of user entities
+            var pageSelectionOps = new List<SelectListItem>(); // create list for 'page selection' drop down
+            var viewModelUsers = new List<UserAccountData>(); // list of user details
+            string searchQuery = persistedSearchTerm;
+            int pageCount;
+            int totalRows;
+
+            // if the search button is pressed we update the search term to use and reset pagination
+            if (button == "search")
             {
+                searchQuery = searchTerm;
                 selectedPage = 1;
             }
 
-            // getting the top 10 users by default
-            IEnumerable<UserAccount> returnedUsers = _unitOfWork.Users.GetRange((resPerPage * (selectedPage-1)), resPerPage);
+            // whether a search filter has been applied or not
+            if (searchQuery != null && searchQuery != "" && !String.IsNullOrWhiteSpace(searchQuery))
+            {
+                totalRows = _unitOfWork.Users.CountUserMatches(searchQuery);
 
-            List<UserAccountData> viewModelUsers = new List<UserAccountData>();
+                // ensure 'results per page' doesn't go out of bounds
+                if ((resPerPage * (selectedPage - 1)) >= totalRows)
+                {
+                    selectedPage = 1;
+                }
+
+                // get users by search term
+                returnedUsers = _unitOfWork.Users.GetRangeUserMatches((resPerPage * (selectedPage - 1)), resPerPage, searchQuery);
+            }
+            else
+            {
+                totalRows = _unitOfWork.Users.CountRows();
+
+                // ensure 'results per page' doesn't go out of bounds
+                if ((resPerPage * (selectedPage - 1)) >= totalRows)
+                {
+                    selectedPage = 1;
+                }
+
+                returnedUsers = _unitOfWork.Users.GetRangeUsers((resPerPage * (selectedPage - 1)), resPerPage);
+
+                // ensure the search query that we'll pass back to the view is in a specific form
+                searchQuery = "";
+            }
+
+
+            // set paging drop down option
+            pageSelectionOps.Add(new SelectListItem { Text = "1", Value = "1" });
+            pageCount = 1;
+
+            for (int i = 2; i <= ((totalRows + resPerPage - 1) / resPerPage); i++)
+            {
+                pageSelectionOps.Add(new SelectListItem { Text = i.ToString(), Value = i.ToString() });
+                pageCount += 1;
+            };
 
             // create a userAccountData object for each user domain object
             foreach (var user in returnedUsers)
@@ -111,20 +156,11 @@ namespace envSeer.Controllers
             }
 
             // create list for 'results per page' drop down
-            
             var resPerPageOps = new List<SelectListItem>
             {
                 new SelectListItem { Text = "10", Value = "10"},
                 new SelectListItem { Text = "25", Value = "25"},
                 new SelectListItem { Text = "50", Value = "50"}
-            };
-
-            // create list for 'page selection' drop down
-            var pageSelectionOps = new List<SelectListItem>();
-
-            for (int i = 1; i <= ((_unitOfWork.Users.CountRows() + resPerPage - 1) / resPerPage); i++)
-            {
-                pageSelectionOps.Add(new SelectListItem { Text = i.ToString(), Value = i.ToString() });
             };
 
             // instantiate and assign values to ViewModel
@@ -133,11 +169,10 @@ namespace envSeer.Controllers
                 userAccountData = viewModelUsers,
                 resultsPerPageOptions = resPerPageOps,
                 pageSelectOptions = pageSelectionOps,
-                totalPages = ((_unitOfWork.Users.CountRows() + resPerPage - 1) / resPerPage), // Note: integer division always rounds down
-                currentPage = 1,
+                totalPages = pageCount, // Note: integer division always rounds down
+                searchFilter = searchQuery,
+                currentPage = selectedPage
             };
-
-            //ModelState.Clear();
 
             return View(viewModel);
         }
