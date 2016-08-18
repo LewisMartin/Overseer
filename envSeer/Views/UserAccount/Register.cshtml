@@ -93,7 +93,10 @@
                 </div>
                 <div class="form-val-msg">
                     @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
-                </div>   
+                </div>
+                <div class="form-val-msg">
+                    @Html.ValidationMessage("RegError", "")
+                </div>
             </div>
 
             // submit button

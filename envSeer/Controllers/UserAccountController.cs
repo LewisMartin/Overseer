@@ -102,35 +102,42 @@ namespace envSeer.Controllers
             // if the regiter View Model meets it's validation criteria
             if (ModelState.IsValid)
             {
-                // instantiate our hashing provider
-                var crypto = new SimpleCrypto.PBKDF2();
+                if (UserNameAvailable(newUserDetails.UserName))
+                {
+                    // instantiate our hashing provider
+                    var crypto = new SimpleCrypto.PBKDF2();
 
-                // new repository based implementation
-                // generate a new salt to use for this user
-                crypto.GenerateSalt();
+                    // new repository based implementation
+                    // generate a new salt to use for this user
+                    crypto.GenerateSalt();
 
-                // generate a new eUserAccount ntity that we'll add to the database
-                UserAccount newUser = new UserAccount();
+                    // generate a new eUserAccount ntity that we'll add to the database
+                    UserAccount newUser = new UserAccount();
 
-                // populate the new user object with the data from our ViewModel
-                newUser.UserName = newUserDetails.UserName;
-                newUser.FirstName = newUserDetails.FirstName;
-                newUser.LastName = newUserDetails.LastName;
-                newUser.Email = newUserDetails.EmailAddress;
-                newUser.UserRoleID = Int32.Parse(newUserDetails.ChosenRoleID);
-                newUser.Password = crypto.Compute(newUserDetails.Password);
-                newUser.PasswordSalt = crypto.Salt;
+                    // populate the new user object with the data from our ViewModel
+                    newUser.UserName = newUserDetails.UserName;
+                    newUser.FirstName = newUserDetails.FirstName;
+                    newUser.LastName = newUserDetails.LastName;
+                    newUser.Email = newUserDetails.EmailAddress;
+                    newUser.UserRoleID = Int32.Parse(newUserDetails.ChosenRoleID);
+                    newUser.Password = crypto.Compute(newUserDetails.Password);
+                    newUser.PasswordSalt = crypto.Salt;
 
-                // add the user & save changes via unit of work
-                _unitOfWork.Users.Add(newUser);
-                _unitOfWork.Save();
+                    // add the user & save changes via unit of work
+                    _unitOfWork.Users.Add(newUser);
+                    _unitOfWork.Save();
 
-                // model validation passed, login complete - clear modelstate, add additional success message to viewdata and return blank registration form
-                ModelState.Clear();
-                ViewData["RegSuccess"] = "Registration Successful for " + newUser.UserName.ToString() + "!";
-                // populate the 'RoleChoices' property with contents of UserRole db
-                var RegisterGetModel = new RegisterViewModel() { RoleChoices = GetAllUserRoles() };
-                return View(RegisterGetModel);
+                    // model validation passed, login complete - clear modelstate, add additional success message to viewdata and return blank registration form
+                    ModelState.Clear();
+                    ViewData["RegSuccess"] = "Registration Successful for " + newUser.UserName.ToString() + "!";
+                    // populate the 'RoleChoices' property with contents of UserRole db
+                    var RegisterGetModel = new RegisterViewModel() { RoleChoices = GetAllUserRoles() };
+                    return View(RegisterGetModel);
+                }
+                else
+                {
+                    ModelState.AddModelError("RegError", "UserName is not available!");
+                }
             }
 
             // model validation failed - pass model back to view   
@@ -146,9 +153,6 @@ namespace envSeer.Controllers
 
             // create and instance of our hashing provider
             var crypto = new SimpleCrypto.PBKDF2();
-
-            // THIS NEEDS TO BE REPLACED WITH A REPOSITORY
-            // pull the user data from the database
 
             // getting user via user repository
             var matchedUser = _unitOfWork.Users.GetUserByUsername(userName);
@@ -170,6 +174,21 @@ namespace envSeer.Controllers
             }
 
             return valid;
+        }
+
+        // check if username already exists
+        public bool UserNameAvailable(string username)
+        {
+            UserAccount user = _unitOfWork.Users.GetUserByUsername(username);
+
+            if (user != null)
+            {
+                return false;
+            } 
+            else
+            {
+                return true;
+            }
         }
 
         // method to get the role of a user during login we will take the username to find the user record, find their roleId and then query the userrole table using role id to find the role name
@@ -205,7 +224,6 @@ namespace envSeer.Controllers
             // return the list
             return UserRoleListItems;
         }
-
 
         // overriding dispose method to add disposal of UnitOfWork class
         protected override void Dispose(bool disposing)
