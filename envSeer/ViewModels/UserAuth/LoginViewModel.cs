@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
-namespace envSeer.ViewModels.UserAccount
+namespace envSeer.ViewModels.UserAuth
 {
     public class LoginViewModel
     {

@@ -6,8 +6,8 @@
     <title>envSeer</title>
     @Styles.Render("~/Content/css")
     @Styles.Render("~/bundles/bootstrap")
-    @Scripts.Render("~/bundles/modernizr")
     @Styles.Render("~/Custom/Styles")
+    @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
     <!-- Header -->
@@ -28,7 +28,7 @@
                     <label for="User-Area-Toggle"><i class="fa fa-user"></i> @Html.Encode(User.Identity.Name) </label>
                     <ul>
                         <li>Profile</li>
-                        <li>@Html.ActionLink("Sign Out", "LogOut", "UserAccount")</li>
+                        <li>@Html.ActionLink("Sign Out", "LogOut", "UserAuth")</li>
                     </ul>
                 </div>
             </div>
@@ -78,6 +78,6 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/Custom/Scripts")
-    @RenderSection("scripts", required: false)
+    @RenderSection("AdditionalScripts", false)
 </body>
 </html>

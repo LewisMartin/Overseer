@@ -1,4 +1,4 @@
-﻿@model envSeer.ViewModels.UserAccount.RegisterViewModel
+﻿@model envSeer.ViewModels.UserAuth.RegisterViewModel
 
 @{
     ViewBag.Title = "Register";
@@ -10,7 +10,7 @@
     @if (ViewData["RegSuccess"] != null)
     {
         // notification to display if new user was just successfully registered
-        <div class="reg-notif"><i class="fa fa-check icon-margin"></i>@ViewData["RegSuccess"].ToString()</div>
+        <div class="notif"><i class="fa fa-check icon-margin"></i>@ViewData["RegSuccess"].ToString()</div>
     }
     <header class="main-header">
         <div class="header-content">
@@ -21,7 +21,7 @@
             </div>
             <div class="fl-right">
                 <div class="login-reg-link">
-                    <a href="@Url.Action("Login","UserAccount")">
+                    <a href="@Url.Action("Login","UserAuth")">
                         Login<i class="fa fa-arrow-right icon-margin"></i>
                     </a>
                 </div>
@@ -29,7 +29,7 @@
         </div>
     </header>
     <div class="form-container">
-        @using (Html.BeginForm("Register", "UserAccount"))
+        @using (Html.BeginForm("Register", "UserAuth"))
         {
             // use anti forgery token on this form
 

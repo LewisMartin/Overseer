@@ -1,8 +1,8 @@
 ﻿@{
     var controller = HttpContext.Current.Request.RequestContext.RouteData.Values["Controller"].ToString();
     string layoutChoice = "";
-    // if the requests fall within the UserAccount controller, we'll load the uauthenticated (non-dashboard) layout
-    if (controller == "UserAccount")
+    // if the requests fall within the UserAuth controller, we'll load the uauthenticated (non-dashboard) layout
+    if (controller == "UserAuth")
     {
         layoutChoice = "~/Views/Shared/_UnauthLayout.cshtml";
     }

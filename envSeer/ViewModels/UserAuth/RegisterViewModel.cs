@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace envSeer.ViewModels.UserAccount
+namespace envSeer.ViewModels.UserAuth
 {
     // contains data annotations for client side validation
     public class RegisterViewModel

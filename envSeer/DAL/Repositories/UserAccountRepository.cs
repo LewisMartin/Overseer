@@ -10,16 +10,16 @@ using envSeer.DAL.DomainModels;
 namespace envSeer.DAL.Repositories
 {
     // inherits from generic repository (has all generic operations), implements custom interface (forces requirement for all generic and model specific operations)
-    // note here we cast the generic Repository class, hence '<UserAccount>'
-    public class UserAccountRepository : Repository<UserAccount>, IUserAccountRepository
+    // note here we cast the generic Repository class, hence '<UserAuth>'
+    public class UserAuthRepository : Repository<UserAccount>, IUserAuthRepository
     {
         // constructor
-        public UserAccountRepository(envSeerDBContext context) : base(context)
+        public UserAuthRepository(envSeerDBContext context) : base(context)
         {
             // calling base constructor
         }
 
-        // implementation of model specific operation (IUserAccountRepository)
+        // implementation of model specific operation (IUserAuthRepository)
         public UserAccount GetUserByUsername(string name)
         {
             return dbContext.Users.FirstOrDefault(u => u.UserName == name);

@@ -11,6 +11,11 @@
 </div>
 <div id="Page-Content">
     <section>
+        @if (Model.notificationMsg != null)
+        {
+            // notification to display if new user was just edited or deleted
+            <div class="notif"><i class="fa fa-check notif-icon"></i><span>@Model.notificationMsg</span></div>
+        }
         @using (Html.BeginForm())
         {
             <div class="ctrl-bar upper">
@@ -41,7 +46,7 @@
                         }
                     </h3>
                 </header>
-                <table class="seer-tbl" cellpadding="0" cellspacing="0">
+                <table class="seer-tbl usr-tbl" cellpadding="0" cellspacing="0">
                     <tr>
                         <th>ID</th>
                         <th>User Name</th>
@@ -50,17 +55,26 @@
                         <th>User Role</th>
                         <th>Actions</th>
                     </tr>
-                    @foreach (var result in Model.userAccountData)
+                    @{ int rowCounter = 0; }
+                    @foreach (var result in Model.UserAuthData)
                     {
-                        <tr>
+                        rowCounter++;
+                        <tr class='@((rowCounter % 2) == 0 ? "alt-row" : "")'>
                             <td>@result.UserId</td>
                             <td>@result.UserName</td>
                             <td>@result.FullName</td>
                             <td>@result.Email</td>
                             <td>@result.UserRole</td>
                             <td>
-                                <i class="fa fa-pencil a-fw" aria-hidden="true"></i>
-                                <i class="fa fa-trash-o a-fw" aria-hidden="true"></i>
+                                <a href="@Url.Action("EditUser", "Admin", new { id = result.UserId })">
+                                    <i class="fa fa-pencil a-fw" aria-hidden="true"></i>
+                                </a>
+                                @if (result.UserId != 1)
+                                {
+                                    <a href="@Url.Action("ConfirmUserDeletion", "Admin", new { id = result.UserId })">
+                                        <i class="fa fa-trash-o a-fw" aria-hidden="true"></i>
+                                    </a>
+                                }
                             </td>
                         </tr>
                     }
@@ -73,7 +87,7 @@
                 <div class="fl-right">
                         <span>page</span>
                         @Html.DropDownList("selectedPage", Model.pageSelectOptions, new { @class = "filter-drpdwn" })
-                        <button name="button" value="pagination" type="submit" class="pag-btn">
+                        <button name="button" value="pagination" type="submit" class="pag-btn fl-right">
                             GO
                         </button>
                 </div>

@@ -18,5 +18,14 @@ namespace envSeer.Controllers
         {
             _unitOfWork = new UnitOfWork(new envSeerDBContext());
         }
+
+        // overriding dispose method to add disposal of UnitOfWork class
+        protected override void Dispose(bool disposing)
+        {
+            // adding the dispose of UnitOfWork, which will in turn dispose the DbContext#
+            _unitOfWork.Dispose();
+
+            base.Dispose(disposing);
+        }
     }
 }

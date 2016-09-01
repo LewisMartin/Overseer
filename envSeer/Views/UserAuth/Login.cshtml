@@ -1,4 +1,4 @@
-﻿@model envSeer.ViewModels.UserAccount.LoginViewModel
+﻿@model envSeer.ViewModels.UserAuth.LoginViewModel
 
 @{
     ViewBag.Title = "Login";
@@ -14,7 +14,7 @@
             </div>
             <div class="fl-right">
                 <div class="login-reg-link">
-                    <a href="@Url.Action("Register","UserAccount")">
+                    <a href="@Url.Action("Register","UserAuth")">
                        Register<i class="fa fa-arrow-right"></i>
                     </a>
                 </div>
@@ -22,7 +22,7 @@
         </div>
     </header>
     <div class="form-container">
-        @using (Html.BeginForm("Login", "UserAccount"))
+        @using (Html.BeginForm("Login", "UserAuth"))
         {
             // use anti forgery token on this form
             @Html.AntiForgeryToken()

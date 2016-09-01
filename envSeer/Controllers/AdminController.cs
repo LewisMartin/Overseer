@@ -13,7 +13,7 @@ using System.Web.Mvc;
 namespace envSeer.Controllers
 {
     [CustomAuth(Roles = "Administrator")]
-    public class AdminController : BaseController
+    public class AdminController : UserAccountController
     {
         // GET: Admin
         [HttpGet]
@@ -30,18 +30,18 @@ namespace envSeer.Controllers
         }
 
         // get request for admin - users page
-        [HttpGet]
-        public ActionResult Users()
+        [HttpGet, OutputCache(NoStore = true, Duration = 1)] // force controller to reload fresh page rather than use cache
+        public ActionResult Users(string notification)
         {
             // getting the top 10 users by default
             IEnumerable<UserAccount> returnedUsers = _unitOfWork.Users.GetRangeUsers(0, 10);
 
-            List<UserAccountData> viewModelUsers = new List<UserAccountData>();
+            List<UserAuthData> viewModelUsers = new List<UserAuthData>();
 
-            // create a userAccountData object for each user domain object
+            // create a UserAuthData object for each user domain object
             foreach(var user in returnedUsers)
             {
-                viewModelUsers.Add(new UserAccountData
+                viewModelUsers.Add(new UserAuthData
                 {
                     UserId = user.UserID,
                     UserName = user.UserName,
@@ -72,7 +72,8 @@ namespace envSeer.Controllers
             // instantiate and assign values to ViewModel
             UserAdminViewModel viewModel = new UserAdminViewModel
             {
-                userAccountData = viewModelUsers,
+                notificationMsg = notification,
+                UserAuthData = viewModelUsers,
                 resultsPerPageOptions = resPerPageOps,
                 pageSelectOptions = pageSelectionOps,
                 totalPages = ((_unitOfWork.Users.CountRows() + 10 - 1)/10), // Note: integer division always rounds down
@@ -84,12 +85,12 @@ namespace envSeer.Controllers
         }
 
         // POST method for 'Users' page
-        [HttpPost]
+        [HttpPost, OutputCache(NoStore = true, Duration = 1)] // force controller to reload fresh page rather than use cache when back/forward browser operation is used
         public ActionResult Users(string button, int resPerPage, string persistedSearchTerm, string searchTerm, int selectedPage)
         {
             IEnumerable<UserAccount> returnedUsers; // collection of user entities
             var pageSelectionOps = new List<SelectListItem>(); // create list for 'page selection' drop down
-            var viewModelUsers = new List<UserAccountData>(); // list of user details
+            var viewModelUsers = new List<UserAuthData>(); // list of user details
             string searchQuery = persistedSearchTerm;
             int pageCount;
             int totalRows;
@@ -142,10 +143,10 @@ namespace envSeer.Controllers
                 pageCount += 1;
             };
 
-            // create a userAccountData object for each user domain object
+            // create a UserAuthData object for each user domain object
             foreach (var user in returnedUsers)
             {
-                viewModelUsers.Add(new UserAccountData
+                viewModelUsers.Add(new UserAuthData
                 {
                     UserId = user.UserID,
                     UserName = user.UserName,
@@ -166,7 +167,7 @@ namespace envSeer.Controllers
             // instantiate and assign values to ViewModel
             UserAdminViewModel viewModel = new UserAdminViewModel
             {
-                userAccountData = viewModelUsers,
+                UserAuthData = viewModelUsers,
                 resultsPerPageOptions = resPerPageOps,
                 pageSelectOptions = pageSelectionOps,
                 totalPages = pageCount, // Note: integer division always rounds down
@@ -177,15 +178,144 @@ namespace envSeer.Controllers
             return View(viewModel);
         }
 
-
-        // Need to think about how user deletion/sorting/searching will work etc..
-        [HttpPost]
-        public ActionResult delUser(int Id)
+        // GET Action for ConfirmUserDeletion page
+        [HttpGet, OutputCache(NoStore = true, Duration = 1)] // force controller to reload fresh page rather than use cache
+        public ActionResult ConfirmUserDeletion(int? id)
         {
+            if (id == null || id == 1)
+            {
+                return RedirectToAction("Users");
+            }
+            else
+            {
+                UserAccount user = _unitOfWork.Users.Get((int)id);
 
+                ConfirmUserDeletionViewModel viewModel = new ConfirmUserDeletionViewModel
+                {
+                    userToDelete = new UserAuthData
+                    {
+                        UserId = user.UserID,
+                        UserName = user.UserName,
+                        FullName = (user.FirstName + user.LastName),
+                        Email = user.Email,
+                        UserRole = _unitOfWork.UserRoles.Get(user.UserRoleID).RoleName
+                    }
+                };
 
+                return View(viewModel);
+            }
+        }
 
-            return RedirectToAction("");
+        // simply delete the user and redirect to the users page..
+        [HttpPost]
+        public ActionResult DeleteUser(int UserId)
+        {
+            UserAccount userToDelete = _unitOfWork.Users.Get(UserId);
+
+            string notificationMsg = "'" + userToDelete.UserName + "' was successfully deleted.";
+
+            _unitOfWork.Users.Delete(userToDelete);
+
+            _unitOfWork.Save();
+
+            return RedirectToAction("Users", new { notification = notificationMsg});
+        }
+
+        // GET Action for edit user page
+        [HttpGet, OutputCache(NoStore = true, Duration = 1)]
+        public ActionResult EditUser(int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("Users");
+            }
+            else
+            {
+                UserAccount userToEdit = _unitOfWork.Users.Get((int)id);
+
+                EditUserViewModel viewModel = new EditUserViewModel
+                {
+                    UserId = userToEdit.UserID,
+                    FirstName = userToEdit.FirstName,
+                    LastName = userToEdit.LastName,
+                    UserName = userToEdit.UserName,
+                    EmailAddress = userToEdit.Email,
+                    RoleChoices = CreateUserRoleSelectList(_unitOfWork.UserRoles.GetNonAdminRoles(), (_unitOfWork.UserRoles.Get(userToEdit.UserRoleID)).RoleName)
+                };
+
+                return View(viewModel);
+            }
+        }
+
+        // POST Action for edit user page
+        [HttpPost, OutputCache(NoStore = true, Duration = 1)]
+        public ActionResult EditUser(EditUserViewModel editedUserDetails)
+        {
+            // repopulate the list of role choices for the select box
+            editedUserDetails.RoleChoices = CreateUserRoleSelectList(_unitOfWork.UserRoles.GetNonAdminRoles(), (_unitOfWork.UserRoles.Get(int.Parse(editedUserDetails.ChosenRoleID))).RoleName);
+
+            if (ModelState.IsValid)
+            {
+                UserAccount userToUpdate = _unitOfWork.Users.Get(editedUserDetails.UserId);
+
+                // update the rest of the user's details
+                var crypto = new SimpleCrypto.PBKDF2();
+
+                // perform back end validation on password field
+                if (editedUserDetails.PasswordChanged)
+                {
+                    if (string.IsNullOrEmpty(editedUserDetails.Password))
+                    {
+                        ModelState.AddModelError("UnchangedPassError", "You must set a new password!");
+                        return View(editedUserDetails);
+                    }
+                    else
+                    {
+                        if (crypto.Compute(editedUserDetails.Password, userToUpdate.PasswordSalt) == userToUpdate.Password)
+                        {
+                            ModelState.AddModelError("UnchangedPassError", "Password cannot match existing password!");
+                            return View(editedUserDetails);
+                        }
+                        else
+                        {
+                            crypto.GenerateSalt();
+                            userToUpdate.Password = crypto.Compute(editedUserDetails.Password);
+                            userToUpdate.PasswordSalt = crypto.Salt;
+                        }
+                    }
+                }
+
+                // redirect if username is duplicate
+                if (editedUserDetails.UserName != userToUpdate.UserName)
+                {
+                    if (!UserNameAvailable(editedUserDetails.UserName))
+                    {
+                        ModelState.AddModelError("DuplicateUserError", "UserName is not available!");
+                        return View(editedUserDetails);
+                    }
+                }
+
+                userToUpdate.FirstName = editedUserDetails.FirstName;
+                userToUpdate.LastName = editedUserDetails.LastName;
+                userToUpdate.Email = editedUserDetails.EmailAddress;
+                userToUpdate.UserRoleID = Int32.Parse(editedUserDetails.ChosenRoleID);
+
+                _unitOfWork.Save();
+
+                string notificationMsg = "'" + editedUserDetails.UserName + "' was successfully updated.";
+
+                return RedirectToAction("Users", new { notification = notificationMsg });
+            }
+            else
+            {
+                return View(editedUserDetails);
+            }
+        }
+
+        // Dispose Method
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
         }
     }
 }

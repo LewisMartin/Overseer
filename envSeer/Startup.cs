@@ -17,7 +17,7 @@ namespace envSeer
             {
                 AuthenticationType = "ApplicationCookie",
                 // I think the path below is what unauthorized requests get redirected to when using the 'Authorize' attribute
-                LoginPath = new PathString("/UserAccount/Login")
+                LoginPath = new PathString("/UserAuth/Login")
             });
         }
     }

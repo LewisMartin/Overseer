@@ -12,7 +12,7 @@ namespace envSeer.DAL.Core
         private envSeerDBContext _dbContext;
 
         // instances of our repositories ()
-        public IUserAccountRepository Users { get; set; }
+        public IUserAuthRepository Users { get; set; }
         public IUserRoleRepository UserRoles { get; set; }
 
         // constructor 
@@ -20,7 +20,7 @@ namespace envSeer.DAL.Core
         {
             _dbContext = context;
             // using the same context across all of our repositories
-            Users = new UserAccountRepository(_dbContext);
+            Users = new UserAuthRepository(_dbContext);
             UserRoles = new UserRoleRepository(_dbContext);
         }
 
