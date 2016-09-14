@@ -186,6 +186,12 @@
     <Compile Include="DAL\Core\IRepository.cs" />
     <Compile Include="DAL\Core\IUnitOfWork.cs" />
     <Compile Include="DAL\Core\IUserRoleRepository.cs" />
+    <Compile Include="DAL\DomainModels\DiskMonitor.cs" />
+    <Compile Include="DAL\DomainModels\EventLogMonitor.cs" />
+    <Compile Include="DAL\DomainModels\OperatingSys.cs" />
+    <Compile Include="DAL\DomainModels\PerformanceMonitor.cs" />
+    <Compile Include="DAL\DomainModels\ProcessMonitor.cs" />
+    <Compile Include="DAL\DomainModels\ServiceMonitor.cs" />
     <Compile Include="DAL\Repositories\Repository.cs" />
     <Compile Include="DAL\Core\IUserAccountRepository.cs" />
     <Compile Include="DAL\Core\UnitOfWork.cs" />

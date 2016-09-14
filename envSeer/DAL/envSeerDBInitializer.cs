@@ -71,6 +71,28 @@ namespace envSeer.DAL
             // save changes after adding default user
             context.SaveChanges();
 
+
+            // seeding the SupportedOS table:
+            List<OperatingSys> supportedOperatingSystems = new List<OperatingSys> {
+
+                new OperatingSys() { OSName = "Windows 10 x64", Bitness = 64 },
+                new OperatingSys() { OSName = "Windows 10 x86", Bitness = 32 },
+                new OperatingSys() { OSName = "Windows 8 x64", Bitness = 64 },
+                new OperatingSys() { OSName = "Windows 8 x86", Bitness = 32 },
+                new OperatingSys() { OSName = "Windows Server 2012", Bitness = 64 },
+                new OperatingSys() { OSName = "Windows Server 2012 R2", Bitness = 64 },
+                new OperatingSys() { OSName = "Windows Server 2016", Bitness = 64 }
+            };
+
+            // loop through our above UserRole entities and persist them in the UserRoles table
+            foreach (OperatingSys OS in supportedOperatingSystems)
+            {
+                context.SupportedOS.Add(OS);
+            }
+
+            // save changes after adding supported Operating Systems
+            context.SaveChanges();
+
             // call the base seed method (although it's my understanding that this does nothing)
             base.Seed(context);
         }

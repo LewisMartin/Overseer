@@ -7,8 +7,6 @@ using System.Web;
 
 namespace envSeer.DAL.Repositories
 {
-    // the user role table is too simplisti at this point in time to justify creating an interface for this repository 
-    // (basic CRUD operations from generic repository suffice)
     public class UserRoleRepository : Repository<UserRole>, IUserRoleRepository
     {
         public UserRoleRepository(envSeerDBContext context) : base(context)
