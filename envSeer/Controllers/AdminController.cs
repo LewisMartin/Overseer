@@ -15,13 +15,6 @@ namespace envSeer.Controllers
     [CustomAuth(Roles = "Administrator")]
     public class AdminController : UserAccountController
     {
-        // GET: Admin
-        [HttpGet]
-        public ActionResult Index()
-        {
-            return View();
-        }
-
         // get request for admin - site page
         [HttpGet]
         public ActionResult Site()

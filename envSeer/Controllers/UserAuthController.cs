@@ -17,13 +17,7 @@ namespace envSeer.Controllers
 {
     public class UserAuthController : UserAccountController
     {
-        // GET: UserAuth
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // login page
+        // GET: login page
         [HttpGet]
         public ActionResult Login()
         {
@@ -36,6 +30,7 @@ namespace envSeer.Controllers
             // return login view
             return View();
         }
+        // POST: login page
         [HttpPost]
         public ActionResult Login(LoginViewModel userCreds)
         {
@@ -78,7 +73,7 @@ namespace envSeer.Controllers
             return View(userCreds);
         }
 
-        // logout page
+        // GET: logout page
         [HttpGet]
         public ActionResult LogOut()
         {
@@ -89,7 +84,7 @@ namespace envSeer.Controllers
             return RedirectToAction("Login", "UserAuth");
         }
 
-        // registration page
+        // GET: registration page
         [HttpGet]
         public ActionResult Register()
         {
@@ -99,6 +94,7 @@ namespace envSeer.Controllers
             // pass viewmodel to view
             return View(RegisterGetModel);
         }
+        // POST: registration page
         [HttpPost]
         public ActionResult Register(RegisterViewModel newUserDetails)
         {
