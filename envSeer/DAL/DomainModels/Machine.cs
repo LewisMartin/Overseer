@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace envSeer.DAL.DomainModels
@@ -8,7 +9,7 @@ namespace envSeer.DAL.DomainModels
         [Key]
         public int MachineID { get; set; }
 
-        [Required]
+        [ForeignKey("TestEnvironment")]
         public int ParentEnv { get; set; }
 
         [Required]
@@ -25,21 +26,26 @@ namespace envSeer.DAL.DomainModels
         [StringLength(50)]
         public string FQDN { get; set; }    // strings are inherently nullable (an untouched textbox = null)
 
-        [Required]
+        [ForeignKey("OperatingSys")]
         public int OS { get; set; }
-
-        [StringLength(3)]
-        public string OSBitness { get; set; }
 
         public int NumProcessors { get; set; }
 
         public float TotalMemGbs { get; set; }
 
-        // Foreign keys
-        [ForeignKey("ParentEnv")]
+        // navigation properties
         public TestEnvironment TestEnvironment { get; set; }
 
-        [ForeignKey("OS")]
         public OperatingSys OperatingSys { get; set; }
+
+        public PerformanceMonitor PerformanceMonitor { get; set; }
+
+        public ICollection<DiskMonitor> DiskMonitors { get; set; }
+
+        public ICollection<EventLogMonitor> EventLogMonitors { get; set; }
+
+        public ICollection<ProcessMonitor> ProcessMonitors { get; set; }
+
+        public ICollection<ServiceMonitor> ServiceMonitors { get; set; }
     }
 }

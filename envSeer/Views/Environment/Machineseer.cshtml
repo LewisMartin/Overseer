@@ -1,0 +1,30 @@
+﻿@model envSeer.ViewModels.Environment.MachineseerViewModel
+
+@{
+    ViewBag.Title = "Machineseer";
+}
+
+<div id="Page-Title">
+    <div class="fl-left">
+        <i class="fa fa-tachometer a-fw" aria-hidden="true"></i>&nbsp Environments<i class="fa fa-angle-right a-fw breadcrumb-spacer" aria-hidden="true"></i>@Model.MachineDetails.DisplayName
+    </div>
+</div>
+
+<div id="Page-Content">
+    <section>
+        <div class="content-area">
+            <ul>
+                <li>Display Name: @Model.MachineDetails.DisplayName</li>
+                <li>Environment: @Model.MachineDetails.ParentEnvironmentName</li>
+                <li>Machine Name: @Model.MachineDetails.MachineName</li>
+                <li>IPV4 Address: @Model.MachineDetails.IpAddress</li>
+                <li>FQDN: @Model.MachineDetails.FQDN</li>
+                <li>OS: @Model.MachineDetails.OperatingSysName</li>
+                <li>OS Bitness: @Model.MachineDetails.OperatingSysBitness</li>
+                <li>Processor Cores: @Model.MachineDetails.NumProcessors</li>
+                <li>Total Memory (GBs): @Model.MachineDetails.TotalMemGbs</li>
+            </ul>
+        </div>
+    </section>
+</div>
+

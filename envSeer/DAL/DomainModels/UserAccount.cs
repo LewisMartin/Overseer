@@ -36,9 +36,13 @@ namespace envSeer.DAL.DomainModels
         public string PasswordSalt { get; set; }
 
         // foreign key for user role
+        [ForeignKey("UserRole")]
         public int UserRoleID { get; set; }
 
-        [ForeignKey("UserRoleID")]
+        // navigation property to related UserRole data
         public UserRole UserRole { get; set; }
+
+        // navigation property to all test environments this user is 'creator' of
+        public ICollection<TestEnvironment> TestEnvironments { get; set; }
     }
 }

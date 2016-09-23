@@ -1,0 +1,18 @@
+﻿@model envSeer.ViewModels.Navigation._EnvironmentNavigationViewModel
+
+<li>Overseer (All Environments)</li>
+@foreach (var environment in Model.environmentNavDetails)
+{
+    // need to add action link which links to the environmentseer page passing the environment id as a param
+    <li class="env-menu-item">@Html.ActionLink("-" + environment.EnvironmentName, "Environmentseer", "Environment", new { environmentId = environment.EnvironmentId }, null)
+        <div class="pop-out-menu">
+            <ul>
+                @foreach (var childMachine in environment.ChildMachines)
+                {
+                    <li>@Html.ActionLink("--" + childMachine.DisplayName, "Machineseer", "Environment", new { machineId = childMachine.MachineId }, null)</li>
+                }
+            </ul>
+        </div>
+    </li>
+}
+<li>@Html.ActionLink("New Environment...", "EnvironmentCreation", "Environment")</li>

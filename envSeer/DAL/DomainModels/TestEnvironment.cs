@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace envSeer.DAL.DomainModels
@@ -10,10 +11,8 @@ namespace envSeer.DAL.DomainModels
 
         [Required]
         [StringLength(30)]
+        [Index("IX_UniqueEnvironmentNamePerUser", 1)]
         public string EnvironmentName { get; set; }
-
-        [Required]
-        public int Creator { get; set; }
 
         public int? RoadMap { get; set; }
 
@@ -28,7 +27,13 @@ namespace envSeer.DAL.DomainModels
         public int? MonitoringUpdateSchedule { get; set; }
 
         // Foreign keys
-        [ForeignKey("Creator")]
+        [ForeignKey("UserAccount")]
+        [Index("IX_UniqueEnvironmentNamePerUser", 2)]
+        public int Creator { get; set; }
+
+        // navigation properties
         public UserAccount UserAccount { get; set; }
+
+        public ICollection<Machine> Machines { get; set; }
     }
 }

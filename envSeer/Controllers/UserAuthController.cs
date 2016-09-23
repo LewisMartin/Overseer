@@ -49,10 +49,13 @@ namespace envSeer.Controllers
                     var ident = new ClaimsIdentity(
                         new[]
                         {
-                            // add username to claimm
+                            // clam : User ID
+                            new Claim(ClaimTypes.NameIdentifier, GetUserId(userCreds.Username).ToString()),
+
+                            // claim : Username
                             new Claim(ClaimTypes.Name, userCreds.Username),
 
-                            // add role to claim (getting it from the database using the username to search)
+                            // claim : User role (name, not role id)
                             new Claim(ClaimTypes.Role, GetUserRole(userCreds.Username)), // note this is just for use with 'Authorize' attribute - if we need to get the user role in the view we need to pass it to the appropriate ViewModel
                         },
                     DefaultAuthenticationTypes.ApplicationCookie);

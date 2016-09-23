@@ -1,0 +1,28 @@
+﻿@model envSeer.ViewModels.Environment.EnvironmentseerViewModel
+
+@{
+    ViewBag.Title = "Environmentseer";
+}
+
+<div id="Page-Title">
+    <div class="fl-left">
+        <i class="fa fa-tachometer a-fw" aria-hidden="true"></i>&nbsp Environments<i class="fa fa-angle-right a-fw breadcrumb-spacer" aria-hidden="true"></i>@Model.environmentDetails.EnvironmentName
+    </div>
+</div>
+
+<div id="Page-Content">
+    <section>
+        <div class="content-area">
+            <ul>
+                <li>Id: @Model.environmentId</li>
+                <li>Name: @Model.environmentDetails.EnvironmentName</li>
+                <li>Online: @Model.environmentDetails.IsOnline</li>
+                <li>Monitoring Enabled: @Model.environmentDetails.MonitoringEnabled</li>
+                <li>Monitoring Update Interval: @Model.environmentDetails.MonitoringUpdateInterval</li>
+            </ul>
+            <br />
+            @Html.ActionLink("Add new machine to this environment...", "MachineCreation", "Environment", new { environmentId = @Model.environmentId}, null)
+        </div>
+    </section>
+</div>
+

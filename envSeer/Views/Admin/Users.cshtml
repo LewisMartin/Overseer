@@ -1,7 +1,7 @@
 ﻿@model envSeer.ViewModels.Admin.UserAdminViewModel
 
 @{
-    ViewBag.Title = "User Actions";
+    ViewBag.Title = "User Maintenance";
 }
 
 <div id="Page-Title">
@@ -56,7 +56,7 @@
                         <th>Actions</th>
                     </tr>
                     @{ int rowCounter = 0; }
-                    @foreach (var result in Model.UserAuthData)
+                    @foreach (var result in Model.UserAccountData)
                     {
                         rowCounter++;
                         <tr class='@((rowCounter % 2) == 0 ? "alt-row" : "")'>

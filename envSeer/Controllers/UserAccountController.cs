@@ -68,6 +68,14 @@ namespace envSeer.Controllers
             return role.RoleName.ToString();
         }
 
+        // method to get userId of a user during login 
+        public int GetUserId(string userName)
+        {
+            var user = _unitOfWork.Users.GetUserByUsername(userName);
+
+            return user.UserID;
+        }
+
         // method to get all roles from the database
         public IEnumerable<SelectListItem> GetAllUserRoles()
         {

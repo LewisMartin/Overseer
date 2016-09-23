@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace envSeer.DAL.DomainModels
 {
@@ -10,5 +11,8 @@ namespace envSeer.DAL.DomainModels
         [Required]
         [MaxLength(20)]
         public string RoleName { get; set; }
+
+        // navigation properties
+        public ICollection<UserAccount> UsersWithRole;
     }
 }

@@ -7,9 +7,10 @@ namespace envSeer.DAL.DomainModels
     [Table("ProcessMonitoring")]
     public class ProcessMonitor
     {
-        [Key]
+        [Key, ForeignKey("Machine")]
         [Column(Order = 0)]
         public int MachineID { get; set; }
+
         [Key]
         [Column(Order = 1)]
         [StringLength(1)]
@@ -30,8 +31,7 @@ namespace envSeer.DAL.DomainModels
         [Column(TypeName = "DateTime2")]
         public DateTime? LastUpdated { get; set; }
 
-        // Foreign keys
-        [ForeignKey("MachineID")]
+        // navigation properties
         public Machine Machine { get; set; }
     }
 }

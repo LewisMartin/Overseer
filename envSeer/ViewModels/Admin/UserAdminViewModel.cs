@@ -13,7 +13,7 @@ namespace envSeer.ViewModels.Admin
         public string notificationMsg;
 
         // list of user account data to populate the table with
-        public List<UserAuthData> UserAuthData = new List<UserAuthData>();
+        public List<UserDataViewModel> UserAccountData = new List<UserDataViewModel>();
 
         // number of pages of entries based on the current 'records per page' value
         public int totalPages;

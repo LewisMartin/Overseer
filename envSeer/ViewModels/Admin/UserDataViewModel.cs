@@ -5,7 +5,7 @@ using System.Web;
 
 namespace envSeer.Models
 {
-    public class UserAuthData
+    public class UserDataViewModel
     {
         public int UserId { get; set; }
         public string UserName { get; set; }

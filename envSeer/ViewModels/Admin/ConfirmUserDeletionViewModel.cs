@@ -8,6 +8,6 @@ namespace envSeer.ViewModels.Admin
 {
     public class ConfirmUserDeletionViewModel
     {
-        public UserAuthData userToDelete;
+        public UserDataViewModel userToDelete;
     }
 }

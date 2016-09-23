@@ -36,12 +36,12 @@ namespace envSeer.Controllers
             // getting the top 10 users by default
             IEnumerable<UserAccount> returnedUsers = _unitOfWork.Users.GetRangeUsers(0, 10);
 
-            List<UserAuthData> viewModelUsers = new List<UserAuthData>();
+            List<UserDataViewModel> viewModelUsers = new List<UserDataViewModel>();
 
             // create a UserAuthData object for each user domain object
             foreach(var user in returnedUsers)
             {
-                viewModelUsers.Add(new UserAuthData
+                viewModelUsers.Add(new UserDataViewModel
                 {
                     UserId = user.UserID,
                     UserName = user.UserName,
@@ -73,7 +73,7 @@ namespace envSeer.Controllers
             UserAdminViewModel viewModel = new UserAdminViewModel
             {
                 notificationMsg = notification,
-                UserAuthData = viewModelUsers,
+                UserAccountData = viewModelUsers,
                 resultsPerPageOptions = resPerPageOps,
                 pageSelectOptions = pageSelectionOps,
                 totalPages = ((_unitOfWork.Users.CountRows() + 10 - 1)/10), // Note: integer division always rounds down
@@ -90,7 +90,7 @@ namespace envSeer.Controllers
         {
             IEnumerable<UserAccount> returnedUsers; // collection of user entities
             var pageSelectionOps = new List<SelectListItem>(); // create list for 'page selection' drop down
-            var viewModelUsers = new List<UserAuthData>(); // list of user details
+            var viewModelUsers = new List<UserDataViewModel>(); // list of user details
             string searchQuery = persistedSearchTerm;
             int pageCount;
             int totalRows;
@@ -146,7 +146,7 @@ namespace envSeer.Controllers
             // create a UserAuthData object for each user domain object
             foreach (var user in returnedUsers)
             {
-                viewModelUsers.Add(new UserAuthData
+                viewModelUsers.Add(new UserDataViewModel
                 {
                     UserId = user.UserID,
                     UserName = user.UserName,
@@ -167,7 +167,7 @@ namespace envSeer.Controllers
             // instantiate and assign values to ViewModel
             UserAdminViewModel viewModel = new UserAdminViewModel
             {
-                UserAuthData = viewModelUsers,
+                UserAccountData = viewModelUsers,
                 resultsPerPageOptions = resPerPageOps,
                 pageSelectOptions = pageSelectionOps,
                 totalPages = pageCount, // Note: integer division always rounds down
@@ -192,7 +192,7 @@ namespace envSeer.Controllers
 
                 ConfirmUserDeletionViewModel viewModel = new ConfirmUserDeletionViewModel
                 {
-                    userToDelete = new UserAuthData
+                    userToDelete = new UserDataViewModel
                     {
                         UserId = user.UserID,
                         UserName = user.UserName,

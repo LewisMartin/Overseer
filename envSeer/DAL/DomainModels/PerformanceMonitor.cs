@@ -7,7 +7,7 @@ namespace envSeer.DAL.DomainModels
     [Table("PerformanceMonitoring")]
     public class PerformanceMonitor
     {
-        [Key]
+        [Key, ForeignKey("Machine")]
         public int MachineID { get; set; }
 
         public int? CpuUtil { get; set; }
@@ -23,8 +23,7 @@ namespace envSeer.DAL.DomainModels
         [Column(TypeName = "DateTime2")]
         public DateTime? LastUpdated { get; set; }
 
-        // Foreign Keys
-        [ForeignKey("MachineID")]
+        // navigation properties
         public Machine Machine { get; set; }
     }
 }

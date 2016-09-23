@@ -37,44 +37,14 @@
 
     <!-- Sidebar Nav -->
     <nav id="Dashboard-Nav">
-        <ul>
-            <li><div><span><i class="fa fa-home fa-fw" aria-hidden="true"></i></span>&nbsp @Html.ActionLink("Home", "Index", "Home")</div></li>
-            <li>
-                <input type="checkbox" id="Sub-Nav-Toggle-Env" class="sub-nav-toggle">
-                <label for="Sub-Nav-Toggle-Env"><div><span><i class="fa fa-dashboard fa-fw" aria-hidden="true"></i></span>&nbsp Environments</div></label>
-                <ul class="nav-sub-menu">
-                    <li>Details</li>
-                    <li>Monitor</li>
-                    <li>Edit</li>
-                </ul>
-            </li>
-            <li><div><span><i class="fa fa-area-chart fa-fw" aria-hidden="true"></i></span>&nbsp Analyse</div></li>
-            <li><div><span><i class="fa fa-calendar fa-fw" aria-hidden="true"></i></span>&nbsp Road Mapping</div></li>
-            <li><div><span><i class="fa fa-search fa-fw" aria-hidden="true"></i></span>&nbsp Discover</div></li>
-            <li><div><span><i class="fa fa-briefcase fa-fw" aria-hidden="true"></i></span>&nbsp Tool Repo</div></li>
-            @{
-                var ClaimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
-
-                if (ClaimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Role).Value.ToString() == "Administrator")
-                {
-                    <!-- <li><div><i class="fa fa-cogs fa-fw" aria-hidden="true"></i>&nbsp </div></li> -->
-                    <li>
-                        <input type="checkbox" id="Sub-Nav-Toggle-Admin" class="sub-nav-toggle">
-                        <label for="Sub-Nav-Toggle-Admin"><div><span><i class="fa fa-cogs a-fw" aria-hidden="true"></i></span>&nbsp Admin</div></label>
-                        <ul class="nav-sub-menu">
-                            <li>@Html.ActionLink("Site", "Site", "Admin")</li>
-                            <li>@Html.ActionLink("Users", "Users", "Admin")</li>
-                        </ul>
-                    </li>
-                }
-            }
-        </ul>
+        @Html.Action("_SidebarNav", "Navigation")
     </nav>
 
     <!-- Scrollable Content -->
     <main id="Main-Content">
         @RenderBody()
     </main>
+
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/Custom/Scripts")

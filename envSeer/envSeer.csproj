@@ -180,10 +180,15 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\EnvironmentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\NavigationController.cs" />
     <Compile Include="Controllers\UserAccountController.cs" />
     <Compile Include="Controllers\UserAuthController.cs" />
+    <Compile Include="DAL\Core\IMachineRepository.cs" />
+    <Compile Include="DAL\Core\IOperatingSystemRepository.cs" />
     <Compile Include="DAL\Core\IRepository.cs" />
+    <Compile Include="DAL\Core\ITestEnvironmentRepository.cs" />
     <Compile Include="DAL\Core\IUnitOfWork.cs" />
     <Compile Include="DAL\Core\IUserRoleRepository.cs" />
     <Compile Include="DAL\DomainModels\DiskMonitor.cs" />
@@ -192,9 +197,12 @@
     <Compile Include="DAL\DomainModels\PerformanceMonitor.cs" />
     <Compile Include="DAL\DomainModels\ProcessMonitor.cs" />
     <Compile Include="DAL\DomainModels\ServiceMonitor.cs" />
+    <Compile Include="DAL\Repositories\MachineRepository.cs" />
+    <Compile Include="DAL\Repositories\OperatingSystemRepository.cs" />
     <Compile Include="DAL\Repositories\Repository.cs" />
     <Compile Include="DAL\Core\IUserAccountRepository.cs" />
     <Compile Include="DAL\Core\UnitOfWork.cs" />
+    <Compile Include="DAL\Repositories\TestEnvironmentRepository.cs" />
     <Compile Include="DAL\Repositories\UserAccountRepository.cs" />
     <Compile Include="DAL\Repositories\UserRoleRepository.cs" />
     <Compile Include="Global.asax.cs">
@@ -207,16 +215,28 @@
     <Compile Include="DAL\DomainModels\UserAccount.cs" />
     <Compile Include="DAL\DomainModels\UserRole.cs" />
     <Compile Include="Helpers\AuthHelpers\CustomAuthAttribute.cs" />
-    <Compile Include="Models\UserAccountData.cs" />
+    <Compile Include="ViewModels\Admin\UserDataViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\Admin\ConfirmUserDeletionViewModel.cs" />
     <Compile Include="ViewModels\Admin\EditUserViewModel.cs" />
     <Compile Include="ViewModels\Admin\UserAdminViewModel.cs" />
+    <Compile Include="ViewModels\Environment\EnvironmentCreationViewModel.cs" />
+    <Compile Include="ViewModels\Environment\EnvironmentDetailsViewModel.cs" />
+    <Compile Include="ViewModels\Environment\EnvironmentseerViewModel.cs" />
+    <Compile Include="ViewModels\Environment\MachineCreationViewModel.cs" />
+    <Compile Include="ViewModels\Environment\MachineDetailsViewModel.cs" />
+    <Compile Include="ViewModels\Environment\MachineseerViewModel.cs" />
+    <Compile Include="ViewModels\Navigation\EnvironmentLinkViewModel.cs" />
+    <Compile Include="ViewModels\Navigation\MachineLinkViewModel.cs" />
+    <Compile Include="ViewModels\Navigation\_EnvironmentNavigationViewModel.cs" />
+    <Compile Include="ViewModels\Navigation\_SidebarNavViewModel.cs" />
     <Compile Include="ViewModels\UserAuth\LoginViewModel.cs" />
     <Compile Include="ViewModels\UserAuth\RegisterViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Scripts\Custom Scripts\EnvironmentCreationAjax.js" />
+    <Content Include="Content\Scripts\Custom Scripts\MachineCreationAjax.js" />
     <Content Include="Content\Scripts\Custom Scripts\toggleField.js" />
     <Content Include="Content\Styles\bootstrap.css" />
     <Content Include="Content\Styles\bootstrap.min.css" />
@@ -260,7 +280,7 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Shared\Index.cshtml" />
     <Content Include="Views\UserAuth\Index.cshtml" />
     <Content Include="Views\Shared\_DashboardLayout.cshtml" />
     <Content Include="Views\Shared\_UnauthLayout.cshtml" />
@@ -271,12 +291,24 @@
     <Content Include="Views\Admin\Users.cshtml" />
     <Content Include="Views\Admin\ConfirmUserDeletion.cshtml" />
     <Content Include="Views\Admin\EditUser.cshtml" />
+    <Content Include="Views\Navigation\_SidebarNav.cshtml" />
+    <Content Include="Views\Environment\Overseer.cshtml" />
+    <Content Include="Views\Environment\Environmentseer.cshtml" />
+    <Content Include="Views\Environment\Machineseer.cshtml" />
+    <Content Include="Views\Environment\EnvironmentConfiguration.cshtml" />
+    <Content Include="Views\Environment\MachineConfiguration.cshtml" />
+    <Content Include="Views\Environment\EnvironmentCreation.cshtml" />
+    <Content Include="Views\Environment\MachineCreation.cshtml" />
+    <Content Include="Views\Navigation\_EnvironmentNavigation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\Images\" />
+    <Folder Include="Helpers\HtmlHelpers\" />
+    <Folder Include="Models\" />
     <Folder Include="ViewModels\Home\" />
     <Folder Include="Views\Base\" />
+    <Folder Include="Views\Home\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Fonts\glyphicons-halflings-regular.woff" />
@@ -304,7 +336,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>52723</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:64920/</IISUrl>
+          <IISUrl>http://localhost:4356/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

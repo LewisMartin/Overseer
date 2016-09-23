@@ -7,9 +7,9 @@ using System.Web;
 namespace envSeer.DAL.Core
 {
     // UserAuth specific repository interface - inherits all generic opperations from generic repository interface
-    public interface IUserAuthRepository : IRepository<UserAccount>
+    public interface IUserAccountRepository : IRepository<UserAccount>
     {
-        // here we declare any additional data access methods unique to the UserAuth table
+        // here we declare any additional data access methods unique to the UserAccount table
         UserAccount GetUserByUsername(string name);
 
         // gets a range from user table - ideally this should be made generic and moved to 'IRepository' class.

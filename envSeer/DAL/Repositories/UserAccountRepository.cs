@@ -11,10 +11,10 @@ namespace envSeer.DAL.Repositories
 {
     // inherits from generic repository (has all generic operations), implements custom interface (forces requirement for all generic and model specific operations)
     // note here we cast the generic Repository class, hence '<UserAuth>'
-    public class UserAuthRepository : Repository<UserAccount>, IUserAuthRepository
+    public class UserAccountRepository : Repository<UserAccount>, IUserAccountRepository
     {
         // constructor
-        public UserAuthRepository(envSeerDBContext context) : base(context)
+        public UserAccountRepository(envSeerDBContext context) : base(context)
         {
             // calling base constructor
         }
