@@ -1,0 +1,126 @@
+﻿@model Overseer.WebApp.ViewModels.Admin.EditUserViewModel
+@section AdditionalScripts
+{
+    <script src="@Url.Content("~/Content/Scripts/Custom Scripts/toggleField.js")"></script>    
+}
+
+@{
+    ViewBag.Title = "EditUser";
+}
+<div id="Page-Title">
+    <div class="fl-left">
+        <i class="fa fa-cogs a-fw" aria-hidden="true"></i>&nbsp Admin Actions<i class="fa fa-angle-right a-fw breadcrumb-spacer" aria-hidden="true"></i>Users<i class="fa fa-angle-right a-fw breadcrumb-spacer" aria-hidden="true"></i>Edit
+    </div>
+</div>
+<div id="Page-Content">
+    <section>
+        <div class="content-area edit-usr">
+            <h3>Edit User:</h3>
+            <table class="seer-tbl">
+                <tr>
+                    <th>@Model.UserName</th>
+                </tr>
+            </table>
+            <div class="form-container">
+                @using (Html.BeginForm())
+                {
+                    // hidden field for userId
+                    <input type="hidden" name="UserId" value="@Model.UserId" />
+
+                    if (Model.UserId == 1)
+                    {
+                        // Hidden fields to be posted straight back to the controller
+                        <input type="hidden" name="FirstName" value="@Model.FirstName" />
+                        <input type="hidden" name="LastName" value="@Model.LastName" />
+                        <input type="hidden" name="UserName" value="@Model.UserName" />
+                        <input type="hidden" name="EmailAddress" value="@Model.UserName" />
+                        <input type="hidden" name="ChosenRoleID" value="1" />
+
+                        // checkbox to show/hide change password field
+                        <div class="left-input">
+                            @Html.CheckBoxFor(m => m.PasswordChanged, new { @id = "tf-checkbox" })
+                            <label for="tf-checkbox">change password?</label>
+                        </div>
+
+                        // password field
+                        <div class="center-input">
+                            @Html.PasswordFor(m => m.Password, new { placeholder = "Password", disabled = "disabled", @class = "tf-target" })
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="center-input">
+                            @Html.TextBoxFor(m => m.FirstName, new { placeholder = "First Name" })
+                        </div>
+
+                        // last name field
+                        <div class="center-input">
+                            @Html.TextBoxFor(m => m.LastName, new { placeholder = "Last Name" })
+                        </div>
+
+                        // username field
+                        <div class="center-input">
+                            @Html.TextBoxFor(m => m.UserName, new { placeholder = "Username" })
+                        </div>
+
+                        // email field
+                        <div class="center-input">
+                            @Html.TextBoxFor(m => m.EmailAddress, new { placeholder = "Corporate Email" })
+                        </div>
+
+                        // role choice field
+                        <div class="center-input">
+                            @Html.DropDownListFor(m => m.ChosenRoleID, Model.RoleChoices)
+                        </div>
+
+                        // checkbox to show/hide change password field
+                        <div class="left-input">
+                            @Html.CheckBoxFor(m => m.PasswordChanged, new { @id = "tf-checkbox" })
+                            <label for="tf-checkbox">change password?</label>
+                        </div>
+
+                        // password field
+                        <div class="center-input">
+                            @Html.PasswordFor(m => m.Password, new { placeholder = "Password", disabled="disabled", @class="tf-target" })
+                        </div>
+                    }
+                    <div class="center-input form-val">
+                        <div class="form-val-msg">
+                            @Html.ValidationMessageFor(m => m.FirstName, "")
+                        </div>
+                        <div class="form-val-msg">
+                            @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-val-msg">
+                            @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-val-msg">
+                            @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-val-msg">
+                            @Html.ValidationMessageFor(m => m.EmailAddress, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-val-msg">
+                            @Html.ValidationMessageFor(m => m.ChosenRoleID, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-val-msg">
+                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-val-msg">
+                            @Html.ValidationMessage("DuplicateUserError", "")
+                        </div>
+                        <div class="form-val-msg">
+                            @Html.ValidationMessage("UnchangedPassError", "")
+                        </div>
+                    </div>
+                    <div class="form-footer">
+                        <button type="button" class="pag-btn fl-left" onclick="location.href='@Url.Action("Users", "Admin")'">
+                            Back
+                        </button>
+                        <input type="submit" value="Save" class="pag-btn" />
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+</div>

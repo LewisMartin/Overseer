@@ -1,0 +1,99 @@
+﻿@model Overseer.WebApp.ViewModels.Admin.UserAdminViewModel
+
+@{
+    ViewBag.Title = "User Maintenance";
+}
+
+<div id="Page-Title">
+    <div class="fl-left">
+        <i class="fa fa-cogs a-fw" aria-hidden="true"></i>&nbsp Admin Actions<i class="fa fa-angle-right a-fw breadcrumb-spacer" aria-hidden="true"></i>Users
+    </div>
+</div>
+<div id="Page-Content">
+    <section>
+        @if (Model.notificationMsg != null)
+        {
+            // notification to display if new user was just edited or deleted
+            <div class="notif"><i class="fa fa-check notif-icon"></i><span>@Model.notificationMsg</span></div>
+        }
+        @using (Html.BeginForm())
+        {
+            <div class="ctrl-bar upper">
+                <div class="fl-left content-area result-filter">
+                    @Html.DropDownList("resPerPage", Model.resultsPerPageOptions, new { @class = "filter-drpdwn", onchange = "this.form.submit();" })
+                    <span>results per page</span>
+                </div>
+                <div class="fl-right content-area user-search">
+                    <div class="usr-srch-trm">
+                        <input type="hidden" name="persistedSearchTerm" value="@Model.searchFilter"/>
+                        @Html.TextBox("searchTerm")
+                    </div>
+                    <button name="button" value="search" type="submit" class="usr-srch-btn">
+                        <i class="fa fa-search a-fw" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="content-area">
+                <header>
+                    <h3>
+                        @if (Model.searchFilter == "")
+                        {
+                            @:All Users
+                        }
+                        else
+                        {
+                            @:Filter: '@Model.searchFilter'
+                        }
+                    </h3>
+                </header>
+                <table class="seer-tbl usr-tbl" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <th>ID</th>
+                        <th>User Name</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>User Role</th>
+                        <th>Actions</th>
+                    </tr>
+                    @{ int rowCounter = 0; }
+                    @foreach (var result in Model.UserAccountData)
+                    {
+                        rowCounter++;
+                        <tr class='@((rowCounter % 2) == 0 ? "alt-row" : "")'>
+                            <td>@result.UserId</td>
+                            <td>@result.UserName</td>
+                            <td>@result.FullName</td>
+                            <td>@result.Email</td>
+                            <td>@result.UserRole</td>
+                            <td>
+                                <a href="@Url.Action("EditUser", "Admin", new { id = result.UserId })">
+                                    <i class="fa fa-pencil a-fw" aria-hidden="true"></i>
+                                </a>
+                                @if (result.UserId != 1)
+                                {
+                                    <a href="@Url.Action("ConfirmUserDeletion", "Admin", new { id = result.UserId })">
+                                        <i class="fa fa-trash-o a-fw" aria-hidden="true"></i>
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+            <div class="ctrl-bar lower content-area pag-bar">
+                <div>
+                    <span class="fl-left">@Model.currentPage of @Model.totalPages</span>
+                </div>
+                <div class="fl-right">
+                        <span>page</span>
+                        @Html.DropDownList("selectedPage", Model.pageSelectOptions, new { @class = "filter-drpdwn" })
+                        <button name="button" value="pagination" type="submit" class="pag-btn fl-right">
+                            GO
+                        </button>
+                </div>
+            </div>
+        }
+    </section>
+</div>
+
+

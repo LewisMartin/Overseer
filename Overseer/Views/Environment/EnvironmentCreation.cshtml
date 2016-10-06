@@ -1,0 +1,71 @@
+﻿@model Overseer.WebApp.ViewModels.Environment.EnvironmentCreationViewModel
+@section AdditionalScripts
+{
+    <script src="@Url.Content("~/Content/Scripts/jquery.validate.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Content/Scripts/jquery.validate.unobtrusive.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Content/Scripts/Custom Scripts/NewToggleField.js")"></script>
+    <script src="@Url.Content("~/Content/Scripts/Custom Scripts/EnvironmentCreationAjax.js")"></script>
+}
+
+@{
+    ViewBag.Title = "Environment Creation";
+}
+
+<div id="Page-Title">
+    <div class="fl-left">
+        <i class="fa fa-tachometer a-fw" aria-hidden="true"></i>&nbsp Environments<i class="fa fa-angle-right a-fw breadcrumb-spacer" aria-hidden="true"></i>Environment Creation
+    </div>
+</div>
+
+<div id="Page-Content">
+    <section>
+        <div class="content-area edit-usr">
+            <h3>Create new environment:</h3>
+            <div class="form-container">
+                @using (Html.BeginForm())
+                {
+                    <label for="envName">Display Name:</label>
+                    @Html.TextBoxFor(m => m.EnvironmentName, new { @id = "envName" })
+
+                    <label for="isOnline">Private Environment?</label>
+                    @Html.CheckBoxFor(m => m.PrivateEnvironment, new { @id = "privEnvironment" })
+
+
+                    <div class="tf-pair">
+                        <label for="envStatus">Environment Status:</label>
+                        @Html.CheckBoxFor(m => m.EnvironmentStatus, new { @id = "envStatus", @class = "tf-checkbox" })
+
+                        <label for="downTimeCat">Reason for Downtime:</label>
+                        @Html.DropDownListFor(m => m.DownTimeCategory, Model.DownTimeCategoryOptions, new { @id = "downTimeCat", @class = "tf-inverse-target" })
+                    </div>
+
+                    <div class="center-input form-val">
+                        <div class="form-val-msg">
+                            @Html.ValidationMessageFor(m => m.EnvironmentName)
+                        </div>
+                        <div class="form-val-msg">
+                            @Html.ValidationMessageFor(m => m.PrivateEnvironment)
+                        </div>
+                        <div class="form-val-msg">
+                            @Html.ValidationMessageFor(m => m.EnvironmentStatus)
+                        </div>
+                        <div class="form-val-msg">
+                            @Html.ValidationMessageFor(m => m.DownTimeCategory)
+                        </div>
+                        <div id="dupe-env-msg" class="form-val-msg">
+                            
+                        </div>
+                    </div>
+                    <div class="form-footer">
+                        <input type="submit" value="Create" class="pag-btn" />
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div id="form-success">
+
+        </div>
+    </section>
+</div>
+

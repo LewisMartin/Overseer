@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overseer</title>
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/bundles/bootstrap")
+    @Styles.Render("~/Custom/Styles")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <!-- Header -->
+    <header id="Dashboard-Header" class="main-header">
+        <div class="header-content">
+            <div class="fl-left">
+                <div id="site-title">
+                    Overseer
+                </div>
+                <div id="toggle-nav">
+                    <label for="Nav-Toggle"><i class="fa fa-bars"></i></label>
+                    <input type="checkbox" id="Nav-Toggle">
+                </div>
+            </div>
+            <div class="fl-right">
+                <div id="User-Area">
+                    <input type="checkbox" id="User-Area-Toggle">
+                    <label for="User-Area-Toggle"><i class="fa fa-user"></i> @Html.Encode(User.Identity.Name) </label>
+                    <ul>
+                        <li>Profile</li>
+                        <li>@Html.ActionLink("Sign Out", "LogOut", "UserAuth")</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar Nav -->
+    <nav id="Dashboard-Nav">
+        @Html.Action("_SidebarNav", "Navigation")
+    </nav>
+
+    <!-- Scrollable Content -->
+    <main id="Main-Content">
+        @RenderBody()
+    </main>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/Custom/Scripts")
+    @RenderSection("AdditionalScripts", false)
+</body>
+</html>
