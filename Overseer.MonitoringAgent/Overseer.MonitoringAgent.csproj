@@ -51,7 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\SharedCode\MonitoringAgentDTOs.cs">
+    <Compile Include="..\Overseer.MonitoringDTOs\MonitoringAgentDTOs.cs">
       <Link>DTOs\MonitoringAgentDTOs.cs</Link>
     </Compile>
     <Compile Include="MonAgentConfig.cs" />

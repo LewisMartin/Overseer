@@ -178,10 +178,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\SharedCode\MonitoringAgentDTOs.cs">
+    <Compile Include="..\Overseer.MonitoringDTOs\MonitoringAgentDTOs.cs">
       <Link>WebApi\DTOs\MonitoringAgentDTOs.cs</Link>
     </Compile>
-    <Compile Include="..\..\SharedCode\MonitoringConfigDTOs.cs">
+    <Compile Include="..\Overseer.MonitoringDTOs\MonitoringConfigDTOs.cs">
       <Link>WebApi\DTOs\MonitoringConfigDTOs.cs</Link>
     </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
