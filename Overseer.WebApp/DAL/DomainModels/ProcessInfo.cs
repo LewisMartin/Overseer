@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Overseer.WebApp.DAL.DomainModels
 {
     [Table("ProcessMonitoring")]
-    public class ProcessMonitor
+    public class ProcessInfo
     {
         [Key, ForeignKey("Machine")]
         [Column(Order = 0)]

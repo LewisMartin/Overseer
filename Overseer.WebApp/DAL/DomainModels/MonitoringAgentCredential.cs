@@ -1,24 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Web;
 
 namespace Overseer.WebApp.DAL.DomainModels
 {
-    [Table("PerformanceMonitoring")]
-    public class PerformanceMonitor
+    public class MonitoringAgentCredential
     {
         [Key, ForeignKey("Machine")]
         public Guid MachineID { get; set; }
 
-        public int? CpuUtil { get; set; }
+        [Required]
+        public string MonitoringAgentSecret { get; set; }
 
-        public int? TotalProcesses { get; set; }
-
-        public int? TotalThreads { get; set; }
-
-        public int? MemUtil { get; set; }
-
-        public int? MemUsage { get; set; }
+        [Required]
+        public string MonitoringAgentSecretSalt { get; set; }
 
         // navigation properties
         public Machine Machine { get; set; }

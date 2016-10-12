@@ -36,15 +36,17 @@ namespace Overseer.WebApp.DAL
         // EnvironmentCalendarDeadline
         // Machine
         public DbSet<Machine> Machine { get; set; }
+        // MonitoringAgentAuth
+        public DbSet<MonitoringAgentCredential> MonitoringAgentCredentials { get; set; }
         // PerfMon
-        public DbSet<PerformanceMonitor> PerformanceMonitoring { get; set; }
+        public DbSet<PerformanceInfo> PerformanceMonitoring { get; set; }
         // DiskMon
-        public DbSet<DiskMonitor> DiskMonitoring { get; set; }
+        public DbSet<DiskInfo> DiskMonitoring { get; set; }
         // EventMon
-        public DbSet<EventLogMonitor> EventLogMonitoring { get; set; }
+        public DbSet<EventLogInfo> EventLogMonitoring { get; set; }
         // ServiceMon
-        public DbSet<ServiceMonitor> ServiceMonitoring { get; set; }
+        public DbSet<ServiceInfo> ServiceMonitoring { get; set; }
         // ProcessMon
-        public DbSet<ProcessMonitor> ProcessMonitoring { get; set; }
+        public DbSet<DomainModels.ProcessInfo> ProcessMonitoring { get; set; }
     }
 }

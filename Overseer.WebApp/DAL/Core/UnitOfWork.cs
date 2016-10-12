@@ -16,6 +16,7 @@ namespace Overseer.WebApp.DAL.Core
         public IUserRoleRepository UserRoles { get; set; }
         public ITestEnvironmentRepository TestEnvironments { get; set; }
         public IMachineRepository Machines { get; set; }
+        public IMonitoringAgentCredentialRepository MonitoringAgentCredentials { get; set; }
         public IOperatingSystemRepository OperatingSystems { get; set; }
         public IDownTimeCategoryRepository DownTimeCategories { get; set; }
         public IMonitoringSettingsRepository MonitoringSettings { get; set; }
@@ -29,6 +30,7 @@ namespace Overseer.WebApp.DAL.Core
             UserRoles = new UserRoleRepository(_dbContext);
             TestEnvironments = new TestEnvironmentRepository(_dbContext);
             Machines = new MachineRepository(_dbContext);
+            MonitoringAgentCredentials = new MonitoringAgentCredentialRepository(_dbContext);
             OperatingSystems = new OperatingSystemRepository(_dbContext);
             DownTimeCategories = new DownTimeCategoryRepository(_dbContext);
             MonitoringSettings = new MonitoringSettingsRepository(_dbContext);

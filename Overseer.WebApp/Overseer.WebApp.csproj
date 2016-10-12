@@ -178,6 +178,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\SharedCode\MonitoringAgentDTOs.cs">
+      <Link>WebApi\DTOs\MonitoringAgentDTOs.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SharedCode\MonitoringConfigDTOs.cs">
+      <Link>WebApi\DTOs\MonitoringConfigDTOs.cs</Link>
+    </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -191,22 +197,25 @@
     <Compile Include="Controllers\UserAuthController.cs" />
     <Compile Include="DAL\Core\IDownTimeCategoryRepository.cs" />
     <Compile Include="DAL\Core\IMachineRepository.cs" />
+    <Compile Include="DAL\Core\IMonitoringAgentCredentialRepository.cs" />
     <Compile Include="DAL\Core\IMonitoringSettingsRepository.cs" />
     <Compile Include="DAL\Core\IOperatingSystemRepository.cs" />
     <Compile Include="DAL\Core\IRepository.cs" />
     <Compile Include="DAL\Core\ITestEnvironmentRepository.cs" />
     <Compile Include="DAL\Core\IUnitOfWork.cs" />
     <Compile Include="DAL\Core\IUserRoleRepository.cs" />
-    <Compile Include="DAL\DomainModels\DiskMonitor.cs" />
+    <Compile Include="DAL\DomainModels\DiskInfo.cs" />
     <Compile Include="DAL\DomainModels\DownTimeCategory.cs" />
+    <Compile Include="DAL\DomainModels\MonitoringAgentCredential.cs" />
     <Compile Include="DAL\DomainModels\MonitoringSettings.cs" />
-    <Compile Include="DAL\DomainModels\EventLogMonitor.cs" />
+    <Compile Include="DAL\DomainModels\EventLogInfo.cs" />
     <Compile Include="DAL\DomainModels\OperatingSys.cs" />
-    <Compile Include="DAL\DomainModels\PerformanceMonitor.cs" />
-    <Compile Include="DAL\DomainModels\ProcessMonitor.cs" />
-    <Compile Include="DAL\DomainModels\ServiceMonitor.cs" />
+    <Compile Include="DAL\DomainModels\PerformanceInfo.cs" />
+    <Compile Include="DAL\DomainModels\ProcessInfo.cs" />
+    <Compile Include="DAL\DomainModels\ServiceInfo.cs" />
     <Compile Include="DAL\Repositories\DownTimeCategoryRepository.cs" />
     <Compile Include="DAL\Repositories\MachineRepository.cs" />
+    <Compile Include="DAL\Repositories\MonitoringAgentCredentialRepository.cs" />
     <Compile Include="DAL\Repositories\MonitoringSettingsRepository.cs" />
     <Compile Include="DAL\Repositories\OperatingSystemRepository.cs" />
     <Compile Include="DAL\Repositories\Repository.cs" />
@@ -245,8 +254,10 @@
     <Compile Include="ViewModels\Navigation\_SidebarNavViewModel.cs" />
     <Compile Include="ViewModels\UserAuth\LoginViewModel.cs" />
     <Compile Include="ViewModels\UserAuth\RegisterViewModel.cs" />
-    <Compile Include="WebApi\MonitoringAgentEndpointController.cs" />
+    <Compile Include="WebApi\Controllers\BaseApiController.cs" />
+    <Compile Include="WebApi\Controllers\MonitoringAgentEndpointController.cs" />
     <Compile Include="WebApi\NewOS.cs" />
+    <Compile Include="WebApi\Controllers\MonitoringConfigEndpointController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Scripts\Custom Scripts\EnvironmentConfigurationAjax.js" />

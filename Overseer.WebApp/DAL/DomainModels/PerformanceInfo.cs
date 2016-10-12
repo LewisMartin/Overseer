@@ -4,21 +4,21 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Overseer.WebApp.DAL.DomainModels
 {
-    [Table("ServiceMonitoring")]
-    public class ServiceMonitor
+    [Table("PerformanceMonitoring")]
+    public class PerformanceInfo
     {
         [Key, ForeignKey("Machine")]
-        [Column(Order = 0)]
         public Guid MachineID { get; set; }
 
-        [Key]
-        [Column(Order = 1)]
-        [StringLength(1)]
-        public string ServiceName { get; set; }
+        public int? CpuUtil { get; set; }
 
-        public string Status { get; set; }
+        public int? TotalProcesses { get; set; }
 
-        public string StartupType { get; set; }
+        public int? TotalThreads { get; set; }
+
+        public int? MemUtil { get; set; }
+
+        public int? MemUsage { get; set; }
 
         // navigation properties
         public Machine Machine { get; set; }

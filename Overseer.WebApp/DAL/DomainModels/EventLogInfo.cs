@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Overseer.WebApp.DAL.DomainModels
 {
     [Table("EventLogMonitoring")]
-    public class EventLogMonitor
+    public class EventLogInfo
     {
         [Key, ForeignKey("Machine")]
         [Column(Order = 0)]

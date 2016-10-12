@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Overseer.WebApp.DAL.DomainModels
 {
     [Table("DiskMonitoring")]
-    public class DiskMonitor
+    public class DiskInfo
     {
         [Key, ForeignKey("Machine")]
         [Column(Order = 0)]

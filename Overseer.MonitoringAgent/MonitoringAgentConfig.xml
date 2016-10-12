@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MonitoringAgentSettings>
+  <TargetMachineSettings>
+    <MachineGUID>19abedee-638d-e611-80c0-902b34380d00</MachineGUID>
+    <MachineSecret>TemporarySecret</MachineSecret>
+  </TargetMachineSettings>
+  <ServerConnectionSettings>
+    <ServerAddress>http://localhost:4356</ServerAddress>
+  </ServerConnectionSettings>
+</MonitoringAgentSettings>

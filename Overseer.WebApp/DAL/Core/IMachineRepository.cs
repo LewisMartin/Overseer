@@ -9,8 +9,14 @@ namespace Overseer.WebApp.DAL.Core
 {
     public interface IMachineRepository : IRepository<Machine>
     {
+        // we need to overload the generic get method here (machines table uses GUID as primary key)
+        Machine Get(Guid machineId);
+
         // get a machine and eager load it's environment
         Machine GetMachineAndParent(Guid machineId);
+
+        // get a machine and eager load it's owner via parent environment property
+        Machine GetMachineAndOwner(Guid machineId);
 
         // get machine by environment Id & machine display name
         Machine GetMachineByEnvironmentAndDisplayName(int environmentId, string displayName);

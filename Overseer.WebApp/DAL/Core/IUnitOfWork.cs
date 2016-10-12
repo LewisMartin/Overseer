@@ -13,6 +13,7 @@ namespace Overseer.WebApp.DAL.Core
         IUserRoleRepository UserRoles { get; set; }
         ITestEnvironmentRepository TestEnvironments { get; set; }
         IMachineRepository Machines { get; set; }
+        IMonitoringAgentCredentialRepository MonitoringAgentCredentials { get; set; }
         IOperatingSystemRepository OperatingSystems { get; set; }
         IDownTimeCategoryRepository DownTimeCategories { get; set; }
         IMonitoringSettingsRepository MonitoringSettings { get; set; }
