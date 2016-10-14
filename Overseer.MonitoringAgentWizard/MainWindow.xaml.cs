@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml;
 
 namespace Overseer.MonitoringAgentWizard
 {
@@ -34,6 +35,10 @@ namespace Overseer.MonitoringAgentWizard
         {
             // disable button
             ConfigureButton.IsEnabled = false;
+            tbMachineGUID.IsEnabled = false;
+            tbServerAddress.IsEnabled = false;
+            tbUserName.IsEnabled = false;
+
             StatusMsg.Content = "Validating with server..";
 
             // form the api url
@@ -44,7 +49,29 @@ namespace Overseer.MonitoringAgentWizard
 
             MonitoringAgentConfigResponse response = JsonConvert.DeserializeObject<MonitoringAgentConfigResponse>(APIResponse);
 
-            StatusMsg.Content = "Result: " + response.Success.ToString() + "\nSecret:" + response.MachineSecret;
+            if (response.Success)
+            {
+                // encrypt using DPAPI & write secret to xml config file
+                bool success = WriteToConfigFile(tbMachineGUID.Text, response.MachineSecret, tbServerAddress.Text);
+
+                if (success)
+                {
+                    StatusMsg.Content = "Configuration completed sucessfully.";
+                }
+                else
+                {
+                    StatusMsg.Content = "Error occured writing configuration to file.";
+                }
+            }
+            else
+            {
+                // some field was wrong - output reason & highlight incorrect fields
+                StatusMsg.Content = "Configuration unsuccessful.";
+            }
+
+            tbMachineGUID.IsEnabled = true;
+            tbServerAddress.IsEnabled = true;
+            tbUserName.IsEnabled = true;
             ConfigureButton.IsEnabled = true;
         }
 
@@ -83,6 +110,36 @@ namespace Overseer.MonitoringAgentWizard
 
                 // return the content of the response as a string
                 return responseString;
+            }
+        }
+
+        // asynchronous method for writing secret to monitoring agent's xml config file
+        private bool WriteToConfigFile(string machineGUID, string machineSecret, string serverAddress)
+        {
+            string configFileLocation = @"C:\MonitoringAgentTest\MonitoringAgentConfig.xml";
+
+            XmlDocument configXml = new XmlDocument();
+
+            try
+            {
+                configXml.Load(configFileLocation);
+
+                XmlNode root = configXml.DocumentElement;
+                XmlNode mGUID = root.SelectSingleNode("descendant::MachineGUID");
+                XmlNode mSecret = root.SelectSingleNode("descendant::MachineSecret");
+                XmlNode sAddress = root.SelectSingleNode("descendant::ServerAddress");
+
+                mGUID.InnerText = machineGUID;
+                mSecret.InnerText = machineSecret;
+                sAddress.InnerText = serverAddress;
+
+                configXml.Save(configFileLocation);
+
+                return true;
+            }
+            catch(Exception e)
+            {
+                return false;
             }
         }
     }
