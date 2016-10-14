@@ -15,7 +15,6 @@ namespace Overseer.WebApp.DAL.DomainModels
         [Required]
         public string MonitoringAgentSecret { get; set; }
 
-        [Required]
         public string MonitoringAgentSecretSalt { get; set; }
 
         // navigation properties

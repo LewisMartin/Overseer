@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Web.Http;
 
 namespace Overseer.WebApp.WebApi
@@ -15,20 +16,35 @@ namespace Overseer.WebApp.WebApi
     {
         // POST: endpoint for authentication & passcode generation for monitoring agent config wizard
         [HttpPost]
-        public MonitoringAgentConfigResponse AuthenticateMonitoringAgentConfiguration([FromBody] string monitoringConfigDetails)
+        public HttpResponseMessage AuthenticateMonitoringAgentConfiguration([FromBody] string monitoringConfigDetails)
         {
             MonitoringAgentConfigRequest monAgentConfigReq = JsonConvert.DeserializeObject<MonitoringAgentConfigRequest>(monitoringConfigDetails);
 
             Machine machine = _unitOfWork.Machines.GetMachineAndOwner(monAgentConfigReq.MachineGuid);
 
+            MonitoringAgentConfigResponse responseDetails;
+
+            string jsonData;
+
+            HttpResponseMessage response;
+
             // validate user's credentials & ensure user is creator of this machine's environment
             if ((!_ValidatePassword(monAgentConfigReq.Username, monAgentConfigReq.Password)) || (machine.TestEnvironment.UserAccount.UserName != monAgentConfigReq.Username))
             {
-                return new MonitoringAgentConfigResponse()
+                responseDetails = new MonitoringAgentConfigResponse()
                 {
                     Success = false,
                     MachineSecret = null
                 };
+
+                jsonData = JsonConvert.SerializeObject(responseDetails);
+
+                response = new HttpResponseMessage()
+                {
+                    Content = new StringContent(jsonData, Encoding.UTF8, "application/json")
+                };
+
+                return response;
             }
 
             // generate a new machine secret
@@ -55,11 +71,20 @@ namespace Overseer.WebApp.WebApi
             _unitOfWork.Save();
 
             // return secret in response
-            return new MonitoringAgentConfigResponse()
+            responseDetails = new MonitoringAgentConfigResponse()
             {
                 Success = true,
                 MachineSecret = newSecret
             };
+
+            jsonData = JsonConvert.SerializeObject(responseDetails);
+
+            response = new HttpResponseMessage()
+            {
+                Content = new StringContent(jsonData, Encoding.UTF8, "application/json")
+            };
+
+            return response;
         }
 
         // this REALLY needs to be moved into a service layer.. LIKE NOW@@@@

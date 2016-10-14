@@ -72,7 +72,7 @@ namespace Overseer.MonitoringAgent
                 // make get request to server for monitoring settings for this machine
                 string apiResponse = GetMonitoringSettingsFromApi(token, Config.AppUri + "/api/MonitoringAgentEndpoint/GetMonitoringScheduleSettings?machineId=" + Config.MachineGuid).Result;
 
-                // convert to a json array object so that we can grab the data inside
+                // convert to 'MonitoringScheduleResponse' object so that we can grab the data inside
                 MonitoringScheduleResponse monitoringSettings = JsonConvert.DeserializeObject<MonitoringScheduleResponse>(apiResponse);
 
                 if (monitoringSettings.MonitoringEnabled)
