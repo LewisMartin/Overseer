@@ -2,6 +2,7 @@
 using Overseer.DTOs.MonitoringConfig;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -33,11 +34,12 @@ namespace Overseer.MonitoringAgentWizard
 
         private async void Configure_Click(object sender, RoutedEventArgs e)
         {
-            // disable button
+            // disable form elements
             ConfigureButton.IsEnabled = false;
             tbMachineGUID.IsEnabled = false;
             tbServerAddress.IsEnabled = false;
             tbUserName.IsEnabled = false;
+            tbPassword.IsEnabled = false;
 
             StatusMsg.Content = "Validating with server..";
 
@@ -47,31 +49,40 @@ namespace Overseer.MonitoringAgentWizard
 
             string APIResponse = await MakeMonitoringConfigRequest(APIUrl, tbMachineGUID.Text, tbUserName.Text, tbPassword.Password);
 
-            MonitoringAgentConfigResponse response = JsonConvert.DeserializeObject<MonitoringAgentConfigResponse>(APIResponse);
-
-            if (response.Success)
+            if (APIResponse != null)
             {
-                // encrypt using DPAPI & write secret to xml config file
-                bool success = WriteToConfigFile(tbMachineGUID.Text, response.MachineSecret, tbServerAddress.Text);
+                MonitoringAgentConfigResponse response = JsonConvert.DeserializeObject<MonitoringAgentConfigResponse>(APIResponse);
 
-                if (success)
+                if (response.Success)
                 {
-                    StatusMsg.Content = "Configuration completed sucessfully.";
+                    // encrypt using DPAPI & write secret to xml config file
+                    bool success = WriteToConfigFile(tbMachineGUID.Text, response.MachineSecret, tbServerAddress.Text);
+
+                    if (success)
+                    {
+                        StatusMsg.Content = "Configuration completed sucessfully.";
+                    }
+                    else
+                    {
+                        StatusMsg.Content = "Error occured writing configuration to file.";
+                    }
                 }
                 else
                 {
-                    StatusMsg.Content = "Error occured writing configuration to file.";
+                    // some field was wrong - output reason & highlight incorrect fields
+                    StatusMsg.Content = "Configuration unsuccessful.";
                 }
             }
             else
             {
-                // some field was wrong - output reason & highlight incorrect fields
-                StatusMsg.Content = "Configuration unsuccessful.";
+                StatusMsg.Content = "Unable to connect to server.";
             }
 
+            // re-enable form elements
             tbMachineGUID.IsEnabled = true;
             tbServerAddress.IsEnabled = true;
             tbUserName.IsEnabled = true;
+            tbPassword.IsEnabled = true;
             ConfigureButton.IsEnabled = true;
         }
 
@@ -79,7 +90,7 @@ namespace Overseer.MonitoringAgentWizard
         private async Task<string> MakeMonitoringConfigRequest(string apiUrl, string machineGUID, string UserName, string Password)
         {
             // wait for a bit to check UI responsiveness
-            await Task.Delay(3000);
+            //await Task.Delay(3000);
 
             // package the user input into our class to be serialized & posted
             MonitoringAgentConfigRequest req = new MonitoringAgentConfigRequest()
@@ -100,27 +111,38 @@ namespace Overseer.MonitoringAgentWizard
 
             using (var httpClient = new HttpClient())
             {
+                string responseString;
+
                 // setting up the http client
                 httpClient.DefaultRequestHeaders.Accept.Clear();
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                // making the request - posting the data
-                HttpResponseMessage response = await httpClient.PostAsync(apiUrl, postContent);
-                string responseString = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    // making the request - posting the data
+                    HttpResponseMessage response = await httpClient.PostAsync(apiUrl, postContent);
+                    response.EnsureSuccessStatusCode(); // this will throw an exception if http response contains an unsuccessful status code
+
+                    responseString = await response.Content.ReadAsStringAsync();
+                }
+                catch (Exception e)
+                {
+                    responseString = null;
+                }
 
                 // return the content of the response as a string
                 return responseString;
             }
         }
 
-        // asynchronous method for writing secret to monitoring agent's xml config file
+        // method for writing secret to monitoring agent's xml config file
         private bool WriteToConfigFile(string machineGUID, string machineSecret, string serverAddress)
         {
             string configFileLocation = @"C:\MonitoringAgentTest\MonitoringAgentConfig.xml";
 
             XmlDocument configXml = new XmlDocument();
 
-            try
+            if(File.Exists(configFileLocation))
             {
                 configXml.Load(configFileLocation);
 
@@ -137,7 +159,7 @@ namespace Overseer.MonitoringAgentWizard
 
                 return true;
             }
-            catch(Exception e)
+            else
             {
                 return false;
             }

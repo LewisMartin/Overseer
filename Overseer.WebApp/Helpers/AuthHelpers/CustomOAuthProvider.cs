@@ -28,11 +28,11 @@ namespace Overseer.WebApp.Helpers.AuthHelpers
             string machineSecret;
             context.TryGetFormCredentials(out machineGUID, out machineSecret);
 
-            Machine targetMachine = _unitOfWork.Machines.Get(new Guid(machineGUID));
+            MonitoringAgentCredential targetMachineCred = _unitOfWork.MonitoringAgentCredentials.Get(new Guid(machineGUID));
 
-            if (targetMachine != null)
+            if (targetMachineCred != null)
             {
-                if (machineSecret == "TemporarySecret")
+                if (machineSecret == targetMachineCred.MonitoringAgentSecret)
                 {
                     context.Validated(machineGUID);
                 }

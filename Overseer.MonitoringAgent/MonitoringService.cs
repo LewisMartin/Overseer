@@ -22,8 +22,8 @@ namespace Overseer.MonitoringAgent
     {
         string logFilePath;
         Timer MonitoringUpdateSchedular;
-        string token;
         MonAgentConfig Config;
+        ServerCommunicator Server;
 
         public MonitoringService()
         {
@@ -32,7 +32,7 @@ namespace Overseer.MonitoringAgent
             InitializeComponent();
         }
 
-        protected override void OnStart(string[] args)
+        protected async override void OnStart(string[] args)
         {
             System.Diagnostics.Debugger.Launch();
 
@@ -41,16 +41,12 @@ namespace Overseer.MonitoringAgent
             Config = new MonAgentConfig(ConfigurationManager.AppSettings["ConfigFileLocation"]);
             Config.LoadConfig();
 
-            // get credentials for token request
-            //Config.MachineGuid = ConfigurationManager.AppSettings["machineGUID"];
-            //Config.MachineSecret = ConfigurationManager.AppSettings["machineSecret"];
-
-            TempLogger("Requesting Bearer Token.");
+            Server = new ServerCommunicator(Config.AppUri, Config.MachineGuid, Config.MachineSecret);
 
             // request bearer token
-            token = RequestBearerToken(Config.MachineGuid, Config.MachineSecret, Config.AppUri).Result;
-
-            TempLogger("Token: " + token);
+            TempLogger("Requesting Bearer Token.");
+            await Server.RequestBearerToken();
+            TempLogger("Token: " + Server.token);
 
             // begin scheduling
             ScheduleMonitoringUpdate();
@@ -70,7 +66,7 @@ namespace Overseer.MonitoringAgent
             try
             {
                 // make get request to server for monitoring settings for this machine
-                string apiResponse = GetMonitoringSettingsFromApi(token, Config.AppUri + "/api/MonitoringAgentEndpoint/GetMonitoringScheduleSettings?machineId=" + Config.MachineGuid).Result;
+                string apiResponse = Server.GetMonitoringSettingsFromApi().Result;
 
                 // convert to 'MonitoringScheduleResponse' object so that we can grab the data inside
                 MonitoringScheduleResponse monitoringSettings = JsonConvert.DeserializeObject<MonitoringScheduleResponse>(apiResponse);
@@ -135,55 +131,6 @@ namespace Overseer.MonitoringAgent
             ScheduleMonitoringUpdate();
         }
 
-        // method to request bearer token
-        private async Task<string> RequestBearerToken(string cliId, string cliSecret, string appUri)
-        {
-            using (var httpClient = new HttpClient())
-            {
-                // setting up the http client
-                httpClient.BaseAddress = new Uri(appUri);
-                httpClient.DefaultRequestHeaders.Accept.Clear();
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                // setting the form content of the request
-                var reqFormContent = new FormUrlEncodedContent(new[] {
-                    new KeyValuePair<string, string>("grant_type", "client_credentials"),
-                    new KeyValuePair<string, string>("client_id", cliId),
-                    new KeyValuePair<string, string>("client_secret", cliSecret)
-                });
-
-                // initiate the request
-                HttpResponseMessage response = await httpClient.PostAsync("/Token", reqFormContent);
-
-                // get bearer token from the body of the response
-                var responseJson = await response.Content.ReadAsStringAsync();
-                var jObject = JObject.Parse(responseJson);
-                string bearerToken = jObject.GetValue("access_token").ToString();
-
-                // return the bearer token
-                return bearerToken;
-            }
-        }
-
-        // get monitoring settings from api
-        private static async Task<string> GetMonitoringSettingsFromApi(string token, string apiUrl)
-        {
-            using (var httpClient = new HttpClient())
-            {
-                // setting up the http client
-                httpClient.DefaultRequestHeaders.Accept.Clear();
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                httpClient.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
-
-                // making the request
-                HttpResponseMessage response = await httpClient.GetAsync(apiUrl);
-                string responseString = await response.Content.ReadAsStringAsync();
-
-                // return the content of the response as a string
-                return responseString;
-            }
-        }
-
         // temporary logging method
         private void TempLogger(string msg)
         {
@@ -196,12 +143,11 @@ namespace Overseer.MonitoringAgent
                 }
 
                 sw.WriteLine(DateTime.Now + " | " + msg);
-
                 sw.Close();
             }
         }
 
-        // stop he service
+        // stop the service
         private void StopService()
         {
             TempLogger("Stopping Service.");

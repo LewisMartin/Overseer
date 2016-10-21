@@ -54,7 +54,8 @@
     <Compile Include="..\Overseer.MonitoringDTOs\MonitoringAgentDTOs.cs">
       <Link>DTOs\MonitoringAgentDTOs.cs</Link>
     </Compile>
-    <Compile Include="MonAgentConfig.cs" />
+    <Compile Include="Classes\MonAgentConfig.cs" />
+    <Compile Include="Classes\ServerCommunicator.cs" />
     <Compile Include="MonitoringService.cs">
       <SubType>Component</SubType>
     </Compile>

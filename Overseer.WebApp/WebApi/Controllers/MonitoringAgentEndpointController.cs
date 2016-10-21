@@ -47,6 +47,14 @@ namespace Overseer.WebApp.WebApi
         // GET: get the monitoring settings for particular machine
         
         // POST: endpoint for posting monitoring data to
+        [HttpPost]
+        public HttpResponseMessage SubmitMonitoringData([FromBody] string monitoringData)
+        {
+            return new HttpResponseMessage()
+            {
+                Content = new StringContent("Monitoring data submitted!")
+            };
+        }
 
         // POST: Test posting of data
         [HttpPost]
