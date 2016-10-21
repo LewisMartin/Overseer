@@ -54,8 +54,16 @@
     <Compile Include="..\Overseer.MonitoringDTOs\MonitoringAgentDTOs.cs">
       <Link>DTOs\MonitoringAgentDTOs.cs</Link>
     </Compile>
-    <Compile Include="Classes\MonAgentConfig.cs" />
-    <Compile Include="Classes\ServerCommunicator.cs" />
+    <Compile Include="Classes\MonitoringClasses\DiskMonitor.cs" />
+    <Compile Include="Classes\MonitoringClasses\EventLogMonitor.cs" />
+    <Compile Include="Classes\MonitoringClasses\IMonitorable.cs" />
+    <Compile Include="Classes\Helpers\MonAgentConfig.cs" />
+    <Compile Include="Classes\Helpers\ServerCommunicator.cs" />
+    <Compile Include="Classes\MonitoringClasses\OverseerMonitor.cs" />
+    <Compile Include="Classes\MonitoringClasses\PerformanceMonitor.cs" />
+    <Compile Include="Classes\MonitoringClasses\ProcessMonitor.cs" />
+    <Compile Include="Classes\MonitoringClasses\ServiceMonitor.cs" />
+    <Compile Include="Classes\MonitoringClasses\SystemInformationMonitor.cs" />
     <Compile Include="MonitoringService.cs">
       <SubType>Component</SubType>
     </Compile>

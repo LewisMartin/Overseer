@@ -15,6 +15,7 @@ using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Overseer.DTOs.MonitoringAgent;
+using Overseer.MonitoringAgent.MonitoringClasses;
 
 namespace Overseer.MonitoringAgent
 {
@@ -24,6 +25,7 @@ namespace Overseer.MonitoringAgent
         Timer MonitoringUpdateSchedular;
         MonAgentConfig Config;
         ServerCommunicator Server;
+        OverseerMonitor OverSeer;
 
         public MonitoringService()
         {
