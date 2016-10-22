@@ -50,6 +50,9 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
             EventLogMon.Snapshot();
             ServiceMon.Snapshot();
             ProcessMon.Snapshot();
+
+            _Logger.Log("Verifying obtained data..");
+            SysInfoMon.DataCheck();
         }
     }
 }
