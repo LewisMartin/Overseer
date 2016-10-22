@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Overseer.MonitoringAgent.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,16 +7,18 @@ using System.Threading.Tasks;
 
 namespace Overseer.MonitoringAgent.MonitoringClasses
 {
-    class ServiceMonitor : IMonitorable
+    public class ServiceMonitor : IMonitorable
     {
+        private Logger _Logger;
+
         public ServiceMonitor()
         {
-            // constructor
+            _Logger = Logger.Instance();
         }
 
         public void Snapshot()
         {
-            throw new NotImplementedException();
+            _Logger.Log("Snapshot successful for: Services");
         }
     }
 }

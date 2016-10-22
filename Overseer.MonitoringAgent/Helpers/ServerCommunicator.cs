@@ -7,7 +7,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Overseer.MonitoringAgent
+namespace Overseer.MonitoringAgent.Helpers
 {
     class ServerCommunicator
     {
@@ -17,6 +17,7 @@ namespace Overseer.MonitoringAgent
         public string MachineGuid { get; set; }
         public string MachineSecret { get; set; }
         public string token { get; set; }
+        private Logger _Logger;
 
         // constructor
         public ServerCommunicator(string serverAddress, string machineGuid, string machineSecret)
@@ -27,11 +28,15 @@ namespace Overseer.MonitoringAgent
             OverseerAuthEndpoint = serverAddress;
             OverseerMonitoringSettingsEndpoint = serverAddress + "/api/MonitoringAgentEndpoint/GetMonitoringScheduleSettings?machineId=" + MachineGuid;
             OverseerMonitoringDataEndpoint = serverAddress + "/api/SubmitMonitoringData";
+
+            _Logger = Logger.Instance();
         }
 
         // method to request bearer token
         public async Task RequestBearerToken()
         {
+            _Logger.Log("Requesting Bearer Token..");
+
             using (var httpClient = new HttpClient())
             {
                 // setting up the http client
@@ -56,11 +61,15 @@ namespace Overseer.MonitoringAgent
 
                 token = bearerToken;
             }
+
+            _Logger.Log("Token: " + token);
         }
 
         // get monitoring settings from api
         public async Task<string> GetMonitoringSettingsFromApi()
         {
+            _Logger.Log("Requesting Monitoring Settings..");
+
             using (var httpClient = new HttpClient())
             {
                 // setting up the http client

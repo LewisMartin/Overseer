@@ -1,36 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Configuration;
 using System.ServiceProcess;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Overseer.DTOs.MonitoringAgent;
 using Overseer.MonitoringAgent.MonitoringClasses;
+using Overseer.MonitoringAgent.Helpers;
 
 namespace Overseer.MonitoringAgent
 {
     partial class MonitoringService : ServiceBase
     {
-        string logFilePath;
-        Timer MonitoringUpdateSchedular;
-        MonAgentConfig Config;
-        ServerCommunicator Server;
-        OverseerMonitor OverSeer;
+        private Timer MonitoringUpdateSchedular;
+        private MonAgentConfig Config;
+        private ServerCommunicator Server;
+        private OverseerMonitor Overseer;
+        private Logger _Logger;
 
         public MonitoringService()
         {
-            logFilePath = @"C:\MonitoringAgentTest\Log.txt";
-
             InitializeComponent();
         }
 
@@ -38,17 +27,19 @@ namespace Overseer.MonitoringAgent
         {
             System.Diagnostics.Debugger.Launch();
 
-            TempLogger("About to read from app.config..");
+            _Logger = Logger.Instance();
+
+            _Logger.Log("About to read from app.config..");
 
             Config = new MonAgentConfig(ConfigurationManager.AppSettings["ConfigFileLocation"]);
             Config.LoadConfig();
 
             Server = new ServerCommunicator(Config.AppUri, Config.MachineGuid, Config.MachineSecret);
 
+            Overseer = new OverseerMonitor();
+
             // request bearer token
-            TempLogger("Requesting Bearer Token.");
             await Server.RequestBearerToken();
-            TempLogger("Token: " + Server.token);
 
             // begin scheduling
             ScheduleMonitoringUpdate();
@@ -56,7 +47,7 @@ namespace Overseer.MonitoringAgent
 
         protected override void OnStop()
         {
-            TempLogger("Service Stopped.");
+            _Logger.Log("The service is stopping.");
             this.MonitoringUpdateSchedular.Dispose();
         }
 
@@ -75,50 +66,50 @@ namespace Overseer.MonitoringAgent
 
                 if (monitoringSettings.MonitoringEnabled)
                 {
-                    TempLogger("Monitoring currently enabled.");
+                    _Logger.Log("Monitoring currently enabled.");
 
                     DateTime scheduledTimeUtc = monitoringSettings.NextScheduledUpdate;
 
-                    TempLogger("Next Scheduled time (UTC): " + scheduledTimeUtc);
+                    _Logger.Log("Next Scheduled time (UTC): " + scheduledTimeUtc);
                     DateTime scheduledTimeLocal = scheduledTimeUtc.ToLocalTime();
-                    TempLogger("Next Scheduled time (Local): " + scheduledTimeLocal);
+                    _Logger.Log("Next Scheduled time (Local): " + scheduledTimeLocal);
                     DateTime currentTime = DateTime.Now;
-                    TempLogger("Current Time (Local): " + currentTime);
+                    _Logger.Log("Current Time (Local): " + currentTime);
 
                     TimeSpan timeDifference = scheduledTimeLocal - currentTime;
                     int nextUpdateDue = (int)timeDifference.TotalMilliseconds;
 
-                    TempLogger("Milliseconds to next update: " + nextUpdateDue);
+                    _Logger.Log("Milliseconds to next update: " + nextUpdateDue);
 
                     if (nextUpdateDue <= 0)
                     {
                         // we've taken too long - need to get the next schedule time
-                        TempLogger("Update opportunity expired, rescheduling from server..");
+                        _Logger.Log("Update opportunity expired, rescheduling from server..");
                         ScheduleMonitoringUpdate();
                     }
                     else if (nextUpdateDue > 3600000)
                     {
                         // log the exception here using logger class
-                        TempLogger("Error during timer scheduling.");
+                        _Logger.Log("Error during timer scheduling.");
                         StopService();
                     }
                     else
                     {
                         // update the timer with the next duetime
-                        TempLogger("Starting countdown timer to update..");
+                        _Logger.Log("Starting countdown timer to update..");
                         MonitoringUpdateSchedular.Change(nextUpdateDue, Timeout.Infinite);
                     }
                 }
                 else
                 {
-                    TempLogger("Monitoring not enabled at environment level for this machine.");
+                    _Logger.Log("Monitoring not enabled at environment level for this machine.");
                     StopService();
                 }
             }
             catch (Exception e)
             {
                 // log the exception here using logger class
-                TempLogger("Error during timer scheduling: " + e.Message);
+                _Logger.Log("Error during timer scheduling: " + e.Message);
                 StopService();
             }
         }
@@ -127,32 +118,21 @@ namespace Overseer.MonitoringAgent
         private void MonitoringUpdate(Object e)
         {
             // output somethnig to log for testing purposes
-            TempLogger("~~~ Monitoring Update Executed Successfully ~~~");
+            _Logger.Log("~~~ Monitoring Update Beginning ~~~");
+
+            Overseer.Snapshot();
+
+            // output somethnig to log for testing purposes
+            _Logger.Log("~~~ Monitoring Update Executed Successfully ~~~");
 
             // reschedule for next update
             ScheduleMonitoringUpdate();
         }
 
-        // temporary logging method
-        private void TempLogger(string msg)
-        {
-            using (StreamWriter sw = new StreamWriter(logFilePath, true))
-            {
-                if (!File.Exists(logFilePath))
-                {
-                    File.Create(logFilePath);
-                    sw.WriteLine(DateTime.Now + " | Log file created.");
-                }
-
-                sw.WriteLine(DateTime.Now + " | " + msg);
-                sw.Close();
-            }
-        }
-
         // stop the service
         private void StopService()
         {
-            TempLogger("Stopping Service.");
+            _Logger.Log("Stopping Service.");
             ServiceController thisService = new ServiceController("OverseerMonitoringAgent");
             thisService.Stop();
         }

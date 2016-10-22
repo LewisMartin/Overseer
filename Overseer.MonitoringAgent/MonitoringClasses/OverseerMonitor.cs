@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Overseer.MonitoringAgent.Helpers;
 
 namespace Overseer.MonitoringAgent.MonitoringClasses
 {
-    class OverseerMonitor : IMonitorable
+    public class OverseerMonitor : IMonitorable
     {
         public SystemInformationMonitor SysInfoMon;
         public PerformanceMonitor PerfMon;
@@ -16,6 +17,7 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
         public EventLogMonitor EventLogMon;
         public ServiceMonitor ServiceMon;
         public ProcessMonitor ProcessMon;
+        private Logger _Logger;
 
         public OverseerMonitor()
         {
@@ -26,6 +28,8 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
             EventLogMon = new EventLogMonitor();
             ServiceMon = new ServiceMonitor();
             ProcessMon = new ProcessMonitor();
+
+            _Logger = Logger.Instance();
         }
 
         public MonitoringDataRequest GenerateMonitoringDataDTO()
@@ -38,6 +42,8 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
 
         public void Snapshot()
         {
+            _Logger.Log("Taking snapshot of current system state..");
+
             SysInfoMon.Snapshot();
             PerfMon.Snapshot();
             DiskMon.Snapshot();

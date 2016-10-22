@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace Overseer.MonitoringAgent
+namespace Overseer.MonitoringAgent.Helpers
 {
     public class MonAgentConfig
     {
