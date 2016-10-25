@@ -32,6 +32,7 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
             _Logger = Logger.Instance();
         }
 
+        // consider moving this to a 'monitoring mapper' object
         public MonitoringDataRequest GenerateMonitoringDataDTO()
         {
             return new MonitoringDataRequest()
@@ -53,6 +54,7 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
 
             _Logger.Log("Verifying obtained data..");
             SysInfoMon.DataCheck();
+            DiskMon.DataCheck();
         }
     }
 }
