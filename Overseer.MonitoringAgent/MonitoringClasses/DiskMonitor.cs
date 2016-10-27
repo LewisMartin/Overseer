@@ -13,7 +13,7 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
         private Logger _Logger;
 
         // handy .net class we can use to store our drive information
-        public List<DriveInfo> Drives;
+        public List<DriveInfo> Drives { get; set; }
 
         public DiskMonitor()
         {

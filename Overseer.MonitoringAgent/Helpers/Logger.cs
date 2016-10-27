@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Overseer.MonitoringAgent.Helpers
@@ -41,7 +42,7 @@ namespace Overseer.MonitoringAgent.Helpers
                         sw.WriteLine(DateTime.Now + " | Log file created.");
                     }
 
-                    sw.WriteLine(DateTime.Now + " | " + msg);
+                    sw.WriteLine(DateTime.Now + " | " + msg + " | " + Thread.CurrentThread.ManagedThreadId);
                     sw.Close();
                 }
             }

@@ -54,6 +54,7 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
 
             _Logger.Log("Verifying obtained data..");
             SysInfoMon.DataCheck();
+            PerfMon.DataCheck();
             DiskMon.DataCheck();
         }
     }
