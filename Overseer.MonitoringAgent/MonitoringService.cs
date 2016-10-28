@@ -15,7 +15,7 @@ namespace Overseer.MonitoringAgent
         private Timer MonitoringUpdateSchedular;
         private MonAgentConfig Config;
         private ServerCommunicator Server;
-        private OverseerMonitor Overseer;
+        private SystemMonitoring SysMonitoring;
         private Logger _Logger;
 
         public MonitoringService()
@@ -36,10 +36,10 @@ namespace Overseer.MonitoringAgent
 
             Server = new ServerCommunicator(Config.AppUri, Config.MachineGuid, Config.MachineSecret);
 
-            Overseer = new OverseerMonitor();
-
             // request bearer token
             await Server.RequestBearerToken();
+
+            SysMonitoring = new SystemMonitoring();
 
             // begin scheduling
             ScheduleMonitoringUpdate();
@@ -115,15 +115,24 @@ namespace Overseer.MonitoringAgent
         }
 
         // get monitoring info, package & send
-        private void MonitoringUpdate(Object e)
+        private async void MonitoringUpdate(Object e)
         {
-            // output somethnig to log for testing purposes
             _Logger.Log("~~~ Monitoring Update Beginning ~~~");
 
-            Overseer.Snapshot();
+            SysMonitoring.TakeSnapshot();
 
-            // output somethnig to log for testing purposes
             _Logger.Log("~~~ Monitoring Update Executed Successfully ~~~");
+
+            _Logger.Log("Attempting monitoring data submission..");
+
+            try
+            {
+                _Logger.Log(await Server.SubmitMonitoringData(SysMonitoring.GenerateMonitoringDataDTO()));
+            }
+            catch (Exception serverEx)
+            {
+                _Logger.Log("Error Occured whilst submitting monitoring data: " + serverEx.Message);
+            }
 
             // reschedule for next update
             ScheduleMonitoringUpdate();

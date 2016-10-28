@@ -61,7 +61,7 @@
     <Compile Include="MonitoringClasses\IMonitorable.cs" />
     <Compile Include="Helpers\MonAgentConfig.cs" />
     <Compile Include="Helpers\ServerCommunicator.cs" />
-    <Compile Include="MonitoringClasses\OverseerMonitor.cs" />
+    <Compile Include="MonitoringClasses\SystemMonitoring.cs" />
     <Compile Include="MonitoringClasses\PerformanceMonitor.cs" />
     <Compile Include="MonitoringClasses\ProcessMonitor.cs" />
     <Compile Include="MonitoringClasses\ServiceMonitor.cs" />

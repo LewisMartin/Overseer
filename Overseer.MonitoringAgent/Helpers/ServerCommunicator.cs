@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Overseer.DTOs.MonitoringAgent;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +19,7 @@ namespace Overseer.MonitoringAgent.Helpers
         public string MachineGuid { get; set; }
         public string MachineSecret { get; set; }
         public string token { get; set; }
+
         private Logger _Logger;
 
         // constructor
@@ -27,7 +30,7 @@ namespace Overseer.MonitoringAgent.Helpers
 
             OverseerAuthEndpoint = serverAddress;
             OverseerMonitoringSettingsEndpoint = serverAddress + "/api/MonitoringAgentEndpoint/GetMonitoringScheduleSettings?machineId=" + MachineGuid;
-            OverseerMonitoringDataEndpoint = serverAddress + "/api/SubmitMonitoringData";
+            OverseerMonitoringDataEndpoint = serverAddress + "/api/MonitoringAgentEndpoint/SubmitMonitoringData";
 
             _Logger = Logger.Instance();
         }
@@ -65,7 +68,7 @@ namespace Overseer.MonitoringAgent.Helpers
             _Logger.Log("Token: " + token);
         }
 
-        // get monitoring settings from api
+        // GET monitoring settings from api
         public async Task<string> GetMonitoringSettingsFromApi()
         {
             _Logger.Log("Requesting Monitoring Settings..");
@@ -79,6 +82,34 @@ namespace Overseer.MonitoringAgent.Helpers
 
                 // making the request
                 HttpResponseMessage response = await httpClient.GetAsync(OverseerMonitoringSettingsEndpoint);
+                string responseString = await response.Content.ReadAsStringAsync();
+
+                // return the content of the response as a string
+                return responseString;
+            }
+        }
+
+        // POST monitoring data to api
+        public async Task<string> SubmitMonitoringData(MonitoringData monData)
+        {
+            // serializing monitoring data to json string
+            string jsonData = string.Format("={0}", JsonConvert.SerializeObject(monData));
+
+            // forming the content of the psot request
+            var postContent = new StringContent(
+                jsonData,
+                Encoding.UTF8,
+                "application/x-www-form-urlencoded");
+
+            using (var httpClient = new HttpClient())
+            {
+                // setting up the http client
+                httpClient.DefaultRequestHeaders.Accept.Clear();
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                httpClient.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
+
+                // making the request - posting the data
+                HttpResponseMessage response = await httpClient.PostAsync(OverseerMonitoringDataEndpoint, postContent);
                 string responseString = await response.Content.ReadAsStringAsync();
 
                 // return the content of the response as a string

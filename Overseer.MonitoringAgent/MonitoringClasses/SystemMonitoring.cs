@@ -9,17 +9,17 @@ using Overseer.MonitoringAgent.Helpers;
 
 namespace Overseer.MonitoringAgent.MonitoringClasses
 {
-    public class OverseerMonitor : IMonitorable
+    public class SystemMonitoring
     {
-        public SystemInformationMonitor SysInfoMon;
-        public PerformanceMonitor PerfMon;
-        public DiskMonitor DiskMon;
-        public EventLogMonitor EventLogMon;
-        public ServiceMonitor ServiceMon;
-        public ProcessMonitor ProcessMon;
         private Logger _Logger;
+        private SystemInformationMonitor SysInfoMon;
+        private PerformanceMonitor PerfMon;
+        private DiskMonitor DiskMon;
+        private EventLogMonitor EventLogMon;
+        private ServiceMonitor ServiceMon;
+        private ProcessMonitor ProcessMon;
 
-        public OverseerMonitor()
+        public SystemMonitoring()
         {
             // constructor - could pass initial settings to each monitoring component here..
             SysInfoMon = new SystemInformationMonitor();
@@ -32,16 +32,7 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
             _Logger = Logger.Instance();
         }
 
-        // consider moving this to a 'monitoring mapper' object
-        public MonitoringDataRequest GenerateMonitoringDataDTO()
-        {
-            return new MonitoringDataRequest()
-            {
-
-            };
-        }
-
-        public void Snapshot()
+        public void TakeSnapshot()
         {
             _Logger.Log("Taking snapshot of current system state..");
 
@@ -56,6 +47,20 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
             SysInfoMon.DataCheck();
             PerfMon.DataCheck();
             DiskMon.DataCheck();
+        }
+
+        // consider moving this to a 'monitoring mapper' object
+        public MonitoringData GenerateMonitoringDataDTO()
+        {
+            return new MonitoringData()
+            {
+                SystemInfo = SysInfoMon.GetDTO(),
+                PerformanceInfo = PerfMon.GetDTO(),
+                DiskInfo = DiskMon.GetDTO(),
+                EventLogInfo = EventLogMon.GetDTO(),
+                ServiceInfo = ServiceMon.GetDTO(),
+                ProcessInfo = ProcessMon.GetDTO()
+            };
         }
     }
 }

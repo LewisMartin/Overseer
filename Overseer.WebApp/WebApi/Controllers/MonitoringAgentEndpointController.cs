@@ -50,9 +50,11 @@ namespace Overseer.WebApp.WebApi
         [HttpPost]
         public HttpResponseMessage SubmitMonitoringData([FromBody] string monitoringData)
         {
+            MonitoringData monData = JsonConvert.DeserializeObject<MonitoringData>(monitoringData);
+
             return new HttpResponseMessage()
             {
-                Content = new StringContent("Monitoring data submitted!")
+                Content = new StringContent("Monitoring data submitted for: " + monData.SystemInfo.MachineName)
             };
         }
 

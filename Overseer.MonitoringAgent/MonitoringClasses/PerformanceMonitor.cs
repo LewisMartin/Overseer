@@ -6,18 +6,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Threading;
+using Overseer.DTOs.MonitoringAgent;
 
 namespace Overseer.MonitoringAgent.MonitoringClasses
 {
-    public class PerformanceMonitor : IMonitorable
+    public class PerformanceMonitor : IMonitorable<PerformanceInformation>
     {
-        public int TotalNumProcesses { get; set; }
-        public float AvgCpuUtil { get; set; }
-        public float AvgMemUtil { get; set; }
-        public float HighCpuUtilIndicator { get; set; }
-        public float HighMemUtilIndicator { get; set; }
-
         private Logger _Logger;
+
+        private PerformanceInformation _PerformanceInfo;
 
         private readonly Object _Lock_CpuHighUtilCounter = new Object();
         private readonly Object _Lock_MemHighUtilCounter = new Object();
@@ -40,9 +37,11 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
 
         public void Snapshot()
         {
+            _PerformanceInfo = new PerformanceInformation();
+
             Process[] AllProcesses = Process.GetProcesses();
 
-            TotalNumProcesses = AllProcesses.Count();
+            _PerformanceInfo.TotalNumProcesses = AllProcesses.Count();
 
             SnapshotCpu();
             SnapshotMem();
@@ -55,12 +54,17 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
         public void DataCheck()
         {
             _Logger.Log("------- PERFORMANCE INFO -------");
-            _Logger.Log("Number of processes: " + TotalNumProcesses);
-            _Logger.Log("Avg CPU Usage: " + AvgCpuUtil + "%");
-            _Logger.Log("High CPU Usage: " + HighCpuUtilIndicator + "%");
-            _Logger.Log("Avg MEM Usage: " + AvgMemUtil + "%");
-            _Logger.Log("High MEM Usage: " + HighMemUtilIndicator + "%");
+            _Logger.Log("Number of processes: " + _PerformanceInfo.TotalNumProcesses);
+            _Logger.Log("Avg CPU Usage: " + _PerformanceInfo.AvgCpuUtil + "%");
+            _Logger.Log("High CPU Usage: " + _PerformanceInfo.HighCpuUtilIndicator + "%");
+            _Logger.Log("Avg MEM Usage: " + _PerformanceInfo.AvgMemUtil + "%");
+            _Logger.Log("High MEM Usage: " + _PerformanceInfo.HighMemUtilIndicator + "%");
             _Logger.Log("---------------------------------");
+        }
+
+        public PerformanceInformation GetDTO()
+        {
+            return _PerformanceInfo;
         }
 
         private void BeginMonitoring()
@@ -77,14 +81,15 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
 
         private void CpuMonitoring()
         {
+            _Logger.Log("Starting cpu monitoring..");
+
             while (true)
             {
                 lock (_CpuReadings)
                 {
                     _CpuReadings.Add(_CpuUtilCounter.NextValue());
-                    _Logger.Log("Cpu reading taken.");
 
-                    if ((_CpuReadings[_CpuReadings.Count() - 1]) >= 10)
+                    if ((_CpuReadings[_CpuReadings.Count() - 1]) >= 80)
                     {
                         lock (_Lock_CpuHighUtilCounter)
                         {
@@ -99,14 +104,15 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
 
         private void MemMonitoring()
         {
+            _Logger.Log("Starting memory monitoring..");
+
             while (true)
             {
                 lock (_MemReadings)
                 {
                     _MemReadings.Add(_MemUtilCounter.NextValue());
-                    _Logger.Log("Mem reading taken.");
 
-                    if ((_MemReadings[_MemReadings.Count() - 1]) >= 10)
+                    if ((_MemReadings[_MemReadings.Count() - 1]) >= 80)
                     {
                         lock (_Lock_MemHighUtilCounter)
                         {
@@ -150,7 +156,7 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
                 total += cpuReading;
             }
 
-            AvgCpuUtil = total / (_CpuReadings.Count());
+            _PerformanceInfo.AvgCpuUtil = total / (_CpuReadings.Count());
         }
 
         private void CalcAvgMemUtil()
@@ -162,17 +168,17 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
                 total += memReading;
             }
 
-            AvgMemUtil = total / (_MemReadings.Count());
+            _PerformanceInfo.AvgMemUtil = total / (_MemReadings.Count());
         }
 
         private void CalcHighCpuUsage()
         {
-            HighCpuUtilIndicator = ((float)_CpuHighUtilCounter / (float)_CpuReadings.Count()) * 100;
+            _PerformanceInfo.HighCpuUtilIndicator = ((float)_CpuHighUtilCounter / (float)_CpuReadings.Count()) * 100;
         }
 
         private void CalcHighMemUsage()
         {
-            HighMemUtilIndicator = ((float)_MemHighUtilCounter / (float)_MemReadings.Count()) * 100;
+            _PerformanceInfo.HighMemUtilIndicator = ((float)_MemHighUtilCounter / (float)_MemReadings.Count()) * 100;
         }
 
         private void ResetReadings()
