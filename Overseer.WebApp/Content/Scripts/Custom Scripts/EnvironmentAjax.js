@@ -2,8 +2,6 @@
     $('form').submit(function () {
         var form = $('form').data('ajax');
 
-        window.alert(form);
-
         var formReset;
         var successMsg;
         var errorMsg;
