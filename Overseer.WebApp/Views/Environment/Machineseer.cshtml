@@ -13,19 +13,64 @@
 <div id="Page-Content">
     <section>
         <div class="content-area">
+            <h3>Basic Info</h3>
             <ul>
                 <li>GUID: @Model.MachineId</li>
                 <li>Display Name: @Model.MachineDetails.DisplayName</li>
                 <li>Environment: @Model.MachineDetails.ParentEnvironmentName</li>
-                <li>Machine Name: @Model.MachineDetails.MachineName</li>
-                <li>IPV4 Address: @Model.MachineDetails.IpAddress</li>
-                <li>FQDN: @Model.MachineDetails.FQDN</li>
-                <li>OS: @Model.MachineDetails.OperatingSysName</li>
-                <li>OS Bitness: @Model.MachineDetails.OperatingSysBitness</li>
-                <li>Processor Cores: @Model.MachineDetails.NumProcessors</li>
-                <li>Total Memory (GBs): @Model.MachineDetails.TotalMemGbs</li>
             </ul>
         </div>
+        @if (!Model.MonitoringEnabled)
+        {
+            <div class="content-area">
+                <h3>System Info (Manual)</h3>
+                <ul>
+                    <li>Machine Name: @Model.MachineDetails.MachineName</li>
+                    <li>IPV4 Address: @Model.MachineDetails.IpAddress</li>
+                    <li>FQDN: @Model.MachineDetails.FQDN</li>
+                    <li>OS: @Model.MachineDetails.OperatingSysName</li>
+                    <li>OS Bitness: @Model.MachineDetails.OperatingSysBitness</li>
+                    <li>Processor Cores: @Model.MachineDetails.NumProcessors</li>
+                    <li>Total Memory (GBs): @Model.MachineDetails.TotalMemGbs</li>
+                </ul>
+            </div>
+        }
+        else
+        {
+            <div class="content-area">
+                <h3>System Info (Monitoring)</h3>
+                <ul>
+                    <li>Machine Name: @Model.MonitoringData.SystemInfo.MachineName</li>
+                    <li>IPV4 Address: @Model.MonitoringData.SystemInfo.IPAddress</li>
+                    <li>OS: @Model.MonitoringData.SystemInfo.OSNameFriendly</li>
+                    <li>OS Version: @Model.MonitoringData.SystemInfo.OSName</li>
+                    <li>OS Bitness: @Model.MonitoringData.SystemInfo.OSBitness</li>
+                    <li>Processor Cores: @Model.MonitoringData.SystemInfo.ProcessorCount</li>
+                    <li>Total Memory (GBs): @Model.MonitoringData.SystemInfo.TotalMem</li>
+                </ul>
+            </div>
+            <div class="content-area">
+                <h3>Performance Monitoring</h3>
+                <ul>
+                    <li>Avg Cpu Util: @Model.MonitoringData.PerformanceInfo.AvgCpuUtil High Cpu Util: @Model.MonitoringData.PerformanceInfo.HighCpuUtilIndicator</li>
+                    <li>Total processes running: @Model.MonitoringData.PerformanceInfo.TotalNumProcesses</li>
+                    <li>Avg Cpu Util: @Model.MonitoringData.PerformanceInfo.AvgMemUtil High Cpu Util: @Model.MonitoringData.PerformanceInfo.HighMemUtilIndicator</li>
+                </ul>
+            </div>
+            <div class="content-area">
+                <h3>Disk Monitoring</h3>
+                @foreach (var drive in Model.MonitoringData.DiskInfo.Drives)
+                {
+                    <h4>@drive.Name (@drive.VolumeLabel)</h4>
+                    <ul>
+                        <li>Drive type: @drive.DriveType</li>
+                        <li>Drive format: @drive.DriveFormat</li>
+                        <li>Total space: @drive.TotalSpace</li>
+                        <li>Free space: @drive.FreeSpace</li>
+                    </ul>
+                }
+            </div>
+        }
     </section>
 </div>
 

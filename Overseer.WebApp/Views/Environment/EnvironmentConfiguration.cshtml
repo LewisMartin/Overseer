@@ -1,10 +1,7 @@
 ﻿@model Overseer.WebApp.ViewModels.Environment.EnvironmentConfigurationViewModel
 @section AdditionalScripts
 {
-    <script src="@Url.Content("~/Content/Scripts/jquery.validate.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Content/Scripts/jquery.validate.unobtrusive.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Content/Scripts/Custom Scripts/NewToggleField.js")"></script>
-    <script src="@Url.Content("~/Content/Scripts/Custom Scripts/EnvironmentConfigurationAjax.js")"></script>
+    @Scripts.Render("~/Environment/Scripts")
 }
 
 @{
@@ -22,7 +19,7 @@
         <div class="content-area edit-usr">
             <h3>Make changes:</h3>
             <div class="form-container">
-                @using (Html.BeginForm())
+                @using (Html.BeginForm("EnvironmentConfiguration", "Environment", FormMethod.Post, new { data_ajax = "EnvConfig" }))
                 {
                     <input type="hidden" name="EnvironmentId" value="@Model.EnvironmentId" />
 

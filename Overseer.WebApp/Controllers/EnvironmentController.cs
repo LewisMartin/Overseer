@@ -54,12 +54,15 @@ namespace Overseer.WebApp.Controllers
         {
             MachineseerViewModel viewModel = new MachineseerViewModel();
 
-            Machine machine = _unitOfWork.Machines.GetMachineAndParent(machineId);
+            Machine machine = _unitOfWork.Machines.GetMachineseerDataMonitored(machineId);
+
+            MonitoringSettings monSettings = _unitOfWork.MonitoringSettings.Get(machine.TestEnvironment.EnvironmentID);
 
             if (machine != null)
             {
                 viewModel.MachineId = machine.MachineID;
                 viewModel.ParentEnvironmentId = machine.ParentEnv;
+                viewModel.MonitoringEnabled = monSettings.MonitoringEnabled;
 
                 viewModel.MachineDetails = new MachineDetailsViewModel()
                 {
@@ -73,6 +76,36 @@ namespace Overseer.WebApp.Controllers
                     NumProcessors = machine.NumProcessors,
                     TotalMemGbs = machine.TotalMemGbs
                 };
+
+                if (monSettings.MonitoringEnabled)
+                {
+                    if (machine.SystemInformationData != null)
+                    {
+                        viewModel.MonitoringData.SystemInfo.OSNameFriendly = machine.SystemInformationData.OSNameFriendly;
+                    }
+
+                    if (machine.PerformanceData != null)
+                    {
+                        viewModel.MonitoringData.PerformanceInfo.AvgCpuUtil = (machine.PerformanceData.CpuUtil != null ? (float)machine.PerformanceData.CpuUtil : 101);
+                        viewModel.MonitoringData.PerformanceInfo.AvgMemUtil = (machine.PerformanceData.CpuUtil != null ? (float)machine.PerformanceData.CpuUtil : 101);
+                    }
+
+                    if (machine.DiskData != null)
+                    {
+                        foreach (DiskInfo disk in machine.DiskData)
+                        {
+                            viewModel.MonitoringData.DiskInfo.Drives.Add(new SingleDriveViewModel()
+                            {
+                                Name = disk.DriveLetter,
+                                VolumeLabel = disk.VolumeLabel,
+                                DriveType = disk.DriveType,
+                                DriveFormat = disk.DriveFormat,
+                                TotalSpace = (decimal)disk.TotalSpace,
+                                FreeSpace = (decimal)disk.FreeSpace
+                            });
+                        }
+                    }
+                }
 
                 return View(viewModel);
             }
@@ -139,7 +172,6 @@ namespace Overseer.WebApp.Controllers
                     return Json(new { success = false, error = "You already have an environment with that name.." }, JsonRequestBehavior.AllowGet);
                 }
             }
-
 
             // update the TestEnvironment table
             envToUpdate.EnvironmentName = viewModel.EnvironmentName;
@@ -273,7 +305,7 @@ namespace Overseer.WebApp.Controllers
         [HttpPost]
         public ActionResult MachineCreation(MachineCreationViewModel viewModel)
         {
-            var parentEnvironment = _unitOfWork.TestEnvironments.Get(Int32.Parse(viewModel.ParentEnvironmentId));
+            TestEnvironment parentEnvironment = _unitOfWork.TestEnvironments.GetWithMonitoringSettings(Int32.Parse(viewModel.ParentEnvironmentId));
 
             // if a machine with this name already exists for the environment
             if (_unitOfWork.Machines.CheckMachineExistsByEnvironmentAndDisplayName(Int32.Parse(viewModel.ParentEnvironmentId), viewModel.DisplayName))

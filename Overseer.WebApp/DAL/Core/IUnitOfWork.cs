@@ -17,6 +17,9 @@ namespace Overseer.WebApp.DAL.Core
         IOperatingSystemRepository OperatingSystems { get; set; }
         IDownTimeCategoryRepository DownTimeCategories { get; set; }
         IMonitoringSettingsRepository MonitoringSettings { get; set; }
+        ISystemInfoMonitoringRepository SystemInfoMonitoring { get; set; }
+        IPerformanceMonitoringRepository PerformanceMonitoring { get; set; }
+        IDiskMonitoringRepository DiskMonitoring { get; set; }
 
         // our save method that will persist all entity changes across all the abose repositories to the database
         int Save();

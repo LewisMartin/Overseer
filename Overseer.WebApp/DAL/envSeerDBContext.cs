@@ -38,6 +38,8 @@ namespace Overseer.WebApp.DAL
         public DbSet<Machine> Machine { get; set; }
         // MonitoringAgentAuth
         public DbSet<MonitoringAgentCredential> MonitoringAgentCredentials { get; set; }
+        //SysInfoMon
+        public DbSet<SystemInfo> SystemInfoMonitoring { get; set; }
         // PerfMon
         public DbSet<PerformanceInfo> PerformanceMonitoring { get; set; }
         // DiskMon

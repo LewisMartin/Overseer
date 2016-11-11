@@ -29,10 +29,19 @@ namespace Overseer.WebApp
                       "~/Content/Styles/site.css"));
 
 
-            // creating bundles for custom css & js
+            // bundle for custom js
             bundles.Add(new ScriptBundle("~/Custom/Scripts").Include(
-                       "~/Content/Scripts/Custom Scripts/OverseerScripts.js"));
+                       "~/Content/Scripts/Custom Scripts/OverseerScripts.js",
+                       "~/Content/Scripts/Custom Scripts/NewToggleField.js"));
 
+            // bundle for scripts used in environment pages
+            bundles.Add(new ScriptBundle("~/Environment/Scripts").Include(
+                        "~/Content/Scripts/jquery.validate.js",
+                        "~/Content/Scripts/jquery.validate.unobtrusive.js",
+                       "~/Content/Scripts/Custom Scripts/EnvironmentAjax.js"
+                ));
+
+            // bundle for custom site styles
             bundles.Add(new StyleBundle("~/Custom/Styles").Include(
                         "~/Content/Styles/Custom Styles/OverseerStyles.css"));
         }

@@ -107,6 +107,7 @@ namespace Overseer.MonitoringAgent.Helpers
                 httpClient.DefaultRequestHeaders.Accept.Clear();
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 httpClient.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
+                httpClient.DefaultRequestHeaders.Add("TargetMachine", MachineGuid); // could add machine secret underdeath to be used in replacement authorize attribute
 
                 // making the request - posting the data
                 HttpResponseMessage response = await httpClient.PostAsync(OverseerMonitoringDataEndpoint, postContent);

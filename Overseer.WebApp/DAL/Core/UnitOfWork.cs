@@ -20,6 +20,9 @@ namespace Overseer.WebApp.DAL.Core
         public IOperatingSystemRepository OperatingSystems { get; set; }
         public IDownTimeCategoryRepository DownTimeCategories { get; set; }
         public IMonitoringSettingsRepository MonitoringSettings { get; set; }
+        public ISystemInfoMonitoringRepository SystemInfoMonitoring { get; set; }
+        public IPerformanceMonitoringRepository PerformanceMonitoring { get; set; }
+        public IDiskMonitoringRepository DiskMonitoring { get; set; }
 
         // constructor 
         public UnitOfWork(OverseerDBContext context)
@@ -34,6 +37,9 @@ namespace Overseer.WebApp.DAL.Core
             OperatingSystems = new OperatingSystemRepository(_dbContext);
             DownTimeCategories = new DownTimeCategoryRepository(_dbContext);
             MonitoringSettings = new MonitoringSettingsRepository(_dbContext);
+            SystemInfoMonitoring = new SystemInfoMonitoringRepository(_dbContext);
+            PerformanceMonitoring = new PerformanceMonitoringRepository(_dbContext);
+            DiskMonitoring = new DiskMonitoringRepository(_dbContext);
         }
 
         // saving changes via out dbcontext

@@ -43,14 +43,18 @@ namespace Overseer.WebApp.DAL.DomainModels
 
         public OperatingSys OperatingSys { get; set; }
 
-        public PerformanceInfo PerformanceMonitor { get; set; }
+        public MonitoringAgentCredential MonitoringAgentCredential { get; set; }
 
-        public ICollection<DiskInfo> DiskMonitors { get; set; }
+        public SystemInfo SystemInformationData { get; set; }
 
-        public ICollection<EventLogInfo> EventLogMonitors { get; set; }
+        public PerformanceInfo PerformanceData { get; set; }
 
-        public ICollection<ProcessInfo> ProcessMonitors { get; set; }
+        public ICollection<DiskInfo> DiskData { get; set; }
 
-        public ICollection<ServiceInfo> ServiceMonitors { get; set; }
+        public ICollection<EventLogInfo> EventLogData { get; set; }
+
+        public ICollection<ProcessInfo> ProcessData { get; set; }
+
+        public ICollection<ServiceInfo> ServiceData { get; set; }
     }
 }

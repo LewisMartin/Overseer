@@ -10,15 +10,19 @@ namespace Overseer.WebApp.DAL.DomainModels
         [Key, ForeignKey("Machine")]
         public Guid MachineID { get; set; }
 
-        public int? CpuUtil { get; set; }
+        public float? CpuUtil { get; set; }
 
-        public int? TotalProcesses { get; set; }
+        public float? HighCpuUtilIndicator { get; set; }
 
-        public int? TotalThreads { get; set; }
+        public float? TotalProcesses { get; set; }
 
-        public int? MemUtil { get; set; }
+        //public float? TotalThreads { get; set; }
 
-        public int? MemUsage { get; set; }
+        public float? MemUtil { get; set; }
+
+        public float? HighMemUtilIndicator { get; set; }
+
+        //public float? MemUsage { get; set; }
 
         // navigation properties
         public Machine Machine { get; set; }

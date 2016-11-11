@@ -48,9 +48,75 @@ namespace Overseer.WebApp.WebApi
         
         // POST: endpoint for posting monitoring data to
         [HttpPost]
-        public HttpResponseMessage SubmitMonitoringData([FromBody] string monitoringData)
+        public HttpResponseMessage SubmitMonitoringData([FromBody] string monitoringData)   // REFACTOR
         {
             MonitoringData monData = JsonConvert.DeserializeObject<MonitoringData>(monitoringData);
+
+            Guid machineId = new Guid(Request.Headers.GetValues("TargetMachine").FirstOrDefault());
+
+            // getting/creating system information record in 'SystemMonitoring' table.
+            SystemInfo sysInfo = _unitOfWork.SystemInfoMonitoring.Get(machineId);
+
+            if (sysInfo == null)
+            {
+                _unitOfWork.SystemInfoMonitoring.Add(new SystemInfo()
+                {
+                    MachineID = machineId
+                });
+
+                _unitOfWork.Save();
+
+                sysInfo = _unitOfWork.SystemInfoMonitoring.Get(machineId);
+            }
+
+            // getting/creating system information record in 'PerformanceMonitoring' table.
+            PerformanceInfo perfInfo = _unitOfWork.PerformanceMonitoring.Get(machineId);
+
+            if (perfInfo == null)
+            {
+                _unitOfWork.PerformanceMonitoring.Add(new PerformanceInfo()
+                {
+                    MachineID = machineId
+                });
+                _unitOfWork.Save();
+
+                perfInfo = _unitOfWork.PerformanceMonitoring.Get(machineId);
+            }
+
+            // far less cumbersome just to delete all disk records for this machine & add new ones rather than attempting to maintain a list
+            _unitOfWork.DiskMonitoring.DeleteByMachine(machineId);
+            _unitOfWork.Save();
+
+            foreach (SingleDrive drive in monData.DiskInfo.Drives)
+            {
+                _unitOfWork.DiskMonitoring.Add(new DiskInfo()
+                {
+                    MachineID = machineId,
+                    DriveLetter = drive.Name,
+                    VolumeLabel = drive.VolumeLabel,
+                    DriveType = drive.DriveType,
+                    DriveFormat = drive.DriveFormat,
+                    TotalSpace = drive.TotalSpace,
+                    FreeSpace = drive.FreeSpace,
+                    AvailableSpace = drive.AvailableSpace
+                });
+            }
+
+            sysInfo.MachineName = monData.SystemInfo.MachineName;
+            sysInfo.IPAddress = monData.SystemInfo.IPAddress;
+            sysInfo.OSName = monData.SystemInfo.OSName;
+            sysInfo.OSNameFriendly = monData.SystemInfo.OSNameFriendly;
+            sysInfo.OSBitness = monData.SystemInfo.OSBitness;
+            sysInfo.ProcessorCount = monData.SystemInfo.ProcessorCount;
+            sysInfo.TotalMem = monData.SystemInfo.TotalMem;
+
+            perfInfo.CpuUtil = monData.PerformanceInfo.AvgCpuUtil;
+            perfInfo.MemUtil = monData.PerformanceInfo.AvgMemUtil;
+            perfInfo.HighCpuUtilIndicator = monData.PerformanceInfo.HighCpuUtilIndicator;
+            perfInfo.HighMemUtilIndicator = monData.PerformanceInfo.HighMemUtilIndicator;
+            perfInfo.TotalProcesses = monData.PerformanceInfo.TotalNumProcesses;
+
+            _unitOfWork.Save();
 
             return new HttpResponseMessage()
             {
