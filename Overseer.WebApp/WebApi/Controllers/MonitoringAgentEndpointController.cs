@@ -7,13 +7,14 @@ using System.Web.Http;
 using Newtonsoft.Json;
 using Overseer.WebApp.DAL.Core;
 using Overseer.WebApp.DAL;
+using Overseer.WebApp.Helpers.AuthHelpers;
 using Overseer.WebApp.DAL.DomainModels;
 using Overseer.DTOs.MonitoringAgent;
 using Overseer.WebApp.WebApi.Controllers;
 
 namespace Overseer.WebApp.WebApi
 {
-    [System.Web.Http.Authorize]
+    [CustomAPIAuth]
     public class MonitoringAgentEndpointController : BaseApiController
     {
         // GET api/<controller>

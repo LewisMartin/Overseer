@@ -18,7 +18,6 @@ namespace Overseer.MonitoringAgent.Helpers
         public string OverseerMonitoringDataEndpoint { get; set; }
         public string MachineGuid { get; set; }
         public string MachineSecret { get; set; }
-        public string token { get; set; }
 
         private Logger _Logger;
 
@@ -35,39 +34,6 @@ namespace Overseer.MonitoringAgent.Helpers
             _Logger = Logger.Instance();
         }
 
-        // method to request bearer token
-        public async Task RequestBearerToken()
-        {
-            _Logger.Log("Requesting Bearer Token..");
-
-            using (var httpClient = new HttpClient())
-            {
-                // setting up the http client
-                httpClient.BaseAddress = new Uri(OverseerAuthEndpoint);
-                httpClient.DefaultRequestHeaders.Accept.Clear();
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                // setting the form content of the request
-                var reqFormContent = new FormUrlEncodedContent(new[] {
-                    new KeyValuePair<string, string>("grant_type", "client_credentials"),
-                    new KeyValuePair<string, string>("client_id", MachineGuid),
-                    new KeyValuePair<string, string>("client_secret", MachineSecret)
-                });
-
-                // initiate the request
-                HttpResponseMessage response = await httpClient.PostAsync("/Token", reqFormContent);
-
-                // get bearer token from the body of the response
-                var responseJson = await response.Content.ReadAsStringAsync();
-                var jObject = JObject.Parse(responseJson);
-                string bearerToken = jObject.GetValue("access_token").ToString();
-
-                token = bearerToken;
-            }
-
-            _Logger.Log("Token: " + token);
-        }
-
         // GET monitoring settings from api
         public async Task<string> GetMonitoringSettingsFromApi()
         {
@@ -78,14 +44,14 @@ namespace Overseer.MonitoringAgent.Helpers
                 // setting up the http client
                 httpClient.DefaultRequestHeaders.Accept.Clear();
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                httpClient.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
+                httpClient.DefaultRequestHeaders.Add("TargetMachine", MachineGuid.ToString());
+                httpClient.DefaultRequestHeaders.Add("TargetSecret", MachineSecret);
 
                 // making the request
                 HttpResponseMessage response = await httpClient.GetAsync(OverseerMonitoringSettingsEndpoint);
-                string responseString = await response.Content.ReadAsStringAsync();
 
                 // return the content of the response as a string
-                return responseString;
+                return ReadResponseMessage(response).Result;
             }
         }
 
@@ -106,15 +72,26 @@ namespace Overseer.MonitoringAgent.Helpers
                 // setting up the http client
                 httpClient.DefaultRequestHeaders.Accept.Clear();
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                httpClient.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
-                httpClient.DefaultRequestHeaders.Add("TargetMachine", MachineGuid); // could add machine secret underdeath to be used in replacement authorize attribute
+                httpClient.DefaultRequestHeaders.Add("TargetMachine", MachineGuid.ToString());
+                httpClient.DefaultRequestHeaders.Add("TargetSecret", MachineSecret);
 
                 // making the request - posting the data
                 HttpResponseMessage response = await httpClient.PostAsync(OverseerMonitoringDataEndpoint, postContent);
-                string responseString = await response.Content.ReadAsStringAsync();
 
                 // return the content of the response as a string
-                return responseString;
+                return ReadResponseMessage(response).Result;
+            }
+        }
+
+        private async Task<string> ReadResponseMessage(HttpResponseMessage response)
+        {
+            if (response.StatusCode.ToString() == "OK")
+            {
+                return await response.Content.ReadAsStringAsync();
+            }
+            else
+            {
+                return "Error " + response.StatusCode.ToString() + ": " + response.ReasonPhrase; 
             }
         }
     }

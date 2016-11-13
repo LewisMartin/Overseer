@@ -36,9 +36,6 @@ namespace Overseer.MonitoringAgent
 
             Server = new ServerCommunicator(Config.AppUri, Config.MachineGuid, Config.MachineSecret);
 
-            // request bearer token
-            await Server.RequestBearerToken();
-
             SysMonitoring = new SystemMonitoring();
 
             // begin scheduling
@@ -61,8 +58,17 @@ namespace Overseer.MonitoringAgent
                 // make get request to server for monitoring settings for this machine
                 string apiResponse = Server.GetMonitoringSettingsFromApi().Result;
 
-                // convert to 'MonitoringScheduleResponse' object so that we can grab the data inside
-                MonitoringScheduleResponse monitoringSettings = JsonConvert.DeserializeObject<MonitoringScheduleResponse>(apiResponse);
+                MonitoringScheduleResponse monitoringSettings = new MonitoringScheduleResponse();
+
+                try
+                {
+                    monitoringSettings = JsonConvert.DeserializeObject<MonitoringScheduleResponse>(apiResponse);
+                }
+                catch (JsonException)
+                {
+                    _Logger.Log("Server Response Error: " + apiResponse);
+                    StopService();
+                }
 
                 if (monitoringSettings.MonitoringEnabled)
                 {
@@ -108,7 +114,6 @@ namespace Overseer.MonitoringAgent
             }
             catch (Exception e)
             {
-                // log the exception here using logger class
                 _Logger.Log("Error during timer scheduling: " + e.Message);
                 StopService();
             }

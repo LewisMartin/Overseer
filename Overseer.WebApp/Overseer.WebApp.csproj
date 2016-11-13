@@ -240,8 +240,8 @@
     <Compile Include="DAL\envSeerDBInitializer.cs" />
     <Compile Include="DAL\DomainModels\UserAccount.cs" />
     <Compile Include="DAL\DomainModels\UserRole.cs" />
+    <Compile Include="Helpers\AuthHelpers\CustomAPIAuthAttribute.cs" />
     <Compile Include="Helpers\AuthHelpers\CustomAuthAttribute.cs" />
-    <Compile Include="Helpers\AuthHelpers\CustomOAuthProvider.cs" />
     <Compile Include="ViewModels\Admin\UserDataViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />

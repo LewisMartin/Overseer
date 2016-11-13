@@ -28,7 +28,7 @@ namespace Overseer.WebApp
             });
 
             // Enable application to allow use of OAuth bearer tokens for the Web API
-            OAuthOptions = new OAuthAuthorizationServerOptions
+            /*OAuthOptions = new OAuthAuthorizationServerOptions
             {
                 TokenEndpointPath = new PathString("/Token"),
                 Provider = new CustomOAuthProvider(),
@@ -37,7 +37,7 @@ namespace Overseer.WebApp
                 AuthenticationMode = Microsoft.Owin.Security.AuthenticationMode.Active
             };
 
-            app.UseOAuthBearerTokens(OAuthOptions);
+            app.UseOAuthBearerTokens(OAuthOptions);*/
         }
     }
 }
