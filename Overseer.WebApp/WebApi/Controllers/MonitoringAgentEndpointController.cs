@@ -46,6 +46,14 @@ namespace Overseer.WebApp.WebApi
         }
 
         // GET: get the monitoring settings for particular machine
+        [HttpGet]
+        public MonitoringSettingsResponse GetMonitoringSettings(Guid machineId)
+        {
+            return new MonitoringSettingsResponse()
+            {
+
+            };
+        }
         
         // POST: endpoint for posting monitoring data to
         [HttpPost]
