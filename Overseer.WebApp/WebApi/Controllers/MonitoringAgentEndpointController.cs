@@ -49,10 +49,37 @@ namespace Overseer.WebApp.WebApi
         [HttpGet]
         public MonitoringSettingsResponse GetMonitoringSettings(Guid machineId)
         {
-            return new MonitoringSettingsResponse()
-            {
+            MonitoringSettingsResponse monitoringSettingsResponse = new MonitoringSettingsResponse();
 
-            };
+            IEnumerable<ProcessInfo> procs = _unitOfWork.ProcessMonitoring.GetByMachine(machineId);
+            IEnumerable<EventLogInfo> logs = _unitOfWork.EventLogMonitoring.GetByMachine(machineId);
+            IEnumerable<ServiceInfo> services = _unitOfWork.ServiceMonitoring.GetByMachine(machineId);
+
+            if (procs != null)
+            {
+                foreach (ProcessInfo proc in procs)
+                {
+                    monitoringSettingsResponse.MonitoredProcessNames.Add(proc.ProcessName);
+                }
+            }
+
+            if (logs != null)
+            {
+                foreach (EventLogInfo log in logs)
+                {
+                    monitoringSettingsResponse.MonitoredEventLogNames.Add(log.EventLogName);
+                }
+            }
+
+            if (services != null)
+            {
+                foreach (ServiceInfo service in services)
+                {
+                    monitoringSettingsResponse.MonitoredServiceNames.Add(service.ServiceName);
+                }
+            }
+
+            return monitoringSettingsResponse;
         }
         
         // POST: endpoint for posting monitoring data to

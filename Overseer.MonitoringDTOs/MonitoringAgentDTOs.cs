@@ -14,7 +14,17 @@ namespace Overseer.DTOs.MonitoringAgent
     // DTO for returning monitoring settings to monitoring agent
     public class MonitoringSettingsResponse
     {
+        public MonitoringSettingsResponse()
+        {
+            MonitoredProcessNames = new List<string>();
+            MonitoredEventLogNames = new List<string>();
+            MonitoredServiceNames = new List<string>();
+        }
+
         // list of processes/services/eventlogs to monitor
+        public List<string> MonitoredProcessNames { get; set; }
+        public List<string> MonitoredEventLogNames { get; set; }
+        public List<string> MonitoredServiceNames { get; set; }
     }
 
     // DTO for sending monitoring data from monitoring agent back to server
