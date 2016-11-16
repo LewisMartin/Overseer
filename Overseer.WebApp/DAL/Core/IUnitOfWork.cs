@@ -20,6 +20,9 @@ namespace Overseer.WebApp.DAL.Core
         ISystemInfoMonitoringRepository SystemInfoMonitoring { get; set; }
         IPerformanceMonitoringRepository PerformanceMonitoring { get; set; }
         IDiskMonitoringRepository DiskMonitoring { get; set; }
+        IEventLogMonitoringRepository EventLogMonitoring { get; set; }
+        IProcessMonitoringRepository ProcessMonitoring { get; set; }
+        IServiceMonitoringRepository ServiceMonitoring { get; set; }
 
         // our save method that will persist all entity changes across all the abose repositories to the database
         int Save();

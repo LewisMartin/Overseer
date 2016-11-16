@@ -1,7 +1,114 @@
-﻿
-@{
-    ViewBag.Title = "MachineConfiguration";
+﻿@model Overseer.WebApp.ViewModels.Environment.MachineConfigurationViewModel
+@section AdditionalScripts
+{
+    @Scripts.Render("~/Environment/Scripts", "~/Environment/MachineConfiguration/Scripts")
 }
 
-<h2>MachineConfiguration</h2>
+@{
+    ViewBag.Title = "Machine Configuration";
+}
 
+<div id="Page-Title">
+    <div class="fl-left">
+        <i class="fa fa-tachometer a-fw" aria-hidden="true"></i>&nbsp Environments<i class="fa fa-angle-right a-fw breadcrumb-spacer" aria-hidden="true"></i>Machine Configuration
+    </div>
+</div>
+
+<div id="Page-Content">
+    <section>
+        <div class="content-area edit-usr">
+            <h3>Configure:</h3>
+            <div class="form-container">
+                @using (Html.BeginForm("MachineConfiguration", "Environment", FormMethod.Post, new { data_ajax = "MachineConfig" }))
+                {
+                    <input type="hidden" name="MachineId" value="@Model.MachineId" />
+
+                    <h4>System Information (manual):</h4>
+
+                    <label for="parentEnv">Add machine to environment:</label>
+                    @Html.DropDownListFor(m => m.ParentEnvironmentId, Model.ParentEnvironmentOptions, new { @id = "parentEnv" })
+
+                    <label for="displayName">Display Name:</label>
+                    @Html.TextBoxFor(m => m.DisplayName, new { @id = "displayName" })
+
+                    <label for="machineName">Machine Name:</label>
+                    @Html.TextBoxFor(m => m.MachineName, new { @id = "machineName" })
+
+                    <label for="IPV4">IPV4 Address:</label>
+                    @Html.TextBoxFor(m => m.IpAddress, new { @id = "IPV4" })
+
+                    <label for="FQDN">Fully Qualified Domain Name:</label>
+                    @Html.TextBoxFor(m => m.FQDN, new { @id = "FQDN" })
+
+                    <label for="operatingSys">Operating System:</label>
+                    @Html.DropDownListFor(m => m.OperatingSystemId, Model.OperatingSystemOptions, new { @id = "operatingSys" })
+
+                    <label for="processorCores">ProcessorCores:</label>
+                    @Html.EditorFor(m => m.NumProcessors, new { @id = "processorCores" })
+
+                    <label for="totalMem">Total RAM:</label>
+                    @Html.EditorFor(m => m.TotalMemGbs, new { @id = "totalMem" })
+
+                    <h4>Monitoring Settings:</h4>
+
+                    <div id="monitoredProcesses">
+                        <label for="monitoredProcList">Processes:</label>
+                        <input type="text" class="mon-list-input" />
+                        <button type="button" class="mon-list-add"><i class="fa fa-plus a-fw" aria-hidden="true"></i></button>
+                        <button type="button" class="mon-list-remove"><i class="fa fa-close a-fw" aria-hidden="true"></i></button>
+                        @Html.ListBoxFor(m => m.UpdatedMonitoredProcesses, Model.CurrentMonitoredProcesses, new { @id = "monitoredProcList", @class = "mon-list-box" })
+                    </div>
+
+                    <div id="monitoredEventLogs">
+                        <label for="monitoredEventLogList">EventLogs:</label>
+                        <input type="text" class="mon-list-input" />
+                        <button type="button" class="mon-list-add"><i class="fa fa-plus a-fw" aria-hidden="true"></i></button>
+                        <button type="button" class="mon-list-remove"><i class="fa fa-close a-fw" aria-hidden="true"></i></button>
+                        @Html.ListBoxFor(m => m.UpdatedMonitoredEventLogs, Model.CurrentMonitoredEventLogs, new { @id = "monitoredEventLogList", @class = "mon-list-box" })
+                    </div>
+
+                    <div id="monitoredServices">
+                        <label for="monitoredServiceList">Services:</label>
+                        <input type="text" class="mon-list-input" />
+                        <button type="button" class="mon-list-add"><i class="fa fa-plus a-fw" aria-hidden="true"></i></button>
+                        <button type="button" class="mon-list-remove"><i class="fa fa-close a-fw" aria-hidden="true"></i></button>
+                        @Html.ListBoxFor(m => m.UpdatedMonitoredServices, Model.CurrentMonitoredServices, new { @id = "monitoredServiceList", @class = "mon-list-box" })
+                    </div>
+
+                    <div class="center-input form-val">
+                        <div class="form-val-msg">
+                            @Html.ValidationMessageFor(m => m.ParentEnvironmentId)
+                        </div>
+                        <div class="form-val-msg">
+                            @Html.ValidationMessageFor(m => m.DisplayName)
+                        </div>
+                        <div class="form-val-msg">
+                            @Html.ValidationMessageFor(m => m.IpAddress)
+                        </div>
+                        <div class="form-val-msg">
+                            @Html.ValidationMessageFor(m => m.FQDN)
+                        </div>
+                        <div class="form-val-msg">
+                            @Html.ValidationMessageFor(m => m.OperatingSystemId)
+                        </div>
+                        <div class="form-val-msg">
+                            @Html.ValidationMessageFor(m => m.NumProcessors)
+                        </div>
+                        <div class="form-val-msg">
+                            @Html.ValidationMessageFor(m => m.TotalMemGbs)
+                        </div>
+                        <div id="dupe-machine-msg" class="form-val-msg">
+
+                        </div>
+                    </div>
+                    <div class="form-footer">
+                        <input type="submit" value="Save Changes" class="pag-btn" />
+                    </div>
+                }
+            </div>
+        </div>
+        <div id="form-success">
+
+        </div>
+    </section>
+</div>

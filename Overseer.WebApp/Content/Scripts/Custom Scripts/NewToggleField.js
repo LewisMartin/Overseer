@@ -1,5 +1,4 @@
 ﻿$(document).ready(function () {
-    console.log("Document Ready");
 
     // enable/disable field on document ready
     $('.tf-checkbox').each(function () {

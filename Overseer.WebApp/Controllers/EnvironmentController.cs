@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Overseer.WebApp.Controllers
@@ -113,7 +112,8 @@ namespace Overseer.WebApp.Controllers
             return HttpNotFound();
         }
 
-        // GET: EnvironmentConfiguration - page to change environment details & configure environment level monitoring settings
+        // EnvironmentConfiguration - page to change environment details & configure environment level monitoring settings
+        // GET:
         public ActionResult EnvironmentConfiguration(int environmentId)
         {
             // a lot of this should be extracted into a service layer..
@@ -154,7 +154,7 @@ namespace Overseer.WebApp.Controllers
 
             return View(viewModel);
         }
-        // POST: EnvironmentConfiguration
+        // POST:
         [HttpPost]
         public ActionResult EnvironmentConfiguration(EnvironmentConfigurationViewModel viewModel)
         {
@@ -196,13 +196,175 @@ namespace Overseer.WebApp.Controllers
             return Json(new { success = true, successmsg = ("<i>Changes made successfully!</i>") }, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: MachineConfiguration - page to change machine details & configure machine level monitoring settings
-        public ActionResult MachineConfiguration()
+        // MachineConfiguration - page to change machine details & configure machine level monitoring settings
+        // GET: 
+        [HttpGet]
+        public ActionResult MachineConfiguration(Guid machineId)
         {
-            return View();
+            Machine machineToUpdate = _unitOfWork.Machines.GetMachineAndParent(machineId);
+
+            var userClaims = User.Identity as ClaimsIdentity;
+            int loggedInUserId = Int32.Parse(userClaims.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            var operatingSystems = _unitOfWork.OperatingSystems.GetAll();
+            var environments = _unitOfWork.TestEnvironments.GetEnvironmentsByCreator(loggedInUserId);
+
+            List<SelectListItem> parentEnvOps = new List<SelectListItem>();
+            List<SelectListItem> operatingSysOps = new List<SelectListItem>();
+            List<SelectListItem> currentMonitoredProcs = new List<SelectListItem>();
+            List<SelectListItem> currentMonitoredLogs = new List<SelectListItem>();
+            List<SelectListItem> currentMonitoredServices = new List<SelectListItem>();
+
+            foreach (var environment in environments)
+            {
+                parentEnvOps.Add(new SelectListItem
+                {
+                    Value = environment.EnvironmentID.ToString(),
+                    Text = environment.EnvironmentName,
+                    Selected = (environment.EnvironmentID == machineToUpdate.ParentEnv ? true : false)
+                });
+            }
+
+            foreach (var os in operatingSystems)
+            {
+                operatingSysOps.Add(new SelectListItem
+                {
+                    Value = os.OperatingSysID.ToString(),
+                    Text = os.OSName,
+                    Selected = (os.OperatingSysID == machineToUpdate.OperatingSys.OperatingSysID ? true : false)
+                });
+            }
+
+            IEnumerable<ProcessInfo> procs = _unitOfWork.ProcessMonitoring.GetByMachine(machineId);
+            if (procs != null)
+            {
+                foreach (ProcessInfo proc in procs)
+                {
+                    currentMonitoredProcs.Add(new SelectListItem
+                    {
+                        Value = proc.ProcessName,
+                        Text = proc.ProcessName,
+                        Selected = false
+                    });
+                }
+            }
+
+            IEnumerable<EventLogInfo> logs = _unitOfWork.EventLogMonitoring.GetByMachine(machineId);
+            if (logs != null)
+            {
+                foreach (EventLogInfo log in logs)
+                {
+                    currentMonitoredLogs.Add(new SelectListItem()
+                    {
+                        Value = log.EventLogName,
+                        Text = log.EventLogName,
+                        Selected = false
+                    });
+                }
+            }
+
+            IEnumerable<ServiceInfo> services = _unitOfWork.ServiceMonitoring.GetByMachine(machineId);
+            if (services != null)
+            {
+                foreach (ServiceInfo service in services)
+                {
+                    currentMonitoredServices.Add(new SelectListItem()
+                    {
+                        Value = service.ServiceName,
+                        Text = service.ServiceName,
+                        Selected = false
+                    });
+                }
+            }
+
+            MachineConfigurationViewModel viewModel = new MachineConfigurationViewModel()
+            {
+                MachineId = machineToUpdate.MachineID,
+                ParentEnvironmentId = machineToUpdate.ParentEnv.ToString(),
+                DisplayName = machineToUpdate.DisplayName,
+                MachineName = machineToUpdate.ComputerName,
+                IpAddress = machineToUpdate.IPV4,
+                FQDN = machineToUpdate.FQDN,
+                OperatingSystemId = machineToUpdate.OperatingSys.OperatingSysID.ToString(),
+                NumProcessors = machineToUpdate.NumProcessors,
+                TotalMemGbs = machineToUpdate.TotalMemGbs,
+                ParentEnvironmentOptions = parentEnvOps,
+                OperatingSystemOptions = operatingSysOps,
+                CurrentMonitoredProcesses = currentMonitoredProcs,
+                CurrentMonitoredEventLogs = currentMonitoredLogs,
+                CurrentMonitoredServices = currentMonitoredServices
+            };
+
+            return View(viewModel);
+        }
+        // POST:
+        [HttpPost]
+        public ActionResult MachineConfiguration(MachineConfigurationViewModel viewModel)
+        {
+            Machine machineToUpdate = _unitOfWork.Machines.Get(viewModel.MachineId);
+            TestEnvironment parentEnvironment = _unitOfWork.TestEnvironments.GetWithMonitoringSettings(Int32.Parse(viewModel.ParentEnvironmentId));
+
+            // if a machine with the new name already exists for the environment
+            if (viewModel.DisplayName != machineToUpdate.DisplayName)
+            {
+                if (_unitOfWork.Machines.CheckMachineExistsByEnvironmentAndDisplayName(Int32.Parse(viewModel.ParentEnvironmentId), viewModel.DisplayName))
+                {
+                    return Json(new { success = false, error = "'" + parentEnvironment.EnvironmentName + "' already contains a machine with that name." }, JsonRequestBehavior.AllowGet);
+                }
+            }
+
+            // update machine details
+            machineToUpdate.ParentEnv = Int32.Parse(viewModel.ParentEnvironmentId);
+            machineToUpdate.DisplayName = viewModel.DisplayName;
+            machineToUpdate.ComputerName = viewModel.MachineName;
+            machineToUpdate.IPV4 = viewModel.IpAddress;
+            machineToUpdate.FQDN = viewModel.FQDN;
+            machineToUpdate.OS = Int32.Parse(viewModel.OperatingSystemId);
+            machineToUpdate.NumProcessors = viewModel.NumProcessors;
+            machineToUpdate.TotalMemGbs = viewModel.TotalMemGbs;
+
+            _unitOfWork.Save();
+
+            // delete and recreate records in process, eventlog & service monitoring tables.
+            _unitOfWork.ProcessMonitoring.DeleteByMachine(viewModel.MachineId);
+            _unitOfWork.EventLogMonitoring.DeleteByMachine(viewModel.MachineId);
+            _unitOfWork.ServiceMonitoring.DeleteByMachine(viewModel.MachineId);
+            _unitOfWork.Save();
+
+            foreach (string procName in viewModel.UpdatedMonitoredProcesses)
+            {
+                _unitOfWork.ProcessMonitoring.Add(new ProcessInfo()
+                {
+                    MachineID = viewModel.MachineId,
+                    ProcessName = procName
+                });
+            }
+
+            foreach (string eventLogName in viewModel.UpdatedMonitoredEventLogs)
+            {
+                _unitOfWork.EventLogMonitoring.Add(new EventLogInfo()
+                {
+                    MachineID = viewModel.MachineId,
+                    EventLogName = eventLogName
+                });
+            }
+
+            foreach (string serviceName in viewModel.UpdatedMonitoredServices)
+            {
+                _unitOfWork.ServiceMonitoring.Add(new ServiceInfo()
+                {
+                    MachineID = viewModel.MachineId,
+                    ServiceName = serviceName
+                });
+            }
+
+            _unitOfWork.Save();
+
+            return Json(new { success = true, successmsg = ("<i>Changes made successfully!</i>") }, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: EnvironmentCreation - page for creating new environments
+        // EnvironmentCreation - page for creating new environments
+        // GET:
         [HttpGet]
         public ActionResult EnvironmentCreation()
         {
@@ -222,7 +384,7 @@ namespace Overseer.WebApp.Controllers
 
             return View(viewModel);
         }
-        // POST: EnvironmentCreation
+        // POST:
         [HttpPost]
         public ActionResult EnvironmentCreation(EnvironmentCreationViewModel viewModel)
         {
@@ -266,7 +428,8 @@ namespace Overseer.WebApp.Controllers
             }
         }
 
-        // GET: MachineCreation - page for creating new machines
+        // MachineCreation - page for creating new machines
+        // GET:
         public ActionResult MachineCreation(int environmentId)
         {
             var userClaims = User.Identity as ClaimsIdentity;
@@ -300,8 +463,7 @@ namespace Overseer.WebApp.Controllers
 
             return View(viewModel);
         }
-
-        // POST: MachineCreation
+        // POST:
         [HttpPost]
         public ActionResult MachineCreation(MachineCreationViewModel viewModel)
         {

@@ -13,8 +13,10 @@ namespace Overseer.WebApp.DAL.DomainModels
 
         [Key]
         [Column(Order = 1)]
-        [StringLength(1)]
+        [StringLength(25)]
         public string ServiceName { get; set; }
+
+        public bool? Exists { get; set; }
 
         public string Status { get; set; }
 

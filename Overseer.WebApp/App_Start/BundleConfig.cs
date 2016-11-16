@@ -20,25 +20,29 @@ namespace Overseer.WebApp
                         "~/Content/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js",
-                      "~/Content/Scripts/respond.js"));
+                        "~/Scripts/bootstrap.js",
+                        "~/Content/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      //"~/Content/Styles/bootstrap.css",
-                      "~/Content/Styles/font-awesome.min.css",
-                      "~/Content/Styles/site.css"));
+                        "~/Content/Styles/font-awesome.min.css",
+                        "~/Content/Styles/site.css"));
 
 
             // bundle for custom js
             bundles.Add(new ScriptBundle("~/Custom/Scripts").Include(
-                       "~/Content/Scripts/Custom Scripts/OverseerScripts.js",
-                       "~/Content/Scripts/Custom Scripts/NewToggleField.js"));
+                        "~/Content/Scripts/Custom Scripts/OverseerScripts.js",
+                        "~/Content/Scripts/Custom Scripts/NewToggleField.js"));
 
             // bundle for scripts used in environment pages
             bundles.Add(new ScriptBundle("~/Environment/Scripts").Include(
                         "~/Content/Scripts/jquery.validate.js",
                         "~/Content/Scripts/jquery.validate.unobtrusive.js",
-                       "~/Content/Scripts/Custom Scripts/EnvironmentAjax.js"
+                        "~/Content/Scripts/Custom Scripts/EnvironmentAjax.js"
+                ));
+
+            // bundles for scripts used in specific pages
+            bundles.Add(new ScriptBundle("~/Environment/MachineConfiguration/Scripts").Include(
+                        "~/Content/Scripts/Custom Scripts/EditableListBox.js"
                 ));
 
             // bundle for custom site styles

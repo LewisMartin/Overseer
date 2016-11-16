@@ -23,7 +23,7 @@ namespace Overseer.MonitoringAgent
             InitializeComponent();
         }
 
-        protected async override void OnStart(string[] args)
+        protected override void OnStart(string[] args)
         {
             System.Diagnostics.Debugger.Launch();
 
@@ -53,22 +53,14 @@ namespace Overseer.MonitoringAgent
             // define the callback for the timer
             MonitoringUpdateSchedular = new Timer(new TimerCallback(MonitoringUpdate));
 
+            string apiResponse = "";
+
             try
             {
                 // make get request to server for monitoring settings for this machine
-                string apiResponse = Server.GetMonitoringSettingsFromApi().Result;
+                apiResponse = Server.GetMonitoringSettingsFromApi().Result;
 
-                MonitoringScheduleResponse monitoringSettings = new MonitoringScheduleResponse();
-
-                try
-                {
-                    monitoringSettings = JsonConvert.DeserializeObject<MonitoringScheduleResponse>(apiResponse);
-                }
-                catch (JsonException)
-                {
-                    _Logger.Log("Server Response Error: " + apiResponse);
-                    StopService();
-                }
+                MonitoringScheduleResponse monitoringSettings = JsonConvert.DeserializeObject<MonitoringScheduleResponse>(apiResponse);
 
                 if (monitoringSettings.MonitoringEnabled)
                 {
@@ -112,6 +104,11 @@ namespace Overseer.MonitoringAgent
                     StopService();
                 }
             }
+            catch (JsonException)
+            {
+                _Logger.Log("Server Response Error: " + apiResponse);
+                StopService();
+            }
             catch (Exception e)
             {
                 _Logger.Log("Error during timer scheduling: " + e.Message);
@@ -147,8 +144,11 @@ namespace Overseer.MonitoringAgent
         private void StopService()
         {
             _Logger.Log("Stopping Service.");
-            ServiceController thisService = new ServiceController("OverseerMonitoringAgent");
-            thisService.Stop();
+
+            this.Stop();
+
+            //ServiceController thisService = new ServiceController("OverseerMonitoringAgent");
+            //thisService.Stop();
         }
     }
 }

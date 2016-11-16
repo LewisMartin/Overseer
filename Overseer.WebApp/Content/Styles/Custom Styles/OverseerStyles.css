@@ -515,7 +515,7 @@ footer
     padding-top:20px;
     background-color:#ffffff;
 }
-.form-container input[type=text], input[type=password], select
+.form-container input[type=text], input[type=password], select:not([multiple])
 {
     width:240px;
     height:30px;
@@ -523,6 +523,11 @@ footer
     padding-left:8px;
     color:#9aa1a9;
     font-family: 'Roboto Slab', serif;
+}
+select[multiple] 
+{ 
+    width:240px;
+    height:250px;
 }
 .login-reg-link
 {

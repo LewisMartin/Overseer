@@ -23,6 +23,9 @@ namespace Overseer.WebApp.DAL.Core
         public ISystemInfoMonitoringRepository SystemInfoMonitoring { get; set; }
         public IPerformanceMonitoringRepository PerformanceMonitoring { get; set; }
         public IDiskMonitoringRepository DiskMonitoring { get; set; }
+        public IEventLogMonitoringRepository EventLogMonitoring { get; set; }
+        public IProcessMonitoringRepository ProcessMonitoring { get; set; }
+        public IServiceMonitoringRepository ServiceMonitoring { get; set; }
 
         // constructor 
         public UnitOfWork(OverseerDBContext context)
@@ -40,6 +43,9 @@ namespace Overseer.WebApp.DAL.Core
             SystemInfoMonitoring = new SystemInfoMonitoringRepository(_dbContext);
             PerformanceMonitoring = new PerformanceMonitoringRepository(_dbContext);
             DiskMonitoring = new DiskMonitoringRepository(_dbContext);
+            EventLogMonitoring = new EventLogMonitoringRepository(_dbContext);
+            ProcessMonitoring = new ProcessMonitoringRepository(_dbContext);
+            ServiceMonitoring = new ServiceMonitoringRepository(_dbContext);
         }
 
         // saving changes via out dbcontext

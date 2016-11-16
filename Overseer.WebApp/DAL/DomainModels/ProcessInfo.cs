@@ -13,8 +13,10 @@ namespace Overseer.WebApp.DAL.DomainModels
 
         [Key]
         [Column(Order = 1)]
-        [StringLength(1)]
+        [StringLength(25)]
         public string ProcessName { get; set; }
+
+        public bool? IsRunning { get; set; }
 
         public int? PID { get; set; }
 

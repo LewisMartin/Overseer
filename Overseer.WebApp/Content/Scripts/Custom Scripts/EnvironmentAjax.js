@@ -1,5 +1,7 @@
 ﻿$(function () {
     $('form').submit(function () {
+        console.log("submitted");
+
         var form = $('form').data('ajax');
 
         var formReset;
@@ -22,7 +24,14 @@
                 successMsg = $('#form-success');
                 errorMsg = $('#dupe-machine-msg');
                 break;
+            case "MachineConfig":
+                formReset = false;
+                successMsg = $('#form-success');
+                errorMsg = $('#dupe-machine-msg');
+                break;
         }
+
+        toggleMonitoringLists(true);
 
         if ($(this).valid()) {
             $('form').find(':submit').attr("disabled", true)
@@ -35,6 +44,8 @@
                     $('form').find(':submit').attr("disabled", false);
                 },
                 success: function (result) {
+                    toggleMonitoringLists(false);
+
                     var isSuccessful = (result['success'])
 
                     if (isSuccessful) {
@@ -108,3 +119,12 @@ function refreshSidenav() {
         }
     });
 }
+
+function toggleMonitoringLists(toggle) {
+    $('.mon-list-box').each(function () {
+        $(this).children('option').each(function () {
+            $(this).prop("selected", toggle);
+        })
+    });
+}
+
