@@ -270,7 +270,6 @@
     <Compile Include="ViewModels\UserAuth\RegisterViewModel.cs" />
     <Compile Include="WebApi\Controllers\BaseApiController.cs" />
     <Compile Include="WebApi\Controllers\MonitoringAgentEndpointController.cs" />
-    <Compile Include="WebApi\NewOS.cs" />
     <Compile Include="WebApi\Controllers\MonitoringConfigEndpointController.cs" />
   </ItemGroup>
   <ItemGroup>

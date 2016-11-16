@@ -159,29 +159,5 @@ namespace Overseer.WebApp.WebApi
                 Content = new StringContent("Monitoring data submitted for: " + monData.SystemInfo.MachineName)
             };
         }
-
-        // POST: Test posting of data
-        [HttpPost]
-        public HttpResponseMessage AddOS([FromBody] string newOSAsJson)
-        {
-            NewOS newOsData = JsonConvert.DeserializeObject<NewOS>(newOSAsJson);
-
-            OperatingSys newOs = new OperatingSys()
-            {
-                OSName = newOsData.NewOSName,
-                Bitness = newOsData.NewOSBitness
-            };
-
-            _unitOfWork.OperatingSystems.Add(newOs);
-
-            _unitOfWork.Save();
-
-            HttpResponseMessage response = new HttpResponseMessage()
-            {
-                Content = new StringContent("'" + newOsData.NewOSName + "' has been added to the OS Database!")
-            };
-
-            return response;
-        }
     }
 }
