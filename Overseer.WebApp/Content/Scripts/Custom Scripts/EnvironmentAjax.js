@@ -109,7 +109,7 @@ function resetForm(form, fieldIgnoreList) {
 }
 
 function refreshSidenav() {
-    var appRoot = location.protocol + "//" + location.host;
+    var appRoot = $('.form-footer > .pag-btn').data('baseurl');
 
     $.ajax({
         type: "GET",

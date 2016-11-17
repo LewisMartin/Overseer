@@ -43,5 +43,7 @@ namespace Overseer.WebApp.ViewModels.Environment
 
         public IEnumerable<SelectListItem> CurrentMonitoredServices { get; set; }
         public IEnumerable<string> UpdatedMonitoredServices { get; set; }
+
+        public string SidebarRefreshUrl { get; set; }
     }
 }

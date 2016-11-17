@@ -31,5 +31,7 @@ namespace Overseer.WebApp.ViewModels.Environment
         public IEnumerable<SelectListItem> ParentEnvironmentOptions { get; set; }
 
         public IEnumerable<SelectListItem> OperatingSystemOptions { get; set; }
+
+        public string SidebarRefreshUrl { get; set; }
     }
 }

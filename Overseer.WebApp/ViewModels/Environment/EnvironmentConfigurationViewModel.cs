@@ -30,5 +30,7 @@ namespace Overseer.WebApp.ViewModels.Environment
         public string MonitoringUpdateInterval { get; set; }
 
         public IEnumerable<SelectListItem> MonitoringIntervalOptions { get; set; }
+
+        public string SidebarRefreshUrl { get; set; }
     }
 }

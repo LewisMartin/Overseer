@@ -149,8 +149,9 @@ namespace Overseer.WebApp.Controllers
                 EnvironmentStatus = testEnv.Status,
                 DownTimeCategoryOptions = downTimeCategoryOptions,
                 MonitoringEnabled = testEnv.MonitoringSettings.MonitoringEnabled,
-                MonitoringIntervalOptions = monitoringIntervalOptions
-            };
+                MonitoringIntervalOptions = monitoringIntervalOptions,
+                SidebarRefreshUrl = GetBaseApplicationUrl()
+            };    
 
             return View(viewModel);
         }
@@ -292,7 +293,8 @@ namespace Overseer.WebApp.Controllers
                 OperatingSystemOptions = operatingSysOps,
                 CurrentMonitoredProcesses = currentMonitoredProcs,
                 CurrentMonitoredEventLogs = currentMonitoredLogs,
-                CurrentMonitoredServices = currentMonitoredServices
+                CurrentMonitoredServices = currentMonitoredServices,
+                SidebarRefreshUrl = GetBaseApplicationUrl()
             };
 
             return View(viewModel);
@@ -323,39 +325,45 @@ namespace Overseer.WebApp.Controllers
             machineToUpdate.NumProcessors = viewModel.NumProcessors;
             machineToUpdate.TotalMemGbs = viewModel.TotalMemGbs;
 
-            _unitOfWork.Save();
-
             // delete and recreate records in process, eventlog & service monitoring tables.
             _unitOfWork.ProcessMonitoring.DeleteByMachine(viewModel.MachineId);
             _unitOfWork.EventLogMonitoring.DeleteByMachine(viewModel.MachineId);
             _unitOfWork.ServiceMonitoring.DeleteByMachine(viewModel.MachineId);
-            _unitOfWork.Save();
 
-            foreach (string procName in viewModel.UpdatedMonitoredProcesses)
+            if (viewModel.UpdatedMonitoredProcesses != null)
             {
-                _unitOfWork.ProcessMonitoring.Add(new ProcessInfo()
+                foreach (string procName in viewModel.UpdatedMonitoredProcesses)
                 {
-                    MachineID = viewModel.MachineId,
-                    ProcessName = procName
-                });
+                    _unitOfWork.ProcessMonitoring.Add(new ProcessInfo()
+                    {
+                        MachineID = viewModel.MachineId,
+                        ProcessName = procName
+                    });
+                }
             }
 
-            foreach (string eventLogName in viewModel.UpdatedMonitoredEventLogs)
+            if (viewModel.UpdatedMonitoredEventLogs != null)
             {
-                _unitOfWork.EventLogMonitoring.Add(new EventLogInfo()
+                foreach (string eventLogName in viewModel.UpdatedMonitoredEventLogs)
                 {
-                    MachineID = viewModel.MachineId,
-                    EventLogName = eventLogName
-                });
+                    _unitOfWork.EventLogMonitoring.Add(new EventLogInfo()
+                    {
+                        MachineID = viewModel.MachineId,
+                        EventLogName = eventLogName
+                    });
+                }
             }
 
-            foreach (string serviceName in viewModel.UpdatedMonitoredServices)
+            if (viewModel.UpdatedMonitoredServices != null)
             {
-                _unitOfWork.ServiceMonitoring.Add(new ServiceInfo()
+                foreach (string serviceName in viewModel.UpdatedMonitoredServices)
                 {
-                    MachineID = viewModel.MachineId,
-                    ServiceName = serviceName
-                });
+                    _unitOfWork.ServiceMonitoring.Add(new ServiceInfo()
+                    {
+                        MachineID = viewModel.MachineId,
+                        ServiceName = serviceName
+                    });
+                }
             }
 
             _unitOfWork.Save();
@@ -379,7 +387,8 @@ namespace Overseer.WebApp.Controllers
 
             EnvironmentCreationViewModel viewModel = new EnvironmentCreationViewModel()
             {
-                DownTimeCategoryOptions = downTimeCategoryOptions
+                DownTimeCategoryOptions = downTimeCategoryOptions,
+                SidebarRefreshUrl = GetBaseApplicationUrl()
             };
 
             return View(viewModel);
@@ -458,7 +467,8 @@ namespace Overseer.WebApp.Controllers
             MachineCreationViewModel viewModel = new MachineCreationViewModel()
             {
                 ParentEnvironmentOptions = parentEnvOps,
-                OperatingSystemOptions = operatingSysOps
+                OperatingSystemOptions = operatingSysOps,
+                SidebarRefreshUrl = GetBaseApplicationUrl()
             };
 
             return View(viewModel);
@@ -494,6 +504,15 @@ namespace Overseer.WebApp.Controllers
 
                 return Json(new { success = true, successmsg = ("<i>'" + viewModel.DisplayName + "' has been successfully added to '" + parentEnvironment.EnvironmentName + "'</i>") }, JsonRequestBehavior.AllowGet);
             }
+        }
+
+        // Note: this needs to be mved to service layer
+        // method to get base url of application
+        private string GetBaseApplicationUrl()
+        {
+            var Req = ControllerContext.RequestContext.HttpContext.Request;
+
+            return Req.Url.Scheme + "://" + Req.Url.Authority + Req.ApplicationPath.TrimEnd('/');
         }
     }
 }

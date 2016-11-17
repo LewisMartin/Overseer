@@ -27,7 +27,6 @@ namespace Overseer.WebApp
                         "~/Content/Styles/font-awesome.min.css",
                         "~/Content/Styles/site.css"));
 
-
             // bundle for custom js
             bundles.Add(new ScriptBundle("~/Custom/Scripts").Include(
                         "~/Content/Scripts/Custom Scripts/OverseerScripts.js",

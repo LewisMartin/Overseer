@@ -21,5 +21,7 @@ namespace Overseer.WebApp.ViewModels.Environment
         public string DownTimeCategory { get; set; }
 
         public IEnumerable<SelectListItem> DownTimeCategoryOptions { get; set; }
+
+        public string SidebarRefreshUrl { get; set; }
     }
 }
