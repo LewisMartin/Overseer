@@ -12,10 +12,10 @@ namespace Overseer.MonitoringAgent
 {
     partial class MonitoringService : ServiceBase
     {
-        private Timer MonitoringUpdateSchedular;
-        private MonAgentConfig Config;
-        private ServerCommunicator Server;
-        private SystemMonitoring SysMonitoring;
+        private Timer _MonitoringUpdateSchedular;
+        private MonAgentConfig _Config;
+        private ServerCommunicator _Server;
+        private SystemMonitoring _SysMonitoring;
         private Logger _Logger;
 
         public MonitoringService()
@@ -31,12 +31,15 @@ namespace Overseer.MonitoringAgent
 
             _Logger.Log("About to read from app.config..");
 
-            Config = new MonAgentConfig(ConfigurationManager.AppSettings["ConfigFileLocation"]);
-            Config.LoadConfig();
+            _Config = new MonAgentConfig(ConfigurationManager.AppSettings["ConfigFileLocation"]);
+            _Config.LoadConfig();
 
-            Server = new ServerCommunicator(Config.AppUri, Config.MachineGuid, Config.MachineSecret);
+            _Server = new ServerCommunicator(_Config.AppUri, _Config.MachineGuid, _Config.MachineSecret);
 
-            SysMonitoring = new SystemMonitoring();
+            _SysMonitoring = new SystemMonitoring();
+
+            // review monitoring settings for process/service/eventlog monitoring
+            ReviewMonitoringSettings();
 
             // begin scheduling
             ScheduleMonitoringUpdate();
@@ -45,28 +48,28 @@ namespace Overseer.MonitoringAgent
         protected override void OnStop()
         {
             _Logger.Log("The service is stopping.");
-            this.MonitoringUpdateSchedular.Dispose();
+            this._MonitoringUpdateSchedular.Dispose();
         }
 
         private void ScheduleMonitoringUpdate()
         {
             // define the callback for the timer
-            MonitoringUpdateSchedular = new Timer(new TimerCallback(MonitoringUpdate));
+            _MonitoringUpdateSchedular = new Timer(new TimerCallback(MonitoringUpdate));
 
             string apiResponse = "";
 
             try
             {
                 // make get request to server for monitoring settings for this machine
-                apiResponse = Server.GetMonitoringSettingsFromApi().Result;
+                apiResponse = _Server.GetMonitoringScheduleFromApi().Result;
 
-                MonitoringScheduleResponse monitoringSettings = JsonConvert.DeserializeObject<MonitoringScheduleResponse>(apiResponse);
+                MonitoringScheduleResponse monitoringSchedule = JsonConvert.DeserializeObject<MonitoringScheduleResponse>(apiResponse);
 
-                if (monitoringSettings.MonitoringEnabled)
+                if (monitoringSchedule.MonitoringEnabled)
                 {
                     _Logger.Log("Monitoring currently enabled.");
 
-                    DateTime scheduledTimeUtc = monitoringSettings.NextScheduledUpdate;
+                    DateTime scheduledTimeUtc = monitoringSchedule.NextScheduledUpdate;
 
                     _Logger.Log("Next Scheduled time (UTC): " + scheduledTimeUtc);
                     DateTime scheduledTimeLocal = scheduledTimeUtc.ToLocalTime();
@@ -95,7 +98,7 @@ namespace Overseer.MonitoringAgent
                     {
                         // update the timer with the next duetime
                         _Logger.Log("Starting countdown timer to update..");
-                        MonitoringUpdateSchedular.Change(nextUpdateDue, Timeout.Infinite);
+                        _MonitoringUpdateSchedular.Change(nextUpdateDue, Timeout.Infinite);
                     }
                 }
                 else
@@ -121,7 +124,7 @@ namespace Overseer.MonitoringAgent
         {
             _Logger.Log("~~~ Monitoring Update Beginning ~~~");
 
-            SysMonitoring.TakeSnapshot();
+            _SysMonitoring.TakeSnapshot();
 
             _Logger.Log("~~~ Monitoring Update Executed Successfully ~~~");
 
@@ -129,12 +132,15 @@ namespace Overseer.MonitoringAgent
 
             try
             {
-                _Logger.Log(await Server.SubmitMonitoringData(SysMonitoring.GenerateMonitoringDataDTO()));
+                _Logger.Log(await _Server.SubmitMonitoringData(_SysMonitoring.GenerateMonitoringDataDTO()));
             }
             catch (Exception serverEx)
             {
                 _Logger.Log("Error Occured whilst submitting monitoring data: " + serverEx.Message);
             }
+
+            // review monitoring settings for process/service/eventlog monitoring
+            ReviewMonitoringSettings();
 
             // reschedule for next update
             ScheduleMonitoringUpdate();
@@ -146,9 +152,30 @@ namespace Overseer.MonitoringAgent
             _Logger.Log("Stopping Service.");
 
             this.Stop();
+        }
 
-            //ServiceController thisService = new ServiceController("OverseerMonitoringAgent");
-            //thisService.Stop();
+        private void ReviewMonitoringSettings()
+        {
+            _Logger.Log("Reviewing monitoring settings.");
+
+            string apiResponse = "";
+            try
+            {
+                // make get request to server for monitoring settings for this machine
+                apiResponse = _Server.GetMonitoringSettingsFromApi().Result;
+                MonitoringSettingsResponse settings = JsonConvert.DeserializeObject<MonitoringSettingsResponse>(apiResponse);
+                _SysMonitoring.UpdateMonitoringSettings(settings.MonitoredProcessNames, settings.MonitoredEventLogNames, settings.MonitoredServiceNames);
+            }
+            catch (JsonException)
+            {
+                _Logger.Log("Server Response Error: " + apiResponse);
+                StopService();
+            }
+            catch (Exception e)
+            {
+                _Logger.Log("Error during monitoring settings review: " + e.Message);
+                StopService();
+            }
         }
     }
 }

@@ -14,6 +14,7 @@ namespace Overseer.MonitoringAgent.Helpers
     class ServerCommunicator
     {
         public string OverseerAuthEndpoint { get; set; }
+        public string OverseerMonitoringScheduleEndpoint { get; set; }
         public string OverseerMonitoringSettingsEndpoint { get; set; }
         public string OverseerMonitoringDataEndpoint { get; set; }
         public string MachineGuid { get; set; }
@@ -28,16 +29,17 @@ namespace Overseer.MonitoringAgent.Helpers
             MachineSecret = machineSecret;
 
             OverseerAuthEndpoint = serverAddress;
-            OverseerMonitoringSettingsEndpoint = serverAddress + "/api/MonitoringAgentEndpoint/GetMonitoringScheduleSettings?machineId=" + MachineGuid;
+            OverseerMonitoringScheduleEndpoint = serverAddress + "/api/MonitoringAgentEndpoint/GetMonitoringSchedule?machineId=" + MachineGuid;
+            OverseerMonitoringSettingsEndpoint = serverAddress + "/api/MonitoringAgentEndpoint/GetMonitoringSettings?machineId=" + MachineGuid;
             OverseerMonitoringDataEndpoint = serverAddress + "/api/MonitoringAgentEndpoint/SubmitMonitoringData";
 
             _Logger = Logger.Instance();
         }
 
-        // GET monitoring settings from api
-        public async Task<string> GetMonitoringSettingsFromApi()
+        // GET monitoring schedule from API
+        public async Task<string> GetMonitoringScheduleFromApi()
         {
-            _Logger.Log("Requesting Monitoring Settings..");
+            _Logger.Log("Requesting Monitoring Schedule..");
 
             using (var httpClient = new HttpClient())
             {
@@ -48,9 +50,27 @@ namespace Overseer.MonitoringAgent.Helpers
                 httpClient.DefaultRequestHeaders.Add("TargetSecret", MachineSecret);
 
                 // making the request
-                HttpResponseMessage response = await httpClient.GetAsync(OverseerMonitoringSettingsEndpoint);
+                HttpResponseMessage response = await httpClient.GetAsync(OverseerMonitoringScheduleEndpoint);
 
                 // return the content of the response as a string
+                return ReadResponseMessage(response).Result;
+            }
+        }
+
+        // GET monitoring settings from API
+        public async Task<string> GetMonitoringSettingsFromApi()
+        {
+            _Logger.Log("Requesting Monitoring Settings");
+
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Accept.Clear();
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                httpClient.DefaultRequestHeaders.Add("TargetMachine", MachineGuid.ToString());
+                httpClient.DefaultRequestHeaders.Add("TargetSecret", MachineSecret);
+
+                HttpResponseMessage response = await httpClient.GetAsync(OverseerMonitoringSettingsEndpoint);
+
                 return ReadResponseMessage(response).Result;
             }
         }

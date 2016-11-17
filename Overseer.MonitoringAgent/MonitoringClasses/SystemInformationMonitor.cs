@@ -11,16 +11,11 @@ using Overseer.DTOs.MonitoringAgent;
 
 namespace Overseer.MonitoringAgent.MonitoringClasses
 {
-    public class SystemInformationMonitor : IMonitorable<SystemInformation>
-    {
-        private Logger _Logger;
-        
+    public class SystemInformationMonitor : StaticMonitor, IMonitorable<SystemInformation>
+    {     
         private SystemInformation _SystemInfo;
 
-        public SystemInformationMonitor()
-        {
-            _Logger = Logger.Instance();
-        }
+        public SystemInformationMonitor() { }
 
         public void Snapshot()
         {
@@ -36,18 +31,13 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
             _Logger.Log("Snapshot successful for: System Information");
         }
 
-        public void DataCheck()
+        public void LogSnapshot()
         {
-            _Logger.Log("---------- SYSTEM INFO ----------");
-            _Logger.Log("Machine Name: " + _SystemInfo.MachineName);
-            _Logger.Log("IP Address: " + _SystemInfo.IPAddress);
-            _Logger.Log("OS Name: " + _SystemInfo.OSName);
-            _Logger.Log("Friendly OS Name: " + _SystemInfo.OSNameFriendly);
-            _Logger.Log("OS Bitness: " + _SystemInfo.OSBitness);
-            _Logger.Log("Processor Count: " + _SystemInfo.ProcessorCount);
-            _Logger.Log("Total RAM: " + _SystemInfo.TotalMem.ToString("0.0"));
-            _Logger.Log("Current Up Time (mins): " + _SystemInfo.UpTime.ToString(@"dd\.hh\:mm\:ss"));
-            _Logger.Log("---------------------------------");
+            string SnapshotData = String.Format("SYSTEM INFO: <Machine Name: {0}, OS Name: {1}, Friendly OS Name: {2}, OS Bitness: {3}, Processor Count: {4}, RAM: {5}, Up Time: {6}>",
+                _SystemInfo.IPAddress, _SystemInfo.OSName, _SystemInfo.OSNameFriendly, _SystemInfo.OSBitness, 
+                _SystemInfo.ProcessorCount, _SystemInfo.TotalMem.ToString("0.0"), _SystemInfo.UpTime.ToString(@"dd\.hh\:mm\:ss"));
+
+            _Logger.Log(SnapshotData);
         }
 
         public SystemInformation GetDTO()

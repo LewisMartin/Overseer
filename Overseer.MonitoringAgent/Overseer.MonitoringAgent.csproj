@@ -56,11 +56,14 @@
       <Link>DTOs\MonitoringAgentDTOs.cs</Link>
     </Compile>
     <Compile Include="Helpers\Logger.cs" />
+    <Compile Include="MonitoringClasses\BaseMonitor.cs" />
     <Compile Include="MonitoringClasses\DiskMonitor.cs" />
+    <Compile Include="MonitoringClasses\DynamicMonitor.cs" />
     <Compile Include="MonitoringClasses\EventLogMonitor.cs" />
     <Compile Include="MonitoringClasses\IMonitorable.cs" />
     <Compile Include="Helpers\MonAgentConfig.cs" />
     <Compile Include="Helpers\ServerCommunicator.cs" />
+    <Compile Include="MonitoringClasses\StaticMonitor.cs" />
     <Compile Include="MonitoringClasses\SystemMonitoring.cs" />
     <Compile Include="MonitoringClasses\PerformanceMonitor.cs" />
     <Compile Include="MonitoringClasses\ProcessMonitor.cs" />

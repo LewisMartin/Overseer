@@ -2,18 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Threading;
 using Overseer.DTOs.MonitoringAgent;
 
 namespace Overseer.MonitoringAgent.MonitoringClasses
 {
-    public class PerformanceMonitor : IMonitorable<PerformanceInformation>
+    public class PerformanceMonitor : StaticMonitor, IMonitorable<PerformanceInformation>
     {
-        private Logger _Logger;
-
         private PerformanceInformation _PerformanceInfo;
 
         private readonly Object _Lock_CpuHighUtilCounter = new Object();
@@ -28,7 +24,6 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
 
         public PerformanceMonitor()
         {
-            _Logger = Logger.Instance();
             _CpuUtilCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
             _MemUtilCounter = new PerformanceCounter("Memory", "% Committed Bytes In Use");
 
@@ -51,15 +46,12 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
             _Logger.Log("Snapshot successful for: Performance");
         }
 
-        public void DataCheck()
+        public void LogSnapshot()
         {
-            _Logger.Log("------- PERFORMANCE INFO -------");
-            _Logger.Log("Number of processes: " + _PerformanceInfo.TotalNumProcesses);
-            _Logger.Log("Avg CPU Usage: " + _PerformanceInfo.AvgCpuUtil + "%");
-            _Logger.Log("High CPU Usage: " + _PerformanceInfo.HighCpuUtilIndicator + "%");
-            _Logger.Log("Avg MEM Usage: " + _PerformanceInfo.AvgMemUtil + "%");
-            _Logger.Log("High MEM Usage: " + _PerformanceInfo.HighMemUtilIndicator + "%");
-            _Logger.Log("---------------------------------");
+            string SnapshotData = String.Format("PERFORMANCE INFO: <Process count: {0}, Avg CPU Usage: {1}%, High CPU Usage: {2}%, Avg MEM Usage: {3}%, High MEM Usage: {4}%>",
+                _PerformanceInfo.TotalNumProcesses, _PerformanceInfo.AvgCpuUtil, _PerformanceInfo.HighCpuUtilIndicator, _PerformanceInfo.AvgMemUtil, _PerformanceInfo.HighMemUtilIndicator);
+
+            _Logger.Log(SnapshotData);
         }
 
         public PerformanceInformation GetDTO()

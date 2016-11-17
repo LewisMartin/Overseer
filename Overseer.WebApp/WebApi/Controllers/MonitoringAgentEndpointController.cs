@@ -25,7 +25,7 @@ namespace Overseer.WebApp.WebApi
 
         // GET: get the monitoring interval to use within monitoring agent for specified target machine
         [HttpGet]
-        public MonitoringScheduleResponse GetMonitoringScheduleSettings(Guid machineId)
+        public MonitoringScheduleResponse GetMonitoringSchedule(Guid machineId)
         {
             Machine targetMachine = _unitOfWork.Machines.Get(machineId);
 

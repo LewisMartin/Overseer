@@ -12,22 +12,23 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
     public class SystemMonitoring
     {
         private Logger _Logger;
-        private SystemInformationMonitor SysInfoMon;
-        private PerformanceMonitor PerfMon;
-        private DiskMonitor DiskMon;
-        private EventLogMonitor EventLogMon;
-        private ServiceMonitor ServiceMon;
-        private ProcessMonitor ProcessMon;
+
+        private SystemInformationMonitor _SysInfoMon;
+        private PerformanceMonitor _PerfMon;
+        private DiskMonitor _DiskMon;
+        private EventLogMonitor _EventLogMon;
+        private ServiceMonitor _ServiceMon;
+        private ProcessMonitor _ProcessMon;
 
         public SystemMonitoring()
         {
             // constructor - could pass initial settings to each monitoring component here..
-            SysInfoMon = new SystemInformationMonitor();
-            PerfMon = new PerformanceMonitor();
-            DiskMon = new DiskMonitor();
-            EventLogMon = new EventLogMonitor();
-            ServiceMon = new ServiceMonitor();
-            ProcessMon = new ProcessMonitor();
+            _SysInfoMon = new SystemInformationMonitor();
+            _PerfMon = new PerformanceMonitor();
+            _DiskMon = new DiskMonitor();
+            _ProcessMon = new ProcessMonitor();
+            _EventLogMon = new EventLogMonitor();
+            _ServiceMon = new ServiceMonitor();
 
             _Logger = Logger.Instance();
         }
@@ -36,17 +37,27 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
         {
             _Logger.Log("Taking snapshot of current system state..");
 
-            SysInfoMon.Snapshot();
-            PerfMon.Snapshot();
-            DiskMon.Snapshot();
-            EventLogMon.Snapshot();
-            ServiceMon.Snapshot();
-            ProcessMon.Snapshot();
+            _SysInfoMon.Snapshot();
+            _PerfMon.Snapshot();
+            _DiskMon.Snapshot();
+            _EventLogMon.Snapshot();
+            _ServiceMon.Snapshot();
+            _ProcessMon.Snapshot();
 
             _Logger.Log("Verifying obtained data..");
-            SysInfoMon.DataCheck();
-            PerfMon.DataCheck();
-            DiskMon.DataCheck();
+            _SysInfoMon.LogSnapshot();
+            _PerfMon.LogSnapshot();
+            _DiskMon.LogSnapshot();
+            _ProcessMon.LogSnapshot();
+            _EventLogMon.LogSnapshot();
+            _ServiceMon.LogSnapshot();
+        }
+
+        public void UpdateMonitoringSettings(List<string> updatedProcesses, List<string> updatedEventLogs, List<string> updatedServices)
+        {
+            _ProcessMon.UpdateMonitoredEntities(updatedProcesses);
+            _EventLogMon.UpdateMonitoredEntities(updatedEventLogs);
+            _ServiceMon.UpdateMonitoredEntities(updatedServices);
         }
 
         // consider moving this to a 'monitoring mapper' object
@@ -54,12 +65,12 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
         {
             return new MonitoringData()
             {
-                SystemInfo = SysInfoMon.GetDTO(),
-                PerformanceInfo = PerfMon.GetDTO(),
-                DiskInfo = DiskMon.GetDTO(),
-                EventLogInfo = EventLogMon.GetDTO(),
-                ServiceInfo = ServiceMon.GetDTO(),
-                ProcessInfo = ProcessMon.GetDTO()
+                SystemInfo = _SysInfoMon.GetDTO(),
+                PerformanceInfo = _PerfMon.GetDTO(),
+                DiskInfo = _DiskMon.GetDTO(),
+                EventLogInfo = _EventLogMon.GetDTO(),
+                ServiceInfo = _ServiceMon.GetDTO(),
+                ProcessInfo = _ProcessMon.GetDTO()
             };
         }
     }

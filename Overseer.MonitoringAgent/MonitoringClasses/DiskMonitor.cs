@@ -4,23 +4,16 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Overseer.MonitoringAgent.MonitoringClasses
 {
-    public class DiskMonitor : IMonitorable<DiskInformation>
+    public class DiskMonitor : StaticMonitor, IMonitorable<DiskInformation>
     {
-        private Logger _Logger;
-
         private DiskInformation _DiskInfo;
 
         private List<DriveInfo> _DriveList { get; set; }  // Note: this .Net class cannot be serialized (as we want), hence we map each drive to a custom object
 
-        public DiskMonitor()
-        {
-            _Logger = Logger.Instance();
-        }
+        public DiskMonitor() { }
 
         public void Snapshot()
         {
@@ -35,22 +28,18 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
             _Logger.Log("Snapshot successful for: Disk");
         }
 
-        public void DataCheck()
+        public void LogSnapshot()
         {
-            _Logger.Log("---------- DRIVE INFO ----------");
-            _Logger.Log("Number of drives: " + _DriveList.Count());
+            string SnapshotData = String.Format("DISK INFO: <Drive Count: {0},", _DriveList.Count());
 
             foreach (SingleDrive drive in _DiskInfo.Drives)
             {
-                _Logger.Log(drive.Name + " drive (" + drive.VolumeLabel + "):");
-                _Logger.Log("Drive Type: " + drive.DriveType);
-                _Logger.Log("Drive Format: " + drive.DriveFormat);
-                _Logger.Log("Total drive size: " + drive.TotalSpace);
-                _Logger.Log("Total free space: " + drive.FreeSpace);
-                _Logger.Log("Total available space: " + drive.AvailableSpace);
+                SnapshotData += String.Format(" {0} drive: [Volume label: {1}, Drive type: {2}, Drive format: {3}, Total size: {4}, Free space: {5}, Available space: {6}]",
+                    drive.Name, drive.VolumeLabel, drive.DriveType, drive.DriveFormat, drive.TotalSpace, drive.FreeSpace, drive.AvailableSpace);
             }
+            SnapshotData += " >";
 
-            _Logger.Log("---------------------------------");
+            _Logger.Log(SnapshotData);
         }
 
         public DiskInformation GetDTO()

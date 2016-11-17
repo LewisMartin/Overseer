@@ -8,16 +8,11 @@ using System.Threading.Tasks;
 
 namespace Overseer.MonitoringAgent.MonitoringClasses
 {
-    public class EventLogMonitor : IMonitorable<EventLogInformation>
+    public class EventLogMonitor : DynamicMonitor, IMonitorable<EventLogInformation>
     {
-        private Logger _Logger;
-
         private EventLogInformation EventLogInfo;
 
-        public EventLogMonitor()
-        {
-            _Logger = Logger.Instance();
-        }
+        public EventLogMonitor() { }
 
         public void Snapshot()
         {
@@ -29,6 +24,20 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
         public EventLogInformation GetDTO()
         {
             return EventLogInfo;
+        }
+
+        public void LogSnapshot()
+        {
+            string SnapshotData = ("EVENTLOG INFO: <");
+
+            foreach (string eventlog in MonitoredEntities)
+            {
+                SnapshotData += String.Format(" {0}: [Exists: , NumEventsTrawled: , NumInfos: , NumWarnings: , NumErrors: ]",
+                    eventlog);
+            }
+            SnapshotData += " >";
+
+            _Logger.Log(SnapshotData);
         }
     }
 }

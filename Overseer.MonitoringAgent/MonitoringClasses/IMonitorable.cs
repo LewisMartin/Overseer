@@ -16,7 +16,7 @@ namespace Overseer.MonitoringAgent
         // package monitored information into format to be serialized to json and sent to server
         T GetDTO();
 
-        // this will be used later in conjuction with monitoring settings for each monitored component
-        //void UpdateSettings();
+        // method for logging out current snapshot data
+        void LogSnapshot();
     }
 }

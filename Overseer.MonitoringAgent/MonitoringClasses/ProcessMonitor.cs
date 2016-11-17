@@ -8,16 +8,11 @@ using System.Threading.Tasks;
 
 namespace Overseer.MonitoringAgent.MonitoringClasses
 {
-    public class ProcessMonitor : IMonitorable<ProcessInformation>
+    public class ProcessMonitor : DynamicMonitor, IMonitorable<ProcessInformation>
     {
-        private Logger _Logger;
-
         private ProcessInformation _ProcessInfo;
 
-        public ProcessMonitor()
-        {
-            _Logger = Logger.Instance();
-        }
+        public ProcessMonitor() { }
 
         public void Snapshot()
         {
@@ -29,6 +24,20 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
         public ProcessInformation GetDTO()
         {
             return _ProcessInfo;
+        }
+
+        public void LogSnapshot()
+        {
+            string SnapshotData = ("PROCESS INFO: <");
+
+            foreach (string proc in MonitoredEntities)
+            {
+                SnapshotData += String.Format(" {0}.exe: [IsRunning: , PID: , ThreadCount: , Status: , StartTime: , CpuTime: , MEM Usage: ]",
+                    proc);
+            }
+            SnapshotData += " >";
+
+            _Logger.Log(SnapshotData);
         }
     }
 }

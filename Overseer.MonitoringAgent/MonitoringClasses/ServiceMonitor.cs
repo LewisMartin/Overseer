@@ -8,16 +8,11 @@ using System.Threading.Tasks;
 
 namespace Overseer.MonitoringAgent.MonitoringClasses
 {
-    public class ServiceMonitor : IMonitorable<ServiceInformation>
+    public class ServiceMonitor : DynamicMonitor, IMonitorable<ServiceInformation>
     {
-        private Logger _Logger;
-
         private ServiceInformation _ServiceInfo;
 
-        public ServiceMonitor()
-        {
-            _Logger = Logger.Instance();
-        }
+        public ServiceMonitor() { }
 
         public void Snapshot()
         {
@@ -29,6 +24,20 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
         public ServiceInformation GetDTO()
         {
             return _ServiceInfo;
+        }
+
+        public void LogSnapshot()
+        {
+            string SnapshotData = ("SERVICE INFO: <");
+
+            foreach (string service in MonitoredEntities)
+            {
+                SnapshotData += String.Format(" {0}: [Exists: , Status: , Startup type: ]",
+                    service);
+            }
+            SnapshotData += " >";
+
+            _Logger.Log(SnapshotData);
         }
     }
 }
