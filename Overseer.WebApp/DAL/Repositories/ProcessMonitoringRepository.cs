@@ -10,9 +10,9 @@ namespace Overseer.WebApp.DAL.Repositories
     {
         public ProcessMonitoringRepository(OverseerDBContext context) : base(context) { }
 
-        public ProcessInfo Get(Guid machineId, string processName)
+        public ProcessInfo Get(Guid machineId, int pid)
         {
-            return dbContext.ProcessMonitoring.FirstOrDefault(p => p.MachineID == machineId && p.ProcessName == processName);
+            return dbContext.ProcessMonitoring.FirstOrDefault(p => p.MachineID == machineId && p.PID == pid);
         }
 
         public IEnumerable<ProcessInfo> GetByMachine(Guid machineId)

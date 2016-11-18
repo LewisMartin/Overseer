@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using Overseer.WebApp.DAL.DomainModels;
 
 namespace Overseer.WebApp.DAL
@@ -46,9 +42,12 @@ namespace Overseer.WebApp.DAL
         public DbSet<DiskInfo> DiskMonitoring { get; set; }
         // EventMon
         public DbSet<EventLogInfo> EventLogMonitoring { get; set; }
+        public DbSet<EventLogSettings> EventLogMonitoringSettings { get; set; }
         // ServiceMon
         public DbSet<ServiceInfo> ServiceMonitoring { get; set; }
+        public DbSet<ServiceSettings> ServiceMonitoringSettings { get; set; }
         // ProcessMon
-        public DbSet<DomainModels.ProcessInfo> ProcessMonitoring { get; set; }
+        public DbSet<ProcessInfo> ProcessMonitoring { get; set; }
+        public DbSet<ProcessSettings> ProcessMonitoringSettings { get; set; }
     }
 }

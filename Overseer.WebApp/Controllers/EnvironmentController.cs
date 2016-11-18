@@ -236,10 +236,10 @@ namespace Overseer.WebApp.Controllers
                 });
             }
 
-            IEnumerable<ProcessInfo> procs = _unitOfWork.ProcessMonitoring.GetByMachine(machineId);
+            IEnumerable<ProcessSettings> procs = _unitOfWork.ProcessMonitoringSettings.GetByMachine(machineId);
             if (procs != null)
             {
-                foreach (ProcessInfo proc in procs)
+                foreach (ProcessSettings proc in procs)
                 {
                     currentMonitoredProcs.Add(new SelectListItem
                     {
@@ -250,10 +250,10 @@ namespace Overseer.WebApp.Controllers
                 }
             }
 
-            IEnumerable<EventLogInfo> logs = _unitOfWork.EventLogMonitoring.GetByMachine(machineId);
+            IEnumerable<EventLogSettings> logs = _unitOfWork.EventLogMonitoringSettings.GetByMachine(machineId);
             if (logs != null)
             {
-                foreach (EventLogInfo log in logs)
+                foreach (EventLogSettings log in logs)
                 {
                     currentMonitoredLogs.Add(new SelectListItem()
                     {
@@ -264,10 +264,10 @@ namespace Overseer.WebApp.Controllers
                 }
             }
 
-            IEnumerable<ServiceInfo> services = _unitOfWork.ServiceMonitoring.GetByMachine(machineId);
+            IEnumerable<ServiceSettings> services = _unitOfWork.ServiceMonitoringSettings.GetByMachine(machineId);
             if (services != null)
             {
-                foreach (ServiceInfo service in services)
+                foreach (ServiceSettings service in services)
                 {
                     currentMonitoredServices.Add(new SelectListItem()
                     {
@@ -326,15 +326,15 @@ namespace Overseer.WebApp.Controllers
             machineToUpdate.TotalMemGbs = viewModel.TotalMemGbs;
 
             // delete and recreate records in process, eventlog & service monitoring tables.
-            _unitOfWork.ProcessMonitoring.DeleteByMachine(viewModel.MachineId);
-            _unitOfWork.EventLogMonitoring.DeleteByMachine(viewModel.MachineId);
-            _unitOfWork.ServiceMonitoring.DeleteByMachine(viewModel.MachineId);
+            _unitOfWork.ProcessMonitoringSettings.DeleteByMachine(viewModel.MachineId);
+            _unitOfWork.EventLogMonitoringSettings.DeleteByMachine(viewModel.MachineId);
+            _unitOfWork.ServiceMonitoringSettings.DeleteByMachine(viewModel.MachineId);
 
             if (viewModel.UpdatedMonitoredProcesses != null)
             {
                 foreach (string procName in viewModel.UpdatedMonitoredProcesses)
                 {
-                    _unitOfWork.ProcessMonitoring.Add(new ProcessInfo()
+                    _unitOfWork.ProcessMonitoringSettings.Add(new ProcessSettings()
                     {
                         MachineID = viewModel.MachineId,
                         ProcessName = procName
@@ -346,7 +346,7 @@ namespace Overseer.WebApp.Controllers
             {
                 foreach (string eventLogName in viewModel.UpdatedMonitoredEventLogs)
                 {
-                    _unitOfWork.EventLogMonitoring.Add(new EventLogInfo()
+                    _unitOfWork.EventLogMonitoringSettings.Add(new EventLogSettings()
                     {
                         MachineID = viewModel.MachineId,
                         EventLogName = eventLogName
@@ -358,7 +358,7 @@ namespace Overseer.WebApp.Controllers
             {
                 foreach (string serviceName in viewModel.UpdatedMonitoredServices)
                 {
-                    _unitOfWork.ServiceMonitoring.Add(new ServiceInfo()
+                    _unitOfWork.ServiceMonitoringSettings.Add(new ServiceSettings()
                     {
                         MachineID = viewModel.MachineId,
                         ServiceName = serviceName

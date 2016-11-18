@@ -51,13 +51,13 @@ namespace Overseer.WebApp.WebApi
         {
             MonitoringSettingsResponse monitoringSettingsResponse = new MonitoringSettingsResponse();
 
-            IEnumerable<ProcessInfo> procs = _unitOfWork.ProcessMonitoring.GetByMachine(machineId);
-            IEnumerable<EventLogInfo> logs = _unitOfWork.EventLogMonitoring.GetByMachine(machineId);
-            IEnumerable<ServiceInfo> services = _unitOfWork.ServiceMonitoring.GetByMachine(machineId);
+            IEnumerable<ProcessSettings> procs = _unitOfWork.ProcessMonitoringSettings.GetByMachine(machineId);
+            IEnumerable<EventLogSettings> logs = _unitOfWork.EventLogMonitoringSettings.GetByMachine(machineId);
+            IEnumerable<ServiceSettings> services = _unitOfWork.ServiceMonitoringSettings.GetByMachine(machineId);
 
             if (procs != null)
             {
-                foreach (ProcessInfo proc in procs)
+                foreach (ProcessSettings proc in procs)
                 {
                     monitoringSettingsResponse.MonitoredProcessNames.Add(proc.ProcessName);
                 }
@@ -65,7 +65,7 @@ namespace Overseer.WebApp.WebApi
 
             if (logs != null)
             {
-                foreach (EventLogInfo log in logs)
+                foreach (EventLogSettings log in logs)
                 {
                     monitoringSettingsResponse.MonitoredEventLogNames.Add(log.EventLogName);
                 }
@@ -73,7 +73,7 @@ namespace Overseer.WebApp.WebApi
 
             if (services != null)
             {
-                foreach (ServiceInfo service in services)
+                foreach (ServiceSettings service in services)
                 {
                     monitoringSettingsResponse.MonitoredServiceNames.Add(service.ServiceName);
                 }
