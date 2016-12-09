@@ -16,15 +16,17 @@ namespace Overseer.WebApp.DAL.DomainModels
         [StringLength(25)]
         public string EventLogName { get; set; }
 
-        public bool? Exists { get; set; }
+        public string FriendlyLogName { get; set; }
 
-        public int? TotalEvents { get; set; }
+        public bool Exists { get; set; }
 
-        public int? NumInfos { get; set; }
+        public int TotalEvents { get; set; }
 
-        public int? NumWarnings { get; set; }
+        public int NumInfos { get; set; }
 
-        public int? NumErrors { get; set; }
+        public int NumWarnings { get; set; }
+
+        public int NumErrors { get; set; }
 
         // navigation properties
         public Machine Machine { get; set; }

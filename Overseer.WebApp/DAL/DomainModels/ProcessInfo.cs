@@ -17,17 +17,17 @@ namespace Overseer.WebApp.DAL.DomainModels
 
         public string ProcessName { get; set; }
 
-        public bool? IsRunning { get; set; }
+        public bool Status { get; set; }
 
-        public string Status { get; set; }
+        public DateTime StartTime { get; set; }
 
-        public int? ThreadCount { get; set; }
+        public TimeSpan CpuTime { get; set; }
 
-        public DateTime? LastStartTime { get; set; }
+        public int ThreadCount { get; set; }
 
-        public TimeSpan? CpuTime { get; set; }
+        public long PrivateWorkingSet { get; set; }
 
-        public long? MemUsage { get; set; }
+        public long CommitSize { get; set; }
 
         // navigation properties
         public Machine Machine { get; set; }

@@ -19,6 +19,8 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
 
         public void Snapshot()
         {
+            _ProcessList.Clear();
+
             _ProcessInfo = new ProcessInformation();
 
             if (MonitoredEntities.Count() > 0)

@@ -70,6 +70,65 @@
                     </ul>
                 }
             </div>
+            <div class="content-area">
+                <h3>Process Monitoring</h3>
+                @if (Model.MonitoringData.ProcessInfo.MonitoredProcesses != null)
+                {
+                    foreach (var procGroup in Model.MonitoringData.ProcessInfo.MonitoredProcesses)
+                    {
+                        <h4>@procGroup.ProcessName</h4>
+                        <ul>
+                            @foreach (var proc in procGroup.Processes)
+                            {
+                                <li>
+                                    <ul>
+                                        <li>@proc.PID</li>
+                                        <li>@proc.Status</li>
+                                        <li>@proc.StartTime</li>
+                                        <li>@proc.CpuTime</li>
+                                        <li>@proc.ThreadCount</li>
+                                        <li>@proc.PrivateWorkingSet</li>
+                                        <li>@proc.CommitSize</li>
+                                    </ul>
+                                </li>
+                            }
+                        </ul>
+                    }
+                }
+            </div>
+            <div class="content-area">
+                <h3>EventLog Monitoring</h3>
+                @if (Model.MonitoringData.EventLogInfo.EventLogs != null)
+                {
+                    foreach (var log in Model.MonitoringData.EventLogInfo.EventLogs)
+                    {
+                        <h4>@log.EventLogName</h4>
+                        <ul>
+                            <li>@log.FriendlyLogName</li>
+                            <li>@log.Exists</li>
+                            <li>@log.TotalEvents</li>
+                            <li>@log.NumInfos</li>
+                            <li>@log.NumWarnings</li>
+                            <li>@log.NumErrors</li>
+                        </ul>
+                    }
+                }
+            </div>
+            <div class="content-area">
+                <h3>Services Monitoring</h3>
+                @if (Model.MonitoringData.ServiceInfo.Services != null)
+                {
+                    foreach (var service in Model.MonitoringData.ServiceInfo.Services)
+                    {
+                        <h4>@service.ServiceName</h4>
+                        <ul>
+                            <li>@service.Exists</li>
+                            <li>@service.Status</li>
+                            <li>@service.StartupType</li>
+                        </ul>
+                    }
+                }
+            </div>
         }
         @Html.ActionLink("Configure Machine", "MachineConfiguration", "Environment", new { machineId = @Model.MachineId }, null)
     </section>

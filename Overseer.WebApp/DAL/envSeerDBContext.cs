@@ -40,14 +40,14 @@ namespace Overseer.WebApp.DAL
         public DbSet<PerformanceInfo> PerformanceMonitoring { get; set; }
         // DiskMon
         public DbSet<DiskInfo> DiskMonitoring { get; set; }
+        // ProcessMon
+        public DbSet<ProcessInfo> ProcessMonitoring { get; set; }
+        public DbSet<ProcessSettings> ProcessMonitoringSettings { get; set; }
         // EventMon
         public DbSet<EventLogInfo> EventLogMonitoring { get; set; }
         public DbSet<EventLogSettings> EventLogMonitoringSettings { get; set; }
         // ServiceMon
         public DbSet<ServiceInfo> ServiceMonitoring { get; set; }
         public DbSet<ServiceSettings> ServiceMonitoringSettings { get; set; }
-        // ProcessMon
-        public DbSet<ProcessInfo> ProcessMonitoring { get; set; }
-        public DbSet<ProcessSettings> ProcessMonitoringSettings { get; set; }
     }
 }

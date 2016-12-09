@@ -113,6 +113,69 @@ namespace Overseer.WebApp.Controllers
                             });
                         }
                     }
+
+                    if (machine.ProcessConfig != null)
+                    {
+                        foreach (ProcessSettings setting in machine.ProcessConfig)  // each monitored process
+                        {
+                            List<SingleProcessViewModel> procs = new List<SingleProcessViewModel>();
+
+                            if (machine.ProcessData != null)
+                            {
+                                foreach (ProcessInfo proc in machine.ProcessData)   // each process for which we have data
+                                {
+                                    if (proc.ProcessName == setting.ProcessName)
+                                    {
+                                        procs.Add(new SingleProcessViewModel()
+                                        {
+                                            PID = proc.PID,
+                                            Status = proc.Status,
+                                            StartTime = proc.StartTime,
+                                            CpuTime = proc.CpuTime,
+                                            ThreadCount = proc.ThreadCount,
+                                            PrivateWorkingSet = proc.PrivateWorkingSet,
+                                            CommitSize = proc.CommitSize
+                                        });
+                                    }
+                                   
+                                }
+                            }
+
+                            viewModel.MonitoringData.ProcessInfo.MonitoredProcesses.Add(new ProcessGroupViewModel() { ProcessName = setting.ProcessName, Processes = procs });
+
+                        }
+                    }
+
+                    if (machine.EventLogData != null)
+                    {
+                        foreach (EventLogInfo log in machine.EventLogData)
+                        {
+                            viewModel.MonitoringData.EventLogInfo.EventLogs.Add(new SingleEventLogViewModel()
+                            {
+                                EventLogName = log.EventLogName,
+                                FriendlyLogName = log.FriendlyLogName,
+                                Exists = log.Exists,
+                                TotalEvents = log.TotalEvents,
+                                NumInfos = log.NumInfos,
+                                NumWarnings = log.NumWarnings,
+                                NumErrors = log.NumErrors
+                            });
+                        }
+                    }
+
+                    if (machine.ServiceData != null)
+                    {
+                        foreach (ServiceInfo service in machine.ServiceData)
+                        {
+                            viewModel.MonitoringData.ServiceInfo.Services.Add(new SingleServiceViewModel()
+                            {
+                                ServiceName = service.ServiceName,
+                                Exists = service.Exists,
+                                Status = service.Status,
+                                StartupType = service.StartupType
+                            });
+                        }
+                    }
                 }
 
                 return View(viewModel);

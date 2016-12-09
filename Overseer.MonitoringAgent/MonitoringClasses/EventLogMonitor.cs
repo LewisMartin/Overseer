@@ -19,6 +19,8 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
 
         public void Snapshot()
         {
+            _EventLogList.Clear();
+
             _EventLogInfo = new EventLogInformation();
 
             if (MonitoredEntities != null)

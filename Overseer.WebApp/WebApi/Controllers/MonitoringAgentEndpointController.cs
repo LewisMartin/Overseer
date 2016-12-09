@@ -105,6 +105,13 @@ namespace Overseer.WebApp.WebApi
 
                 sysInfo = _unitOfWork.SystemInfoMonitoring.Get(machineId);
             }
+            sysInfo.MachineName = monData.SystemInfo.MachineName;
+            sysInfo.IPAddress = monData.SystemInfo.IPAddress;
+            sysInfo.OSName = monData.SystemInfo.OSName;
+            sysInfo.OSNameFriendly = monData.SystemInfo.OSNameFriendly;
+            sysInfo.OSBitness = monData.SystemInfo.OSBitness;
+            sysInfo.ProcessorCount = monData.SystemInfo.ProcessorCount;
+            sysInfo.TotalMem = monData.SystemInfo.TotalMem;
 
             // getting/creating system information record in 'PerformanceMonitoring' table.
             PerformanceInfo perfInfo = _unitOfWork.PerformanceMonitoring.Get(machineId);
@@ -119,6 +126,11 @@ namespace Overseer.WebApp.WebApi
 
                 perfInfo = _unitOfWork.PerformanceMonitoring.Get(machineId);
             }
+            perfInfo.CpuUtil = monData.PerformanceInfo.AvgCpuUtil;
+            perfInfo.MemUtil = monData.PerformanceInfo.AvgMemUtil;
+            perfInfo.HighCpuUtilIndicator = monData.PerformanceInfo.HighCpuUtilIndicator;
+            perfInfo.HighMemUtilIndicator = monData.PerformanceInfo.HighMemUtilIndicator;
+            perfInfo.TotalProcesses = monData.PerformanceInfo.TotalNumProcesses;
 
             // far less cumbersome just to delete all disk records for this machine & add new ones rather than attempting to maintain a list
             _unitOfWork.DiskMonitoring.DeleteByMachine(machineId);
@@ -139,20 +151,62 @@ namespace Overseer.WebApp.WebApi
                 });
             }
 
-            sysInfo.MachineName = monData.SystemInfo.MachineName;
-            sysInfo.IPAddress = monData.SystemInfo.IPAddress;
-            sysInfo.OSName = monData.SystemInfo.OSName;
-            sysInfo.OSNameFriendly = monData.SystemInfo.OSNameFriendly;
-            sysInfo.OSBitness = monData.SystemInfo.OSBitness;
-            sysInfo.ProcessorCount = monData.SystemInfo.ProcessorCount;
-            sysInfo.TotalMem = monData.SystemInfo.TotalMem;
+            // likewise for all processes
+            _unitOfWork.ProcessMonitoring.DeleteByMachine(machineId);
+            _unitOfWork.Save();
 
-            perfInfo.CpuUtil = monData.PerformanceInfo.AvgCpuUtil;
-            perfInfo.MemUtil = monData.PerformanceInfo.AvgMemUtil;
-            perfInfo.HighCpuUtilIndicator = monData.PerformanceInfo.HighCpuUtilIndicator;
-            perfInfo.HighMemUtilIndicator = monData.PerformanceInfo.HighMemUtilIndicator;
-            perfInfo.TotalProcesses = monData.PerformanceInfo.TotalNumProcesses;
+            foreach (SingleProc proc in monData.ProcessInfo.Processes)
+            {
+                _unitOfWork.ProcessMonitoring.Add(new ProcessInfo()
+                {
+                    MachineID = machineId,
+                    PID = proc.Pid,
+                    ProcessName = proc.Name,
+                    Status = proc.Status,
+                    StartTime = proc.StartTime,
+                    CpuTime = proc.CpuTime,
+                    ThreadCount = proc.ThreadCount,
+                    PrivateWorkingSet = proc.PrivateWorkingSet,
+                    CommitSize = proc.CommitSize
+                });
+            }
 
+            // likewise for all event logs
+            _unitOfWork.EventLogMonitoring.DeleteByMachine(machineId);
+            _unitOfWork.Save();
+
+            foreach (SingleLog log in monData.EventLogInfo.EventLogs)
+            {
+                _unitOfWork.EventLogMonitoring.Add(new EventLogInfo()
+                {
+                    MachineID = machineId,
+                    EventLogName = log.Name,
+                    FriendlyLogName = log.DisplayName,
+                    Exists = log.Exists,
+                    TotalEvents = log.EntryTotal,
+                    NumInfos = log.InfoTotal,
+                    NumWarnings = log.WarningTotal,
+                    NumErrors = log.ErrorTotal,
+                });
+            }
+
+            // likewise for all services
+            _unitOfWork.ServiceMonitoring.DeleteByMachine(machineId);
+            _unitOfWork.Save();
+
+            foreach (SingleService service in monData.ServiceInfo.Services)
+            {
+                _unitOfWork.ServiceMonitoring.Add(new ServiceInfo()
+                {
+                    MachineID = machineId,
+                    ServiceName = service.Name,
+                    Exists = service.Exists,
+                    Status = service.Status,
+                    StartupType = service.StartUpType
+                });
+            }
+
+            // persist all changes
             _unitOfWork.Save();
 
             return new HttpResponseMessage()

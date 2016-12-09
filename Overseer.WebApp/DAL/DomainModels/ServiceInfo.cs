@@ -16,7 +16,7 @@ namespace Overseer.WebApp.DAL.DomainModels
         [StringLength(25)]
         public string ServiceName { get; set; }
 
-        public bool? Exists { get; set; }
+        public bool Exists { get; set; }
 
         public string Status { get; set; }
 

@@ -50,6 +50,12 @@ namespace Overseer.WebApp.DAL.Repositories
                 .Include(m => m.SystemInformationData)
                 .Include(m => m.PerformanceData)
                 .Include(m => m.DiskData)
+                .Include(m => m.ProcessConfig)
+                .Include(m => m.ProcessData)
+                .Include(m => m.EventLogConfig)
+                .Include(m => m.EventLogData)
+                .Include(m => m.ServiceConfig)
+                .Include(m => m.ServiceData)
                 .FirstOrDefault(m => m.MachineID == machineId);
         }
 
