@@ -11,6 +11,7 @@ using Overseer.WebApp.Helpers.AuthHelpers;
 using Overseer.WebApp.DAL.DomainModels;
 using Overseer.DTOs.MonitoringAgent;
 using Overseer.WebApp.WebApi.Controllers;
+using Newtonsoft.Json.Converters;
 
 namespace Overseer.WebApp.WebApi
 {
@@ -86,7 +87,7 @@ namespace Overseer.WebApp.WebApi
         [HttpPost]
         public HttpResponseMessage SubmitMonitoringData([FromBody] string monitoringData)   // REFACTOR
         {
-            MonitoringData monData = JsonConvert.DeserializeObject<MonitoringData>(monitoringData);
+            MonitoringData monData = JsonConvert.DeserializeObject<MonitoringData>(monitoringData, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy HH:mm:ss" }); // specify format for deserialization of any dates within data
 
             Guid machineId = new Guid(Request.Headers.GetValues("TargetMachine").FirstOrDefault());
 

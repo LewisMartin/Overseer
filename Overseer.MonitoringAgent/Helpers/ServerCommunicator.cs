@@ -79,7 +79,7 @@ namespace Overseer.MonitoringAgent.Helpers
         public async Task<string> SubmitMonitoringData(MonitoringData monData)
         {
             // serializing monitoring data to json string
-            string jsonData = string.Format("={0}", JsonConvert.SerializeObject(monData));
+            string jsonData = string.Format("={0}", JsonConvert.SerializeObject(monData, new JsonSerializerSettings() { DateFormatString = "dd/MM/yyyy HH:mm:ss" }));
 
             // forming the content of the psot request
             var postContent = new StringContent(

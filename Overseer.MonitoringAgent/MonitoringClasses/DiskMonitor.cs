@@ -78,8 +78,6 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
         {
             _DiskInfo.DriveCount = _DriveList.Count();
 
-            _DiskInfo.Drives = new List<SingleDrive>();
-
             foreach (DriveInfo drive in _DriveList)
             {
                 _DiskInfo.Drives.Add(new SingleDrive()

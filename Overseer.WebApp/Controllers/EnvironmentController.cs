@@ -80,13 +80,22 @@ namespace Overseer.WebApp.Controllers
                 {
                     if (machine.SystemInformationData != null)
                     {
+                        viewModel.MonitoringData.SystemInfo.MachineName = machine.SystemInformationData.MachineName;
+                        viewModel.MonitoringData.SystemInfo.IPAddress = machine.SystemInformationData.IPAddress;
                         viewModel.MonitoringData.SystemInfo.OSNameFriendly = machine.SystemInformationData.OSNameFriendly;
+                        viewModel.MonitoringData.SystemInfo.OSName = machine.SystemInformationData.OSName;
+                        viewModel.MonitoringData.SystemInfo.OSBitness = machine.SystemInformationData.OSBitness;
+                        viewModel.MonitoringData.SystemInfo.ProcessorCount = (machine.SystemInformationData.ProcessorCount != null ? (int)machine.SystemInformationData.ProcessorCount : 0);
+                        viewModel.MonitoringData.SystemInfo.TotalMem = (machine.SystemInformationData.TotalMem != null ? (int)machine.SystemInformationData.TotalMem : 0);
                     }
 
                     if (machine.PerformanceData != null)
                     {
                         viewModel.MonitoringData.PerformanceInfo.AvgCpuUtil = (machine.PerformanceData.CpuUtil != null ? (float)machine.PerformanceData.CpuUtil : 101);
-                        viewModel.MonitoringData.PerformanceInfo.AvgMemUtil = (machine.PerformanceData.CpuUtil != null ? (float)machine.PerformanceData.CpuUtil : 101);
+                        viewModel.MonitoringData.PerformanceInfo.AvgMemUtil = (machine.PerformanceData.MemUtil != null ? (float)machine.PerformanceData.MemUtil : 101);
+                        viewModel.MonitoringData.PerformanceInfo.HighCpuUtilIndicator = (machine.PerformanceData.HighCpuUtilIndicator != null ? (float)machine.PerformanceData.HighCpuUtilIndicator : 0);
+                        viewModel.MonitoringData.PerformanceInfo.HighMemUtilIndicator = (machine.PerformanceData.HighMemUtilIndicator != null ? (float)machine.PerformanceData.HighMemUtilIndicator : 0);
+                        viewModel.MonitoringData.PerformanceInfo.TotalNumProcesses = (machine.PerformanceData.TotalProcesses != null ? (int)machine.PerformanceData.TotalProcesses : 0);
                     }
 
                     if (machine.DiskData != null)
@@ -349,7 +358,8 @@ namespace Overseer.WebApp.Controllers
                     _unitOfWork.EventLogMonitoringSettings.Add(new EventLogSettings()
                     {
                         MachineID = viewModel.MachineId,
-                        EventLogName = eventLogName
+                        EventLogName = eventLogName,
+                        EventBacklogSize = 100
                     });
                 }
             }

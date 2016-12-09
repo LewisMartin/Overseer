@@ -14,17 +14,17 @@ namespace Overseer.DTOs.MonitoringAgent
     // DTO for returning monitoring settings to monitoring agent
     public class MonitoringSettingsResponse
     {
+        // list of processes/services/eventlogs to monitor
+        public List<string> MonitoredProcessNames { get; set; }
+        public List<string> MonitoredEventLogNames { get; set; }
+        public List<string> MonitoredServiceNames { get; set; }
+
         public MonitoringSettingsResponse()
         {
             MonitoredProcessNames = new List<string>();
             MonitoredEventLogNames = new List<string>();
             MonitoredServiceNames = new List<string>();
         }
-
-        // list of processes/services/eventlogs to monitor
-        public List<string> MonitoredProcessNames { get; set; }
-        public List<string> MonitoredEventLogNames { get; set; }
-        public List<string> MonitoredServiceNames { get; set; }
     }
 
     // DTO for sending monitoring data from monitoring agent back to server
@@ -34,9 +34,9 @@ namespace Overseer.DTOs.MonitoringAgent
         public SystemInformation SystemInfo;
         public PerformanceInformation PerformanceInfo;
         public DiskInformation DiskInfo;
+        public ProcessInformation ProcessInfo;
         public EventLogInformation EventLogInfo;
         public ServiceInformation ServiceInfo;
-        public ProcessInformation ProcessInfo;
     }
 
     // above is comprised of the below 
@@ -63,6 +63,11 @@ namespace Overseer.DTOs.MonitoringAgent
     {
         public int DriveCount;
         public List<SingleDrive> Drives;
+
+        public DiskInformation()
+        {
+            Drives = new List<SingleDrive>();
+        }
     }
     public struct SingleDrive
     {
@@ -74,17 +79,61 @@ namespace Overseer.DTOs.MonitoringAgent
         public decimal FreeSpace;
         public decimal AvailableSpace;
     }
+    public class ProcessInformation : MonitoredInformation
+    {
+        public List<SingleProc> Processes;
+
+        public ProcessInformation()
+        {
+            Processes = new List<SingleProc>();
+        }
+    }
+    public struct SingleProc
+    {
+        public string Name;
+        public int Pid;
+        public bool Status;
+        public DateTime StartTime;
+        public TimeSpan CpuTime;
+        public int ThreadCount;
+        public long PrivateWorkingSet;
+        public long CommitSize;
+        // public int PageFaults;
+    }
     public class EventLogInformation : MonitoredInformation
     {
+        public List<SingleLog> EventLogs;
 
+        public EventLogInformation()
+        {
+            EventLogs = new List<SingleLog>();
+        }
+    }
+    public struct SingleLog
+    {
+        public string Name;
+        public bool Exists;
+        public string DisplayName;
+        public int EntryTotal;
+        public int InfoTotal;
+        public int WarningTotal;
+        public int ErrorTotal;
     }
     public class ServiceInformation : MonitoredInformation
     {
+        public List<SingleService> Services;
 
+        public ServiceInformation()
+        {
+            Services = new List<SingleService>();
+        }
     }
-    public class ProcessInformation : MonitoredInformation
+    public struct SingleService
     {
-
+        public string Name;
+        public bool Exists;
+        public string Status;
+        public string StartUpType;
     }
     public class MonitoredInformation
     {

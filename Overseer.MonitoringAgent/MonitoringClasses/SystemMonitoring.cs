@@ -40,9 +40,9 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
             _SysInfoMon.Snapshot();
             _PerfMon.Snapshot();
             _DiskMon.Snapshot();
+            _ProcessMon.Snapshot();
             _EventLogMon.Snapshot();
             _ServiceMon.Snapshot();
-            _ProcessMon.Snapshot();
 
             _Logger.Log("Verifying obtained data..");
             _SysInfoMon.LogSnapshot();
