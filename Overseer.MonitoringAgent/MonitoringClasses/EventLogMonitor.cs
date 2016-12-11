@@ -19,7 +19,7 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
 
         public void Snapshot()
         {
-            _EventLogList.Clear();
+            _EventLogList.Clear();  // clear any existing collected event log data
 
             _EventLogInfo = new EventLogInformation();
 

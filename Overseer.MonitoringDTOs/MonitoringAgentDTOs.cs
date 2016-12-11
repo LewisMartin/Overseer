@@ -96,8 +96,9 @@ namespace Overseer.DTOs.MonitoringAgent
         public DateTime StartTime;
         public TimeSpan CpuTime;
         public int ThreadCount;
-        public long PrivateWorkingSet;
-        public long CommitSize;
+        public long WorkingSet;
+        public long PrivateBytes;
+        public long VirtualBytes;
         // public int PageFaults;
     }
     public class EventLogInformation : MonitoredInformation

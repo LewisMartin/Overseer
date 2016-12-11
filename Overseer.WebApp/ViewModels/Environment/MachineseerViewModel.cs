@@ -143,9 +143,11 @@ namespace Overseer.WebApp.ViewModels.Environment
 
         public int ThreadCount { get; set; }
 
-        public long PrivateWorkingSet { get; set; }
+        public long WorkingSet { get; set; }
 
-        public long CommitSize { get; set; }
+        public long PrivateBytes { get; set; }
+
+        public long VirtualBytes { get; set; }
     }
 
     public class EventLogInfoViewModel

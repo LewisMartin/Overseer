@@ -1,11 +1,8 @@
 ﻿using Overseer.DTOs.MonitoringAgent;
-using Overseer.MonitoringAgent.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Overseer.MonitoringAgent.MonitoringClasses
 {
@@ -40,10 +37,10 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
         {
             string SnapshotData = ("PROCESS INFO: <");
 
-            foreach (SingleProc proc in _ProcessInfo.Processes)
+            foreach (SingleProc procDat in _ProcessInfo.Processes)
             {
                 SnapshotData += String.Format(" {0}.exe: [PID: {1}, Status: {2}, Start time: {3}, Cpu time: {4}, ThreadCount: {5}, Private working set: {6}, Commit size: {7}]",
-                    proc.Name, proc.Pid, proc.Status, proc.StartTime, proc.CpuTime, proc.ThreadCount, (proc.PrivateWorkingSet/1024), (proc.CommitSize/2014));
+                    procDat.Name, procDat.Pid, procDat.Status, procDat.StartTime, procDat.CpuTime, procDat.ThreadCount, (procDat.WorkingSet/1024), (procDat.PrivateBytes/1024), (procDat.VirtualBytes/2014));
             }
             SnapshotData += " >";
 
@@ -67,8 +64,9 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
                     StartTime = proc.StartTime,
                     CpuTime = proc.TotalProcessorTime,
                     ThreadCount = proc.Threads.Count,
-                    PrivateWorkingSet = proc.WorkingSet64,
-                    CommitSize = proc.PrivateMemorySize64
+                    WorkingSet = proc.WorkingSet64,             // Equal to: 'Working Set' performance counter.
+                    PrivateBytes = proc.PrivateMemorySize64,    // Equal to: 'Private Bytes' performance counter.
+                    VirtualBytes = proc.VirtualMemorySize64     // Equal to: 'Virtual Bytes' performance counter.
                 });
             }
         }

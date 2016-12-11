@@ -133,8 +133,9 @@ namespace Overseer.WebApp.Controllers
                                             StartTime = proc.StartTime,
                                             CpuTime = proc.CpuTime,
                                             ThreadCount = proc.ThreadCount,
-                                            PrivateWorkingSet = proc.PrivateWorkingSet,
-                                            CommitSize = proc.CommitSize
+                                            WorkingSet = proc.WorkingSet,
+                                            PrivateBytes = proc.PrivateBytes,
+                                            VirtualBytes = proc.VirtualBytes
                                         });
                                     }
                                    
