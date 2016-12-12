@@ -192,6 +192,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\EnvironmentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MachineController.cs" />
     <Compile Include="Controllers\NavigationController.cs" />
     <Compile Include="Controllers\UserAccountController.cs" />
     <Compile Include="Controllers\UserAuthController.cs" />
@@ -267,10 +268,12 @@
     <Compile Include="ViewModels\Environment\EnvironmentCreationViewModel.cs" />
     <Compile Include="ViewModels\Environment\EnvironmentDetailsViewModel.cs" />
     <Compile Include="ViewModels\Environment\EnvironmentseerViewModel.cs" />
-    <Compile Include="ViewModels\Environment\MachineConfigurationViewModel.cs" />
-    <Compile Include="ViewModels\Environment\MachineCreationViewModel.cs" />
-    <Compile Include="ViewModels\Environment\MachineDetailsViewModel.cs" />
-    <Compile Include="ViewModels\Environment\MachineseerViewModel.cs" />
+    <Compile Include="ViewModels\Machine\MachineConfigurationViewModel.cs" />
+    <Compile Include="ViewModels\Machine\MachineCreationViewModel.cs" />
+    <Compile Include="ViewModels\Machine\MachineDetailsViewModel.cs" />
+    <Compile Include="ViewModels\Machine\MachineseerViewModel.cs" />
+    <Compile Include="ViewModels\Machine\_MonitoringSummaryViewModel.cs" />
+    <Compile Include="ViewModels\Machine\_MonitoringSystemInfoViewModel.cs" />
     <Compile Include="ViewModels\Navigation\EnvironmentLinkViewModel.cs" />
     <Compile Include="ViewModels\Navigation\MachineLinkViewModel.cs" />
     <Compile Include="ViewModels\Navigation\_EnvironmentNavigationViewModel.cs" />
@@ -284,8 +287,8 @@
   <ItemGroup>
     <Content Include="Content\Scripts\Custom Scripts\EditableListBox.js" />
     <Content Include="Content\Scripts\Custom Scripts\EnvironmentAjax.js" />
-    <Content Include="Content\Scripts\Custom Scripts\NewToggleField.js" />
-    <Content Include="Content\Scripts\Custom Scripts\toggleField.js" />
+    <Content Include="Content\Scripts\Custom Scripts\RefreshMonitoringData.js" />
+    <Content Include="Content\Scripts\Custom Scripts\ToggleField.js" />
     <Content Include="Content\Styles\bootstrap.css" />
     <Content Include="Content\Styles\bootstrap.min.css" />
     <Content Include="Content\Styles\Custom Styles\OverseerStyles.css" />
@@ -340,13 +343,15 @@
     <Content Include="Views\Navigation\_SidebarNav.cshtml" />
     <Content Include="Views\Environment\Overseer.cshtml" />
     <Content Include="Views\Environment\Environmentseer.cshtml" />
-    <Content Include="Views\Environment\Machineseer.cshtml" />
+    <Content Include="Views\Machine\Machineseer.cshtml" />
     <Content Include="Views\Environment\EnvironmentConfiguration.cshtml" />
-    <Content Include="Views\Environment\MachineConfiguration.cshtml" />
+    <Content Include="Views\Machine\MachineConfiguration.cshtml" />
     <Content Include="Views\Environment\EnvironmentCreation.cshtml" />
-    <Content Include="Views\Environment\MachineCreation.cshtml" />
+    <Content Include="Views\Machine\MachineCreation.cshtml" />
     <Content Include="Views\Navigation\_EnvironmentNavigation.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Machine\_MonitoringSummary.cshtml" />
+    <Content Include="Views\Machine\_MonitoringSystemInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

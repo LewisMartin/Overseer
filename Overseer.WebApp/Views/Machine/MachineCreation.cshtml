@@ -1,30 +1,27 @@
-﻿@model Overseer.WebApp.ViewModels.Environment.MachineConfigurationViewModel
+﻿@model Overseer.WebApp.ViewModels.Machine.MachineCreationViewModel
+
 @section AdditionalScripts
 {
-    @Scripts.Render("~/Environment/Scripts", "~/Environment/MachineConfiguration/Scripts")
+    @Scripts.Render("~/Environment/Scripts")
 }
 
 @{
-    ViewBag.Title = "Machine Configuration";
+    ViewBag.Title = "Machine Creation";
 }
 
 <div id="Page-Title">
     <div class="fl-left">
-        <i class="fa fa-tachometer a-fw" aria-hidden="true"></i>&nbsp Environments<i class="fa fa-angle-right a-fw breadcrumb-spacer" aria-hidden="true"></i>Machine Configuration
+        <i class="fa fa-tachometer a-fw" aria-hidden="true"></i>&nbsp Environments<i class="fa fa-angle-right a-fw breadcrumb-spacer" aria-hidden="true"></i>Machine Creation
     </div>
 </div>
 
 <div id="Page-Content">
     <section>
         <div class="content-area edit-usr">
-            <h3>Configure:</h3>
+            <h3>Create new machine:</h3>
             <div class="form-container">
-                @using (Html.BeginForm("MachineConfiguration", "Environment", FormMethod.Post, new { data_ajax = "MachineConfig" }))
+                @using (Html.BeginForm("MachineCreation", "Machine", FormMethod.Post, new { data_ajax = "MachineCreate" }))
                 {
-                    <input type="hidden" name="MachineId" value="@Model.MachineId" />
-
-                    <h4>System Information (manual):</h4>
-
                     <label for="parentEnv">Add machine to environment:</label>
                     @Html.DropDownListFor(m => m.ParentEnvironmentId, Model.ParentEnvironmentOptions, new { @id = "parentEnv" })
 
@@ -44,36 +41,10 @@
                     @Html.DropDownListFor(m => m.OperatingSystemId, Model.OperatingSystemOptions, new { @id = "operatingSys" })
 
                     <label for="processorCores">ProcessorCores:</label>
-                    @Html.EditorFor(m => m.NumProcessors, new { @id = "processorCores" })
+                     @Html.EditorFor(m => m.NumProcessors, new { @id = "processorCores" })
 
                     <label for="totalMem">Total RAM:</label>
                     @Html.EditorFor(m => m.TotalMemGbs, new { @id = "totalMem" })
-
-                    <h4>Monitoring Settings:</h4>
-
-                    <div id="monitoredProcesses">
-                        <label for="monitoredProcList">Processes:</label>
-                        <input type="text" class="mon-list-input" />
-                        <button type="button" class="mon-list-add"><i class="fa fa-plus a-fw" aria-hidden="true"></i></button>
-                        <button type="button" class="mon-list-remove"><i class="fa fa-close a-fw" aria-hidden="true"></i></button>
-                        @Html.ListBoxFor(m => m.UpdatedMonitoredProcesses, Model.CurrentMonitoredProcesses, new { @id = "monitoredProcList", @class = "mon-list-box" })
-                    </div>
-
-                    <div id="monitoredEventLogs">
-                        <label for="monitoredEventLogList">EventLogs:</label>
-                        <input type="text" class="mon-list-input" />
-                        <button type="button" class="mon-list-add"><i class="fa fa-plus a-fw" aria-hidden="true"></i></button>
-                        <button type="button" class="mon-list-remove"><i class="fa fa-close a-fw" aria-hidden="true"></i></button>
-                        @Html.ListBoxFor(m => m.UpdatedMonitoredEventLogs, Model.CurrentMonitoredEventLogs, new { @id = "monitoredEventLogList", @class = "mon-list-box" })
-                    </div>
-
-                    <div id="monitoredServices">
-                        <label for="monitoredServiceList">Services:</label>
-                        <input type="text" class="mon-list-input" />
-                        <button type="button" class="mon-list-add"><i class="fa fa-plus a-fw" aria-hidden="true"></i></button>
-                        <button type="button" class="mon-list-remove"><i class="fa fa-close a-fw" aria-hidden="true"></i></button>
-                        @Html.ListBoxFor(m => m.UpdatedMonitoredServices, Model.CurrentMonitoredServices, new { @id = "monitoredServiceList", @class = "mon-list-box" })
-                    </div>
 
                     <div class="center-input form-val">
                         <div class="form-val-msg">
@@ -102,7 +73,7 @@
                         </div>
                     </div>
                     <div class="form-footer">
-                        <input type="submit" value="Save Changes" class="pag-btn" data-baseurl="@Model.SidebarRefreshUrl"/>
+                        <input type="submit" value="Create" class="pag-btn" data-baseurl="@Model.SidebarRefreshUrl"/>
                     </div>
                 }
             </div>
@@ -112,3 +83,4 @@
         </div>
     </section>
 </div>
+

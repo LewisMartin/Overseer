@@ -8,6 +8,8 @@ namespace Overseer.WebApp.ViewModels.Admin
 {
     public class ConfirmUserDeletionViewModel
     {
+        public bool Exists { get; set; }
+
         public UserDataViewModel userToDelete;
     }
 }

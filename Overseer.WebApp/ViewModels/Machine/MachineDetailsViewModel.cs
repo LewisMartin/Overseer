@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Overseer.WebApp.ViewModels.Environment
+namespace Overseer.WebApp.ViewModels.Machine
 {
     public class MachineDetailsViewModel
     {

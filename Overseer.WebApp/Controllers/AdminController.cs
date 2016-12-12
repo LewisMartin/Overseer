@@ -183,19 +183,26 @@ namespace Overseer.WebApp.Controllers
             {
                 UserAccount user = _unitOfWork.Users.Get((int)id);
 
-                ConfirmUserDeletionViewModel viewModel = new ConfirmUserDeletionViewModel
+                if (user != null)
                 {
-                    userToDelete = new UserDataViewModel
+                    ConfirmUserDeletionViewModel viewModel = new ConfirmUserDeletionViewModel
                     {
-                        UserId = user.UserID,
-                        UserName = user.UserName,
-                        FullName = (user.FirstName + user.LastName),
-                        Email = user.Email,
-                        UserRole = _unitOfWork.UserRoles.Get(user.UserRoleID).RoleName
-                    }
-                };
+                        Exists = true,
 
-                return View(viewModel);
+                        userToDelete = new UserDataViewModel
+                        {
+                            UserId = user.UserID,
+                            UserName = user.UserName,
+                            FullName = (user.FirstName + user.LastName),
+                            Email = user.Email,
+                            UserRole = _unitOfWork.UserRoles.Get(user.UserRoleID).RoleName
+                        }
+                    };
+
+                    return View(viewModel);
+                }
+
+                return View(new ConfirmUserDeletionViewModel() { Exists = false });
             }
         }
 

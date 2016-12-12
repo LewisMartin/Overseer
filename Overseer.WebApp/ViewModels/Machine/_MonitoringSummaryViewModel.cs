@@ -1,33 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
-namespace Overseer.WebApp.ViewModels.Environment
+namespace Overseer.WebApp.ViewModels.Machine
 {
-    public class MachineseerViewModel
+    public class _MonitoringSummaryViewModel
     {
-        public MachineseerViewModel()
+        public _MonitoringSummaryViewModel()
         {
-            MonitoringData = new MonitoringDataViewModel();
-        }
-
-        public Guid MachineId { get; set; }
-
-        public int ParentEnvironmentId { get; set; }
-
-        public bool MonitoringEnabled { get; set; }
-
-        public MachineDetailsViewModel MachineDetails { get; set; }
-
-        public MonitoringDataViewModel MonitoringData { get; set; }
-    }
-
-    public class MonitoringDataViewModel
-    {
-        public MonitoringDataViewModel()
-        {
-            SystemInfo = new SystemInfoViewModel();
             PerformanceInfo = new PerformanceInfoViewModel();
             DiskInfo = new DiskInfoViewModel();
             ProcessInfo = new ProcessInfoViewModel();
@@ -35,9 +14,7 @@ namespace Overseer.WebApp.ViewModels.Environment
             ServiceInfo = new ServicesInfoViewModel();
         }
 
-        public SystemInfoViewModel SystemInfo { get; set; }
-
-        public PerformanceInfoViewModel PerformanceInfo { get; set; }    // change this to a list in order to cintain multiple performance 'readings'
+        public PerformanceInfoViewModel PerformanceInfo { get; set; }    // change this to a list in order to contain multiple performance 'readings'
 
         public DiskInfoViewModel DiskInfo { get; set; }
 
@@ -46,25 +23,6 @@ namespace Overseer.WebApp.ViewModels.Environment
         public EventLogInfoViewModel EventLogInfo { get; set; }
 
         public ServicesInfoViewModel ServiceInfo { get; set; }
-    }
-
-    public class SystemInfoViewModel
-    {
-        public string MachineName { get; set; }
-
-        public string IPAddress { get; set; }
-
-        public string OSName { get; set; }
-
-        public string OSNameFriendly { get; set; }
-
-        public string OSBitness { get; set; }
-
-        public int ProcessorCount { get; set; }
-
-        public double TotalMem { get; set; }
-
-        public TimeSpan UpTime { get; set; }
     }
 
     public class PerformanceInfoViewModel

@@ -9,7 +9,7 @@
             <ul>
                 @foreach (var childMachine in environment.ChildMachines)
                 {
-                    <li>@Html.ActionLink("--" + childMachine.DisplayName, "Machineseer", "Environment", new { machineId = childMachine.MachineId }, null)</li>
+                    <li>@Html.ActionLink("--" + childMachine.DisplayName, "Machineseer", "Machine", new { machineId = childMachine.MachineId }, null)</li>
                 }
             </ul>
         </div>

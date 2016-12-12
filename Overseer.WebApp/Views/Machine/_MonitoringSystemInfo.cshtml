@@ -1,0 +1,14 @@
+﻿@model Overseer.WebApp.ViewModels.Machine._MonitoringSystemInfoViewModel
+
+<div class="content-area">
+    <h3>System Info (Monitoring)</h3>
+    <ul>
+        <li>Machine Name: @Model.MachineName</li>
+        <li>IPV4 Address: @Model.IPAddress</li>
+        <li>OS: @Model.OSNameFriendly</li>
+        <li>OS Version: @Model.OSName</li>
+        <li>OS Bitness: @Model.OSBitness</li>
+        <li>Processor Cores: @Model.ProcessorCount</li>
+        <li>Total Memory (GBs): @Model.TotalMem</li>
+    </ul>
+</div>

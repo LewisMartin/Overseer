@@ -30,13 +30,18 @@ namespace Overseer.WebApp
             // bundle for custom js
             bundles.Add(new ScriptBundle("~/Custom/Scripts").Include(
                         "~/Content/Scripts/Custom Scripts/OverseerScripts.js",
-                        "~/Content/Scripts/Custom Scripts/NewToggleField.js"));
+                        "~/Content/Scripts/Custom Scripts/ToggleField.js"));
 
             // bundle for scripts used in environment pages
             bundles.Add(new ScriptBundle("~/Environment/Scripts").Include(
                         "~/Content/Scripts/jquery.validate.js",
                         "~/Content/Scripts/jquery.validate.unobtrusive.js",
                         "~/Content/Scripts/Custom Scripts/EnvironmentAjax.js"
+                ));
+
+            // bundle for monitoring auto-refresh
+            bundles.Add(new ScriptBundle("~/Machineseer/Scripts").Include(
+                        "~/Content/Scripts/Custom Scripts/RefreshMonitoringData.js"
                 ));
 
             // bundles for scripts used in specific pages

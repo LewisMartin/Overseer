@@ -27,7 +27,7 @@
             </ul>
             <br />
             @Html.ActionLink("Configure Environment...", "EnvironmentConfiguration", "Environment", new { environmentId = @Model.environmentId }, null)
-            @Html.ActionLink("Add new machine to this environment...", "MachineCreation", "Environment", new { environmentId = @Model.environmentId}, null)
+            @Html.ActionLink("Add new machine to this environment...", "MachineCreation", "Machine", new { environmentId = @Model.environmentId}, null)
         </div>
     </section>
 </div>

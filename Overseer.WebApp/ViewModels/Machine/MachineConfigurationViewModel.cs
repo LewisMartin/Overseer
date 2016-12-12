@@ -5,10 +5,13 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace Overseer.WebApp.ViewModels.Environment
+namespace Overseer.WebApp.ViewModels.Machine
 {
-    public class MachineCreationViewModel
+    public class MachineConfigurationViewModel
     {
+        [Required]
+        public Guid MachineId { get; set; }
+
         [Required]
         public string ParentEnvironmentId { get; set; }
 
@@ -31,6 +34,15 @@ namespace Overseer.WebApp.ViewModels.Environment
         public IEnumerable<SelectListItem> ParentEnvironmentOptions { get; set; }
 
         public IEnumerable<SelectListItem> OperatingSystemOptions { get; set; }
+
+        public IEnumerable<SelectListItem> CurrentMonitoredProcesses { get; set; }
+        public IEnumerable<string> UpdatedMonitoredProcesses { get; set; }
+
+        public IEnumerable<SelectListItem> CurrentMonitoredEventLogs { get; set; }
+        public IEnumerable<string> UpdatedMonitoredEventLogs { get; set; }
+
+        public IEnumerable<SelectListItem> CurrentMonitoredServices { get; set; }
+        public IEnumerable<string> UpdatedMonitoredServices { get; set; }
 
         public string SidebarRefreshUrl { get; set; }
     }
