@@ -1,0 +1,56 @@
+﻿@model Overseer.WebApp.ViewModels.Machine.MachineseerViewModel
+
+@section AdditionalScripts 
+{
+    @Scripts.Render("~/Machineseer/Scripts")
+}
+
+@{
+    ViewBag.Title = "Machineseer";
+}
+
+<div id="Page-Title">
+    <div class="fl-left">
+        <i class="fa fa-tachometer a-fw" aria-hidden="true"></i>&nbsp Environments<i class="fa fa-angle-right a-fw breadcrumb-spacer" aria-hidden="true"></i>@Model.MachineDetails.DisplayName
+    </div>
+</div>
+
+<div id="Machineseer" class="page-content" data-baseurl="@Model.BaseAppUrl" data-machineid="@Model.MachineId" data-refreshrate="@Model.RefreshInterval">
+    <div class="content-area">
+        <h3>Basic Info</h3>
+        <ul>
+            <li>GUID: @Model.MachineId</li>
+            <li>Display Name: @Model.MachineDetails.DisplayName</li>
+            <li>Environment: @Model.MachineDetails.ParentEnvironmentName</li>
+            @Html.ActionLink("Configure Machine", "MachineConfiguration", "Machine", new { machineId = @Model.MachineId }, null)
+        </ul>
+        <div id="SystemInfo">
+            @if (!Model.MonitoringEnabled)
+            {
+                <div class="content-area">
+                    <h3>System Info (Manual)</h3>
+                    <ul>
+                        <li>Machine Name: @Model.MachineDetails.MachineName</li>
+                        <li>IPV4 Address: @Model.MachineDetails.IpAddress</li>
+                        <li>FQDN: @Model.MachineDetails.FQDN</li>
+                        <li>OS: @Model.MachineDetails.OperatingSysName</li>
+                        <li>OS Bitness: @Model.MachineDetails.OperatingSysBitness</li>
+                        <li>Processor Cores: @Model.MachineDetails.NumProcessors</li>
+                        <li>Total Memory (GBs): @Model.MachineDetails.TotalMemGbs</li>
+                    </ul>
+                </div>
+            }
+            else
+            {
+                @Html.Action("_MonitoringSystemInfo", "Machine", new { machineId = Model.MachineId })
+            }
+        </div>
+    </div>
+    <div id="MonitoringData">
+        @if (Model.MonitoringEnabled)
+        {
+            @Html.Action("_MonitoringSummary", "Machine", new { machineId = Model.MachineId })
+        }
+    </div>
+</div>
+

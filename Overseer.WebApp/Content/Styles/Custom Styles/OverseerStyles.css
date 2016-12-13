@@ -216,6 +216,10 @@ h3
     margin-top: 15px;
     height: 36px;
 }
+.content-area>.content-inner
+{
+    padding: 12px;
+}
 
 
 /* ---------- Header Styles ---------- */
@@ -465,6 +469,10 @@ nav i
 {
 	padding:20px;
 }
+.page-content
+{
+    padding: 20px;
+}
 .content-area
 {
     background: #ffffff;
@@ -699,3 +707,72 @@ select[multiple]
 {
     text-align: center;
 }
+
+
+/* ---------- Monitoring Pages Styles ---------- */
+.drive-flex 
+{ 
+  padding: .5vw;
+  font-size: 12px;
+  display: -ms-flexbox;
+  -ms-flex-wrap: wrap;
+  -ms-flex-direction: column;
+  -webkit-flex-flow: row wrap; 
+  flex-flow: row wrap; 
+  display: -webkit-box;
+  display: flex;
+}
+.drive-flex .drive-flex-ele 
+{
+  -webkit-box-flex: auto;
+  -ms-flex: auto;
+  flex: auto; 
+  width: 200px; 
+  margin: .8vw 10px; 
+  padding-top:10px;
+  padding-bottom:10px;
+}
+@media screen and (max-width: 400px) 
+{
+  .drive-flex .drive-flex-ele  { margin: 0; }
+  .drive-flex  { padding: 0; }
+  .drive-flex-ele div { margin: 0px; display: inline; vertical-align: top;}
+}
+.drive-name
+{
+    height: 32px;
+    width:30px;
+    text-align: center;
+    line-height: 32px;
+    float: left;
+}
+.drive-meter-outer
+{
+    background-color: #ebeafa;
+    height: 32px;
+    margin-left:30px;
+    margin-right:70px;
+}
+.drive-meter-inner
+{
+    position: relative;
+    background-color: #807dba;
+    height: 32px;
+}
+.drive-meter-tip 
+{
+    position: absolute;
+    top: -16px;
+    right: 0px;
+    font-size: 10px;
+    white-space: nowrap;
+}
+.drive-total
+{
+    height: 32px;
+    width:70px;
+    text-align: center;
+    line-height: 32px;
+    float: right;
+}
+/* ---------- Monitoring Pages Styles ---------- */

@@ -77,7 +77,6 @@ namespace Overseer.DTOs.MonitoringAgent
         public string DriveFormat;
         public decimal TotalSpace;
         public decimal FreeSpace;
-        public decimal AvailableSpace;
     }
     public class ProcessInformation : MonitoredInformation
     {

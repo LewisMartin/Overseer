@@ -64,7 +64,7 @@ namespace Overseer.WebApp.ViewModels.Machine
 
         public decimal FreeSpace { get; set; }
 
-        public decimal AvailableSpace { get; set; }
+        public decimal UsedSpace { get; set; }
     }
 
     public class ProcessInfoViewModel

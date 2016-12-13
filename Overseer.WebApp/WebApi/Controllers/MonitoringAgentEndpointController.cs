@@ -147,7 +147,7 @@ namespace Overseer.WebApp.WebApi
                     DriveFormat = drive.DriveFormat,
                     TotalSpace = drive.TotalSpace,
                     FreeSpace = drive.FreeSpace,
-                    AvailableSpace = drive.AvailableSpace
+                    UsedSpace = drive.TotalSpace - drive.FreeSpace
                 });
             }
 

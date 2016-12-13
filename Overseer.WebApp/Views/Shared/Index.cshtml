@@ -1,0 +1,21 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div id="Page-Title">
+    <div class="fl-left">
+        <i class="fa fa-home a-fw" aria-hidden="true"></i>&nbsp Home
+    </div>
+</div>
+<div id="Page-Content">
+    <section>
+        <div class="content-area default-area">
+            Your Role:
+            @{
+                var ClaimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+
+                @ClaimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Role).Value.ToString();
+            }
+        </div>
+    </section>
+</div>

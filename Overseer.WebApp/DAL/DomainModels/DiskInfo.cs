@@ -26,7 +26,7 @@ namespace Overseer.WebApp.DAL.DomainModels
 
         public decimal? FreeSpace { get; set; }
 
-        public decimal? AvailableSpace { get; set; }
+        public decimal? UsedSpace { get; set; }
 
         // navigation properties
         public Machine Machine { get; set; }

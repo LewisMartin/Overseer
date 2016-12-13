@@ -108,7 +108,8 @@ namespace Overseer.WebApp.Controllers
                             DriveType = disk.DriveType,
                             DriveFormat = disk.DriveFormat,
                             TotalSpace = (decimal)disk.TotalSpace,
-                            FreeSpace = (decimal)disk.FreeSpace
+                            FreeSpace = (decimal)disk.FreeSpace,
+                            UsedSpace = (decimal)disk.UsedSpace
                         });
                     }
                 }

@@ -25,7 +25,7 @@ namespace Overseer.MonitoringAgent
 
         protected override void OnStart(string[] args)
         {
-            System.Diagnostics.Debugger.Launch();
+            //System.Diagnostics.Debugger.Launch();
 
             _Logger = Logger.Instance();
 

@@ -34,8 +34,8 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
 
             foreach (SingleDrive drive in _DiskInfo.Drives)
             {
-                SnapshotData += String.Format(" {0} drive: [Volume label: {1}, Drive type: {2}, Drive format: {3}, Total size: {4}, Free space: {5}, Available space: {6}]",
-                    drive.Name, drive.VolumeLabel, drive.DriveType, drive.DriveFormat, drive.TotalSpace, drive.FreeSpace, drive.AvailableSpace);
+                SnapshotData += String.Format(" {0} drive: [Volume label: {1}, Drive type: {2}, Drive format: {3}, Total size: {4}, Free space: {5}]",
+                    drive.Name, drive.VolumeLabel, drive.DriveType, drive.DriveFormat, drive.TotalSpace, drive.FreeSpace);
             }
             SnapshotData += " >";
 
@@ -87,8 +87,7 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
                     DriveType = drive.DriveType.ToString(),
                     DriveFormat = drive.DriveFormat,
                     TotalSpace = Math.Round(ConvertBytes(drive.TotalSize, "GB"), 2),
-                    FreeSpace = Math.Round(ConvertBytes(drive.TotalFreeSpace, "GB"), 2),
-                    AvailableSpace = Math.Round(ConvertBytes(drive.AvailableFreeSpace, "GB"), 2)
+                    FreeSpace = Math.Round(ConvertBytes(drive.TotalFreeSpace, "GB"), 2)
                 });
             }
         }

@@ -11,16 +11,40 @@
         </div>
         <div class="content-area">
             <h3>Disk Monitoring</h3>
-            @foreach (var drive in Model.DiskInfo.Drives)
-            {
-                <h4>@drive.Name (@drive.VolumeLabel)</h4>
-                <ul>
-                    <li>Drive type: @drive.DriveType</li>
-                    <li>Drive format: @drive.DriveFormat</li>
-                    <li>Total space: @drive.TotalSpace</li>
-                    <li>Free space: @drive.FreeSpace</li>
-                </ul>
-            }
+            <div class="content-inner drive-flex">
+                @foreach (var drive in Model.DiskInfo.Drives)
+                {
+                    <div class="drive-flex-ele">
+                        <div class="drive-name">
+                            @drive.Name
+                        </div>
+                        <div class="drive-total">
+                            @drive.TotalSpace GB
+                        </div>
+                        <div style="width: auto" class="drive-meter-outer">
+                            <div style="width: @((1 - (drive.FreeSpace / drive.TotalSpace))*100)%" class="drive-meter-inner">
+                                <div class="drive-meter-tip">@drive.UsedSpace GB</div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="content-area">
+            <h3>Disk Monitoring</h3>
+            <div class="content-inner">
+                @foreach (var drive in Model.DiskInfo.Drives)
+                {
+                    <h4>@drive.Name (@drive.VolumeLabel)</h4>
+                        <ul>
+                            <li>Drive type: @drive.DriveType</li>
+                            <li>Drive format: @drive.DriveFormat</li>
+                            <li>Total space: @drive.TotalSpace</li>
+                            <li>Free space: @drive.FreeSpace</li>
+                            <li>Used space: @drive.UsedSpace</li>
+                        </ul>
+                }
+            </div>
         </div>
         <div class="content-area">
             <h3>Process Monitoring</h3>
