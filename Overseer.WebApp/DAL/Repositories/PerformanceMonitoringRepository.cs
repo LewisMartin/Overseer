@@ -14,9 +14,19 @@ namespace Overseer.WebApp.DAL.Repositories
             // calling base constructor
         }
 
-        public PerformanceInfo Get(Guid machineId)
+        public PerformanceInfo GetLatestReading(Guid machineId)
         {
-            return dbContext.PerformanceMonitoring.FirstOrDefault(m => m.MachineID == machineId);
+            return dbContext.PerformanceMonitoring.Where(m => m.MachineID == machineId).OrderByDescending(m => m.ReadingNumber).FirstOrDefault();
+        }
+
+        public List<PerformanceInfo> GetAllReadingsForMachine(Guid machineId)
+        {
+            return dbContext.PerformanceMonitoring.Where(m => m.MachineID == machineId).ToList();
+        }
+
+        public List<PerformanceInfo> GetOrderedReadingsForMachine(Guid machineId)
+        {
+            return dbContext.PerformanceMonitoring.Where(m => m.MachineID == machineId).OrderByDescending(m => m.ReadingNumber).ToList();
         }
     }
 }

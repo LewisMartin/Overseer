@@ -1,7 +1,8 @@
 ﻿var interval = $('#Machineseer').data('refreshrate');
-//window.alert(interval);
 
 function refresh() {
+    //window.alert("Refreshing");
+
     var appRoot = $('#Machineseer').data('baseurl');
     var machineId = $('#Machineseer').data('machineid');
 

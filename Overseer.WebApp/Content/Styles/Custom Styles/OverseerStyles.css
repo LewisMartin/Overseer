@@ -148,14 +148,18 @@ i
 h3
 {
     width: 100%;
-    height: 32px;
+    height: 36px;
     color: #34373c; 
     background-color: #ffffff;
     font-size: 17px;
     font-weight: normal;
     text-align: left;
     padding-left: 15px;
-    line-height: 30px;
+    line-height: 36px;
+}
+h3>span 
+{
+    font-size: 11px;
 }
 .seer-tbl
 {
@@ -477,6 +481,7 @@ nav i
 {
     background: #ffffff;
     margin-bottom: 15px;
+    overflow: hidden;
 }
 .default-area
 {
@@ -710,6 +715,35 @@ select[multiple]
 
 
 /* ---------- Monitoring Pages Styles ---------- */
+.perf-flex
+{
+    display: flex;
+}
+.perf-data 
+{
+    flex: 100%;
+}
+#CpuData
+{
+    margin-right: 15px;
+}
+.chart-container 
+{
+    padding: 20px 40px 15px 25px;
+}
+.perf-footer
+{
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+    padding: 0px 15px;
+}
+.perf-footer>span
+{
+    margin-right: 30px;
+}
+
 .drive-flex 
 { 
   padding: .5vw;

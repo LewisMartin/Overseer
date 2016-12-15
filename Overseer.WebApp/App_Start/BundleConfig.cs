@@ -41,7 +41,8 @@ namespace Overseer.WebApp
 
             // bundle for monitoring auto-refresh
             bundles.Add(new ScriptBundle("~/Machineseer/Scripts").Include(
-                        "~/Content/Scripts/Custom Scripts/RefreshMonitoringData.js"
+                        "~/Content/Scripts/Custom Scripts/RefreshMonitoringData.js",
+                        "~/Content/Scripts/Chart.js"
                 ));
 
             // bundles for scripts used in specific pages

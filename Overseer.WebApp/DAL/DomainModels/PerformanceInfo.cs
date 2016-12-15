@@ -8,7 +8,13 @@ namespace Overseer.WebApp.DAL.DomainModels
     public class PerformanceInfo
     {
         [Key, ForeignKey("Machine")]
+        [Column(Order = 0)]
         public Guid MachineID { get; set; }
+
+        [Key]
+        [Column(Order = 1)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int ReadingNumber { get; set; }   // allows us to keep historical readings for more effective performance graphing
 
         public float? CpuUtil { get; set; }
 

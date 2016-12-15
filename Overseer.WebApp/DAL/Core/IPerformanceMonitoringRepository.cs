@@ -10,6 +10,10 @@ namespace Overseer.WebApp.DAL.Core
     public interface IPerformanceMonitoringRepository : IRepository<PerformanceInfo>
     {
         // we need to overload the generic get method here (machines table uses GUID as primary key)
-        PerformanceInfo Get(Guid machineId);
+        PerformanceInfo GetLatestReading(Guid machineId);
+
+        List<PerformanceInfo> GetAllReadingsForMachine(Guid machineId);
+
+        List<PerformanceInfo> GetOrderedReadingsForMachine(Guid machineId);
     }
 }

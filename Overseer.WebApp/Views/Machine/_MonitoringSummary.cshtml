@@ -1,112 +1,208 @@
 ﻿@model Overseer.WebApp.ViewModels.Machine._MonitoringSummaryViewModel
 
 <section>
-        <div class="content-area">
-            <h3>Performance Monitoring</h3>
-            <ul>
-                <li>Total processes running: @Model.PerformanceInfo.TotalNumProcesses</li>
-                <li>Avg Cpu Util: @Model.PerformanceInfo.AvgCpuUtil High Cpu Util: @Model.PerformanceInfo.HighCpuUtilIndicator</li>
-                <li>Avg Mem Util: @Model.PerformanceInfo.AvgMemUtil High Mem Util: @Model.PerformanceInfo.HighMemUtilIndicator</li>
-            </ul>
+    <div id="PerfData" class="perf-flex">
+        <div id="CpuData" class="content-area perf-data">
+            <h3>Cpu Usage: <span>(perf)</span></h3>
+            <div class="chart-container" style="width: 100%;">
+                <canvas id="CpuChart"></canvas>
+            </div>
+            <div class="perf-footer">
+                <span>Current Usage: @(Model.PerformanceInfo.AvgCpuUtil)% </span>
+                <span>@(Model.PerformanceInfo.TotalNumProcesses) Processes</span>
+                <span>High util: @(Model.PerformanceInfo.HighCpuUtilIndicator)</span>
+            </div>
         </div>
-        <div class="content-area">
-            <h3>Disk Monitoring</h3>
-            <div class="content-inner drive-flex">
-                @foreach (var drive in Model.DiskInfo.Drives)
-                {
-                    <div class="drive-flex-ele">
-                        <div class="drive-name">
-                            @drive.Name
-                        </div>
-                        <div class="drive-total">
-                            @drive.TotalSpace GB
-                        </div>
-                        <div style="width: auto" class="drive-meter-outer">
-                            <div style="width: @((1 - (drive.FreeSpace / drive.TotalSpace))*100)%" class="drive-meter-inner">
-                                <div class="drive-meter-tip">@drive.UsedSpace GB</div>
-                            </div>
+        <div id="MemData" class="content-area perf-data">
+            <h3>Memory Usage: <span>(perf)</span></h3>
+            <div class="chart-container" style="width: 100%;">
+                <canvas id="MemChart"></canvas>
+            </div>
+            <div class="perf-footer">
+                <span>Current Usage: @(Model.PerformanceInfo.AvgMemUtil)% </span>
+                <span>High util: @(Model.PerformanceInfo.HighMemUtilIndicator)</span>
+            </div>
+        </div>
+    </div>
+    <!--<div class="content-area">
+        <h3>Performance Monitoring</h3>
+        <ul>
+            <li>Total processes running: Model.PerformanceInfo.TotalNumProcesses</li>
+            <li>Avg Cpu Util: Model.PerformanceInfo.AvgCpuUtil High Cpu Util: Model.PerformanceInfo.HighCpuUtilIndicator</li>
+            <li>Avg Mem Util: Model.PerformanceInfo.AvgMemUtil High Mem Util: Model.PerformanceInfo.HighMemUtilIndicator</li>
+        </ul>
+    </div>-->
+    <div class="content-area">
+        <h3>Disk Monitoring</h3>
+        <div class="content-inner drive-flex">
+            @foreach (var drive in Model.DiskInfo.Drives)
+            {
+                <div class="drive-flex-ele">
+                    <div class="drive-name">
+                        @drive.Name
+                    </div>
+                    <div class="drive-total">
+                        @drive.TotalSpace GB
+                    </div>
+                    <div style="width: auto" class="drive-meter-outer">
+                        <div style="width: @((1 - (drive.FreeSpace / drive.TotalSpace))*100)%" class="drive-meter-inner">
+                            <div class="drive-meter-tip">@drive.UsedSpace GB</div>
                         </div>
                     </div>
-                }
-            </div>
-        </div>
-        <div class="content-area">
-            <h3>Disk Monitoring</h3>
-            <div class="content-inner">
-                @foreach (var drive in Model.DiskInfo.Drives)
-                {
-                    <h4>@drive.Name (@drive.VolumeLabel)</h4>
-                        <ul>
-                            <li>Drive type: @drive.DriveType</li>
-                            <li>Drive format: @drive.DriveFormat</li>
-                            <li>Total space: @drive.TotalSpace</li>
-                            <li>Free space: @drive.FreeSpace</li>
-                            <li>Used space: @drive.UsedSpace</li>
-                        </ul>
-                }
-            </div>
-        </div>
-        <div class="content-area">
-            <h3>Process Monitoring</h3>
-            @if (Model.ProcessInfo.MonitoredProcesses != null)
-            {
-                foreach (var procGroup in Model.ProcessInfo.MonitoredProcesses)
-                {
-                    <h4>@procGroup.ProcessName</h4>
-                    <ul>
-                        @foreach (var proc in procGroup.Processes)
-                        {
-                            <li>
-                                <ul>
-                                    <li>PID: @proc.PID</li>
-                                    <li>Status: @proc.Status</li>
-                                    <li>StartTime: @proc.StartTime</li>
-                                    <li>CpuTime: @proc.CpuTime</li>
-                                    <li>ThreadCount: @proc.ThreadCount</li>
-                                    <li>WorkingSet: (@proc.WorkingSet/1024) kb</li>
-                                    <li>Private Bytes: (@proc.PrivateBytes/1024) kb</li>
-                                    <li>Virtual Bytes: (@proc.VirtualBytes/1024) kb</li>
-                                </ul>
-                            </li>
-                        }
-                    </ul>
-                }
+                </div>
             }
         </div>
-        <div class="content-area">
-            <h3>EventLog Monitoring</h3>
-            @if (Model.EventLogInfo.EventLogs != null)
+    </div>
+    <!--<div class="content-area">
+        <h3>Disk Monitoring</h3>
+        <div class="content-inner">
+            @foreach (var drive in Model.DiskInfo.Drives)
             {
-                foreach (var log in Model.EventLogInfo.EventLogs)
-                {
-                    <h4>@log.EventLogName</h4>
+                <h4>@drive.Name (@drive.VolumeLabel)</h4>
                     <ul>
-                        <li>@log.FriendlyLogName</li>
-                        <li>@log.Exists</li>
-                        <li>@log.TotalEvents</li>
-                        <li>@log.NumInfos</li>
-                        <li>@log.NumWarnings</li>
-                        <li>@log.NumErrors</li>
+                        <li>Drive type: @drive.DriveType</li>
+                        <li>Drive format: @drive.DriveFormat</li>
+                        <li>Total space: @drive.TotalSpace</li>
+                        <li>Free space: @drive.FreeSpace</li>
+                        <li>Used space: @drive.UsedSpace</li>
                     </ul>
-                }
             }
         </div>
-        <div class="content-area">
-            <h3>Services Monitoring</h3>
-            @if (Model.ServiceInfo.Services != null)
+    </div>-->
+    <div class="content-area">
+        <h3>Process Monitoring</h3>
+        @if (Model.ProcessInfo.MonitoredProcesses != null)
+        {
+            foreach (var procGroup in Model.ProcessInfo.MonitoredProcesses)
             {
-                foreach (var service in Model.ServiceInfo.Services)
-                {
-                    <h4>@service.ServiceName</h4>
-                    <ul>
-                        <li>@service.Exists</li>
-                        <li>@service.Status</li>
-                        <li>@service.StartupType</li>
-                    </ul>
-                }
+                <h4>@procGroup.ProcessName</h4>
+                <ul>
+                    @foreach (var proc in procGroup.Processes)
+                    {
+                        <li>
+                            <ul>
+                                <li>PID: @proc.PID</li>
+                                <li>Status: @proc.Status</li>
+                                <li>StartTime: @proc.StartTime</li>
+                                <li>CpuTime: @proc.CpuTime</li>
+                                <li>ThreadCount: @proc.ThreadCount</li>
+                                <li>WorkingSet: (@proc.WorkingSet/1024) kb</li>
+                                <li>Private Bytes: (@proc.PrivateBytes/1024) kb</li>
+                                <li>Virtual Bytes: (@proc.VirtualBytes/1024) kb</li>
+                            </ul>
+                        </li>
+                    }
+                </ul>
             }
-        </div>
+        }
+    </div>
+    <div class="content-area">
+        <h3>EventLog Monitoring</h3>
+        @if (Model.EventLogInfo.EventLogs != null)
+        {
+            foreach (var log in Model.EventLogInfo.EventLogs)
+            {
+                <h4>@log.EventLogName</h4>
+                <ul>
+                    <li>@log.FriendlyLogName</li>
+                    <li>@log.Exists</li>
+                    <li>@log.TotalEvents</li>
+                    <li>@log.NumInfos</li>
+                    <li>@log.NumWarnings</li>
+                    <li>@log.NumErrors</li>
+                </ul>
+            }
+        }
+    </div>
+    <div class="content-area">
+        <h3>Services Monitoring</h3>
+        @if (Model.ServiceInfo.Services != null)
+        {
+            foreach (var service in Model.ServiceInfo.Services)
+            {
+                <h4>@service.ServiceName</h4>
+                <ul>
+                    <li>@service.Exists</li>
+                    <li>@service.Status</li>
+                    <li>@service.StartupType</li>
+                </ul>
+            }
+        }
+    </div>
 </section>
+
 <script>
-    // Google Charts code here!
+    // Chart.js replacement here...    
+    $(document).ready(function(){
+        //var labelData = Model.PerformanceInfo.ReadingTimes;
+        var labelData = ["10:00", "11:15", "11:30", "11:45", "12:00"];
+        var cpuData = @Model.PerformanceInfo.CpuChartData;
+        var memData = @Model.PerformanceInfo.MemChartData;
+
+        var CpuChartContext = document.getElementById('CpuChart').getContext('2d');
+        var CpuChart = new Chart(CpuChartContext, {
+            type: 'line',
+            data: {
+                labels: labelData,
+                datasets: [{
+                    label: 'cpu',
+                    data: cpuData,
+                    backgroundColor: null,
+                    borderColor: '#f39c12',
+                    backgroundColor: "rgba(243, 156, 18, 0.1)",
+                    pointRadius: 4,
+                    pointBackgroundColor: '#f39c12',
+                    pointHitRadius: 8
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: { 
+                            display: true,
+                            beginAtZero: true,
+                            steps: 5,
+                            max: 100
+                        }
+                    }]            
+                },
+                legend: {
+                    display: false
+                }
+            }
+        });
+
+        var MemChartContext = document.getElementById('MemChart').getContext('2d');
+        var MemChart = new Chart(MemChartContext, {
+            type: 'line',
+            data: {
+                labels: labelData,
+                datasets: [{
+                    label: 'mem',
+                    data: memData,
+                    backgroundColor: null,
+                    borderColor: '#3498db',
+                    backgroundColor: "rgba(52, 152, 219, 0.1)",
+                    pointRadius: 4,
+                    pointBackgroundColor: '#3498db',
+                    pointHitRadius: 8
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: { 
+                            display: true,
+                            beginAtZero: true,
+                            steps: 5,
+                            max: 100
+                        }
+                    }]            
+                },
+                legend: {
+                    display: false
+                }
+            }
+        });
+    });
 </script>

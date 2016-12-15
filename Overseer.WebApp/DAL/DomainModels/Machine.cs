@@ -47,15 +47,15 @@ namespace Overseer.WebApp.DAL.DomainModels
 
         public SystemInfo SystemInformationData { get; set; }
 
-        public PerformanceInfo PerformanceData { get; set; }
+        public ICollection<PerformanceInfo> PerformanceData { get; set; }
+
+        public ICollection<DiskInfo> DiskData { get; set; }
 
         public ICollection<ProcessSettings> ProcessConfig { get; set; }
 
         public ICollection<EventLogSettings> EventLogConfig { get; set; }
 
         public ICollection<ServiceSettings> ServiceConfig { get; set; }
-
-        public ICollection<DiskInfo> DiskData { get; set; }
 
         public ICollection<ProcessInfo> ProcessData { get; set; }
 

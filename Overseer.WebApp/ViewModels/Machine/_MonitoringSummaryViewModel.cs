@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web;
 
 namespace Overseer.WebApp.ViewModels.Machine
 {
@@ -27,6 +28,11 @@ namespace Overseer.WebApp.ViewModels.Machine
 
     public class PerformanceInfoViewModel
     {
+        public PerformanceInfoViewModel()
+        {
+
+        }
+
         public int TotalNumProcesses { get; set; }
 
         public float AvgCpuUtil { get; set; }
@@ -36,6 +42,12 @@ namespace Overseer.WebApp.ViewModels.Machine
         public float HighCpuUtilIndicator { get; set; }
 
         public float HighMemUtilIndicator { get; set; }
+
+        public HtmlString ReadingTimes { get; set; }
+
+        public HtmlString CpuChartData { get; set; }
+
+        public HtmlString MemChartData { get; set; }
     }
 
     public class DiskInfoViewModel

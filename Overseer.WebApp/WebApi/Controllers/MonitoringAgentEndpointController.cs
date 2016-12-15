@@ -114,23 +114,23 @@ namespace Overseer.WebApp.WebApi
             sysInfo.TotalMem = monData.SystemInfo.TotalMem;
 
             // getting/creating system information record in 'PerformanceMonitoring' table.
-            PerformanceInfo perfInfo = _unitOfWork.PerformanceMonitoring.Get(machineId);
+            List<PerformanceInfo> perfReadings = _unitOfWork.PerformanceMonitoring.GetOrderedReadingsForMachine(machineId);
 
-            if (perfInfo == null)
+            if (perfReadings.Count >= 5)
             {
-                _unitOfWork.PerformanceMonitoring.Add(new PerformanceInfo()
-                {
-                    MachineID = machineId
-                });
-                _unitOfWork.Save();
-
-                perfInfo = _unitOfWork.PerformanceMonitoring.Get(machineId);
+                _unitOfWork.PerformanceMonitoring.Delete(perfReadings[perfReadings.Count - 1]);     // delete earliest reading found
             }
-            perfInfo.CpuUtil = monData.PerformanceInfo.AvgCpuUtil;
-            perfInfo.MemUtil = monData.PerformanceInfo.AvgMemUtil;
-            perfInfo.HighCpuUtilIndicator = monData.PerformanceInfo.HighCpuUtilIndicator;
-            perfInfo.HighMemUtilIndicator = monData.PerformanceInfo.HighMemUtilIndicator;
-            perfInfo.TotalProcesses = monData.PerformanceInfo.TotalNumProcesses;
+
+            _unitOfWork.PerformanceMonitoring.Add(new PerformanceInfo()                        // add latest reading
+            {
+                MachineID = machineId,
+                CpuUtil = monData.PerformanceInfo.AvgCpuUtil,
+                MemUtil = monData.PerformanceInfo.AvgMemUtil,
+                HighCpuUtilIndicator = monData.PerformanceInfo.HighCpuUtilIndicator,
+                HighMemUtilIndicator = monData.PerformanceInfo.HighMemUtilIndicator,
+                TotalProcesses = monData.PerformanceInfo.TotalNumProcesses
+            });
+            _unitOfWork.Save();
 
             // far less cumbersome just to delete all disk records for this machine & add new ones rather than attempting to maintain a list
             _unitOfWork.DiskMonitoring.DeleteByMachine(machineId);

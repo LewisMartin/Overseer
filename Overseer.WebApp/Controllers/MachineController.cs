@@ -1,9 +1,9 @@
-﻿using Overseer.WebApp.DAL.DomainModels;
+﻿using Newtonsoft.Json;
+using Overseer.WebApp.DAL.DomainModels;
 using Overseer.WebApp.Helpers.AuthHelpers;
 using Overseer.WebApp.ViewModels.Machine;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Web.Mvc;
 
@@ -82,19 +82,39 @@ namespace Overseer.WebApp.Controllers
         public PartialViewResult _MonitoringSummary(Guid machineId)
         {
             Machine machine = _unitOfWork.Machines.GetMachineseerDataMonitored(machineId);
+            PerformanceInfo latestPerfReading = _unitOfWork.PerformanceMonitoring.GetLatestReading(machineId);
 
             _MonitoringSummaryViewModel viewModel = new _MonitoringSummaryViewModel();
 
             if (machine != null)
             {
 
+                if (latestPerfReading != null)
+                {
+                    viewModel.PerformanceInfo.AvgCpuUtil = (latestPerfReading.CpuUtil != null ? (float)latestPerfReading.CpuUtil : 101);
+                    viewModel.PerformanceInfo.AvgMemUtil = (latestPerfReading.MemUtil != null ? (float)latestPerfReading.MemUtil : 101);
+                    viewModel.PerformanceInfo.HighCpuUtilIndicator = (latestPerfReading.HighCpuUtilIndicator != null ? (float)latestPerfReading.HighCpuUtilIndicator : 0);
+                    viewModel.PerformanceInfo.HighMemUtilIndicator = (latestPerfReading.HighMemUtilIndicator != null ? (float)latestPerfReading.HighMemUtilIndicator : 0);
+                    viewModel.PerformanceInfo.TotalNumProcesses = (latestPerfReading.TotalProcesses != null ? (int)latestPerfReading.TotalProcesses : 0);
+                }
+
                 if (machine.PerformanceData != null)
                 {
-                    viewModel.PerformanceInfo.AvgCpuUtil = (machine.PerformanceData.CpuUtil != null ? (float)machine.PerformanceData.CpuUtil : 101);
-                    viewModel.PerformanceInfo.AvgMemUtil = (machine.PerformanceData.MemUtil != null ? (float)machine.PerformanceData.MemUtil : 101);
-                    viewModel.PerformanceInfo.HighCpuUtilIndicator = (machine.PerformanceData.HighCpuUtilIndicator != null ? (float)machine.PerformanceData.HighCpuUtilIndicator : 0);
-                    viewModel.PerformanceInfo.HighMemUtilIndicator = (machine.PerformanceData.HighMemUtilIndicator != null ? (float)machine.PerformanceData.HighMemUtilIndicator : 0);
-                    viewModel.PerformanceInfo.TotalNumProcesses = (machine.PerformanceData.TotalProcesses != null ? (int)machine.PerformanceData.TotalProcesses : 0);
+                    List<int> readingTimes = new List<int>();
+                    List<float> cpuChartData = new List<float>(), memChartData = new List<float>();
+
+                    int i = 1;
+                    foreach (PerformanceInfo perfInfo in machine.PerformanceData)
+                    {
+                        readingTimes.Add(i);
+                        cpuChartData.Add((float)perfInfo.CpuUtil);
+                        memChartData.Add((float)perfInfo.MemUtil);
+                        i++;
+                    }
+
+                    viewModel.PerformanceInfo.ReadingTimes = new System.Web.HtmlString(JsonConvert.SerializeObject(readingTimes, Formatting.None));
+                    viewModel.PerformanceInfo.CpuChartData = new System.Web.HtmlString(JsonConvert.SerializeObject(cpuChartData, Formatting.None));
+                    viewModel.PerformanceInfo.MemChartData = new System.Web.HtmlString(JsonConvert.SerializeObject(memChartData, Formatting.None));
                 }
 
                 if (machine.DiskData != null)

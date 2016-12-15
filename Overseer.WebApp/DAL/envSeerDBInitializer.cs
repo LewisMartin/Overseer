@@ -8,7 +8,7 @@ using Overseer.WebApp.DAL.DomainModels;
 namespace Overseer.WebApp.DAL
 {
     // custom database initializer class
-    public class OverseerDBInitializer : DropCreateDatabaseAlways<OverseerDBContext>
+    public class OverseerDBInitializer : DropCreateDatabaseIfModelChanges<OverseerDBContext> //DropCreateDatabaseAlways<OverseerDBContext>
     {
         // overriding the default seed method from 'DropCreateDatabaseAlways' class
         protected override void Seed(OverseerDBContext context)
