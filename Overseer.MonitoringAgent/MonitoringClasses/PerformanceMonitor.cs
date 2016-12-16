@@ -64,8 +64,8 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
             _CpuHighUtilCounter = 0;
             _MemHighUtilCounter = 0;
 
-            Thread CpuMonitoringWorker = new Thread(CpuMonitoring);
-            Thread MemMonitoringWorker = new Thread(MemMonitoring);
+            Thread CpuMonitoringWorker = new Thread(CpuMonitoring); // run in separate thread from main thread
+            Thread MemMonitoringWorker = new Thread(MemMonitoring); // run in separate thread from main thread
 
             CpuMonitoringWorker.Start();
             MemMonitoringWorker.Start();

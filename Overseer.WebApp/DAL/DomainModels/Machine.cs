@@ -36,7 +36,7 @@ namespace Overseer.WebApp.DAL.DomainModels
         public float TotalMemGbs { get; set; }
 
         [Column(TypeName = "DateTime2")]
-        public DateTime? LastUpdated { get; set; }
+        public DateTime? LastSnapshot { get; set; }
 
         // navigation properties
         public TestEnvironment TestEnvironment { get; set; }

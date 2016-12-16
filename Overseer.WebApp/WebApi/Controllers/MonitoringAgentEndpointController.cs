@@ -91,6 +91,10 @@ namespace Overseer.WebApp.WebApi
 
             Guid machineId = new Guid(Request.Headers.GetValues("TargetMachine").FirstOrDefault());
 
+            Machine machine = _unitOfWork.Machines.Get(machineId);
+            machine.LastSnapshot = monData.SnapshotTime;
+            _unitOfWork.Save();
+
             // getting/creating system information record in 'SystemMonitoring' table.
             SystemInfo sysInfo = _unitOfWork.SystemInfoMonitoring.Get(machineId);
 
@@ -124,6 +128,7 @@ namespace Overseer.WebApp.WebApi
             _unitOfWork.PerformanceMonitoring.Add(new PerformanceInfo()                        // add latest reading
             {
                 MachineID = machineId,
+                ReadingDateTime = monData.SnapshotTime,
                 CpuUtil = monData.PerformanceInfo.AvgCpuUtil,
                 MemUtil = monData.PerformanceInfo.AvgMemUtil,
                 HighCpuUtilIndicator = monData.PerformanceInfo.HighCpuUtilIndicator,

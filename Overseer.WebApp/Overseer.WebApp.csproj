@@ -285,6 +285,7 @@
     <Compile Include="WebApi\Controllers\MonitoringConfigEndpointController.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Scripts\Custom Scripts\ContentAccordion.js" />
     <Content Include="Content\Scripts\Custom Scripts\EditableListBox.js" />
     <Content Include="Content\Scripts\Custom Scripts\EnvironmentAjax.js" />
     <Content Include="Content\Scripts\Custom Scripts\RefreshMonitoringData.js" />

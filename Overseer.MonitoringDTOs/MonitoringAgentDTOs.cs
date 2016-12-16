@@ -30,6 +30,9 @@ namespace Overseer.DTOs.MonitoringAgent
     // DTO for sending monitoring data from monitoring agent back to server
     public class MonitoringData
     {
+        // time of snapshot
+        public DateTime SnapshotTime;
+
         // all the properties that are monitored (compose this of smaller DTOs for each section - SystemInfo, PerformanceInfo, DiskInfo etc.)
         public SystemInformation SystemInfo;
         public PerformanceInformation PerformanceInfo;

@@ -16,6 +16,9 @@ namespace Overseer.WebApp.DAL.DomainModels
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ReadingNumber { get; set; }   // allows us to keep historical readings for more effective performance graphing
 
+        [Column(TypeName = "DateTime2")]
+        public DateTime ReadingDateTime { get; set; }
+
         public float? CpuUtil { get; set; }
 
         public float? HighCpuUtilIndicator { get; set; }

@@ -13,6 +13,8 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
     {
         private Logger _Logger;
 
+        private DateTime _LatestSnapshot;
+
         private SystemInformationMonitor _SysInfoMon;
         private PerformanceMonitor _PerfMon;
         private DiskMonitor _DiskMon;
@@ -20,17 +22,18 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
         private ServiceMonitor _ServiceMon;
         private ProcessMonitor _ProcessMon;
 
-        public SystemMonitoring()
+        public SystemMonitoring()   // constructor
         {
-            // constructor - could pass initial settings to each monitoring component here..
+            _Logger = Logger.Instance();
+
+            _LatestSnapshot = new DateTime();
+
             _SysInfoMon = new SystemInformationMonitor();
             _PerfMon = new PerformanceMonitor();
             _DiskMon = new DiskMonitor();
             _ProcessMon = new ProcessMonitor();
             _EventLogMon = new EventLogMonitor();
             _ServiceMon = new ServiceMonitor();
-
-            _Logger = Logger.Instance();
         }
 
         public void TakeSnapshot()
@@ -43,6 +46,9 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
             _ProcessMon.Snapshot();
             _EventLogMon.Snapshot();
             _ServiceMon.Snapshot();
+
+            // update time here
+            _LatestSnapshot = DateTime.Now;
 
             _Logger.Log("Verifying obtained data..");
             _SysInfoMon.LogSnapshot();
@@ -65,6 +71,7 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
         {
             return new MonitoringData()
             {
+                SnapshotTime = _LatestSnapshot, // time of snapshot
                 SystemInfo = _SysInfoMon.GetDTO(),
                 PerformanceInfo = _PerfMon.GetDTO(),
                 DiskInfo = _DiskMon.GetDTO(),

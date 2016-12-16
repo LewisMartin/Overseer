@@ -1,14 +1,24 @@
 ﻿@model Overseer.WebApp.ViewModels.Machine._MonitoringSystemInfoViewModel
 
-<div class="content-area">
-    <h3>System Info (Monitoring)</h3>
-    <ul>
-        <li>Machine Name: @Model.MachineName</li>
-        <li>IPV4 Address: @Model.IPAddress</li>
-        <li>OS: @Model.OSNameFriendly</li>
-        <li>OS Version: @Model.OSName</li>
-        <li>OS Bitness: @Model.OSBitness</li>
-        <li>Processor Cores: @Model.ProcessorCount</li>
-        <li>Total Memory (GBs): @Model.TotalMem</li>
-    </ul>
+<div class="info-network">
+    <h4>Network</h4>
+    <div class="system-info-flex">
+        <div><span>Machine Name:</span> @Model.MachineName</div>
+        <div><span>IPV4 Address:</span> @Model.IPAddress</div>
+    </div>
+</div>
+<div class="info-OS">
+    <h4>OS</h4>
+    <div class="system-info-flex">
+        <div><span>OS:</span> @Model.OSNameFriendly</div>
+        <div><span>Version:</span> @Model.OSName</div>
+        <div><span>Bitness:</span> @Model.OSBitness</div>
+    </div>
+</div>
+<div class="info-hardware">
+    <h4>Hardware</h4>
+    <div class="system-info-flex">
+        <div><span>Processor Cores:</span> @Model.ProcessorCount</div>
+        <div><span>Total Memory (GBs):</span> @Model.TotalMem</div>
+    </div>
 </div>

@@ -16,35 +16,51 @@
 </div>
 
 <div id="Machineseer" class="page-content" data-baseurl="@Model.BaseAppUrl" data-machineid="@Model.MachineId" data-refreshrate="@Model.RefreshInterval">
-    <div class="content-area">
-        <h3>Basic Info</h3>
-        <ul>
-            <li>GUID: @Model.MachineId</li>
-            <li>Display Name: @Model.MachineDetails.DisplayName</li>
-            <li>Environment: @Model.MachineDetails.ParentEnvironmentName</li>
-            @Html.ActionLink("Configure Machine", "MachineConfiguration", "Machine", new { machineId = @Model.MachineId }, null)
-        </ul>
-        <div id="SystemInfo">
+    <div class="content-area content-accord">
+        <h3>@Model.MachineDetails.DisplayName 
+            <span class="latest-update">Latest Monitoring Update: @Model.LatestMonitoringUpdate</span>
+            <span class="icon machine-info-i accord-toggle"><i class="fa fa-info-circle" aria-hidden="true"></i></span>
+            <a href="@Url.Action("MachineConfiguration", "Machine", new { machineId = @Model.MachineId }, null)"><span class="icon machine-config-i"><i class="fa fa-cog" aria-hidden="true"></i></span> </a>
+        </h3>
+        <section class="system-info accord-content accord-content-hidden">
+            <div class="info-basic">
+                <h4>Basic</h4>
+                <div class="system-info-flex">
+                    <div><span>Display Name:</span> @Model.MachineDetails.DisplayName</div>
+                    <div><span>GUID:</span> @Model.MachineId</div>
+                    <div><span>Environment:</span> @Model.MachineDetails.ParentEnvironmentName</div>
+                </div>
+            </div>
             @if (!Model.MonitoringEnabled)
             {
-                <div class="content-area">
-                    <h3>System Info (Manual)</h3>
-                    <ul>
-                        <li>Machine Name: @Model.MachineDetails.MachineName</li>
-                        <li>IPV4 Address: @Model.MachineDetails.IpAddress</li>
-                        <li>FQDN: @Model.MachineDetails.FQDN</li>
-                        <li>OS: @Model.MachineDetails.OperatingSysName</li>
-                        <li>OS Bitness: @Model.MachineDetails.OperatingSysBitness</li>
-                        <li>Processor Cores: @Model.MachineDetails.NumProcessors</li>
-                        <li>Total Memory (GBs): @Model.MachineDetails.TotalMemGbs</li>
-                    </ul>
+                <div class="info-network">
+                    <h4>Network</h4>
+                    <div class="system-info-flex">
+                        <div>Machine Name: @Model.MachineDetails.MachineName</div>
+                        <div>IPV4 Address: @Model.MachineDetails.IpAddress</div>
+                        <div>FQDN: @Model.MachineDetails.FQDN</div>
+                    </div>
+                </div>
+                <div class="info-OS">
+                    <h4>OS</h4>
+                    <div class="system-info-flex">
+                        <div>OS: @Model.MachineDetails.OperatingSysName</div>
+                        <div>OS Bitness: @Model.MachineDetails.OperatingSysBitness</div>
+                    </div>
+                </div>
+                <div class="info-hardware">
+                    <h4>Hardware</h4>
+                    <div class="system-info-flex">
+                        <div>Processor Cores: @Model.MachineDetails.NumProcessors</div>
+                        <div>Total Memory (GBs): @Model.MachineDetails.TotalMemGbs</div>
+                    </div>
                 </div>
             }
             else
             {
                 @Html.Action("_MonitoringSystemInfo", "Machine", new { machineId = Model.MachineId })
             }
-        </div>
+        </section>
     </div>
     <div id="MonitoringData">
         @if (Model.MonitoringEnabled)

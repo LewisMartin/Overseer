@@ -17,6 +17,8 @@ namespace Overseer.WebApp.ViewModels.Machine
 
         public bool MonitoringEnabled { get; set; }
 
+        public string LatestMonitoringUpdate { get; set; }
+
         public MachineDetailsViewModel MachineDetails { get; set; }
 
         public string BaseAppUrl { get; set; }

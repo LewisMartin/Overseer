@@ -24,14 +24,7 @@
             </div>
         </div>
     </div>
-    <!--<div class="content-area">
-        <h3>Performance Monitoring</h3>
-        <ul>
-            <li>Total processes running: Model.PerformanceInfo.TotalNumProcesses</li>
-            <li>Avg Cpu Util: Model.PerformanceInfo.AvgCpuUtil High Cpu Util: Model.PerformanceInfo.HighCpuUtilIndicator</li>
-            <li>Avg Mem Util: Model.PerformanceInfo.AvgMemUtil High Mem Util: Model.PerformanceInfo.HighMemUtilIndicator</li>
-        </ul>
-    </div>-->
+
     <div class="content-area">
         <h3>Disk Monitoring</h3>
         <div class="content-inner drive-flex">
@@ -53,22 +46,7 @@
             }
         </div>
     </div>
-    <!--<div class="content-area">
-        <h3>Disk Monitoring</h3>
-        <div class="content-inner">
-            @foreach (var drive in Model.DiskInfo.Drives)
-            {
-                <h4>@drive.Name (@drive.VolumeLabel)</h4>
-                    <ul>
-                        <li>Drive type: @drive.DriveType</li>
-                        <li>Drive format: @drive.DriveFormat</li>
-                        <li>Total space: @drive.TotalSpace</li>
-                        <li>Free space: @drive.FreeSpace</li>
-                        <li>Used space: @drive.UsedSpace</li>
-                    </ul>
-            }
-        </div>
-    </div>-->
+
     <div class="content-area">
         <h3>Process Monitoring</h3>
         @if (Model.ProcessInfo.MonitoredProcesses != null)
@@ -134,8 +112,7 @@
 <script>
     // Chart.js replacement here...    
     $(document).ready(function(){
-        //var labelData = Model.PerformanceInfo.ReadingTimes;
-        var labelData = ["10:00", "11:15", "11:30", "11:45", "12:00"];
+        var labelData = @Model.PerformanceInfo.ReadingTimes;
         var cpuData = @Model.PerformanceInfo.CpuChartData;
         var memData = @Model.PerformanceInfo.MemChartData;
 
@@ -178,7 +155,7 @@
             data: {
                 labels: labelData,
                 datasets: [{
-                    label: 'mem',
+                    label: '% Commited Bytes in use',
                     data: memData,
                     backgroundColor: null,
                     borderColor: '#3498db',

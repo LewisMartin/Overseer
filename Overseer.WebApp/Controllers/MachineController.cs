@@ -33,16 +33,25 @@ namespace Overseer.WebApp.Controllers
                 viewModel.DisplayName = machine.DisplayName;
                 viewModel.ParentEnvironmentId = machine.ParentEnv;
                 viewModel.MonitoringEnabled = monSettings.MonitoringEnabled;
-
-                viewModel.MachineDetails = new MachineDetailsViewModel()
+                if (machine.LastSnapshot != null)
                 {
-                    ParentEnvironmentName = machine.TestEnvironment.EnvironmentName,    // <--- eager loaded environment
+                    DateTime dt = (DateTime)machine.LastSnapshot;
+                    viewModel.LatestMonitoringUpdate = dt.ToString("MM/dd/yyyy h:mm tt");
+                } 
+                else
+                {
+                    viewModel.LatestMonitoringUpdate = "Never";
+                }
+
+                viewModel.MachineDetails = new MachineDetailsViewModel()    // Static (user-entered) system information.
+                {
+                    ParentEnvironmentName = machine.TestEnvironment.EnvironmentName,    // <--- eager loaded environment.
                     DisplayName = machine.DisplayName,
                     MachineName = machine.ComputerName,
                     IpAddress = machine.IPV4,
                     FQDN = machine.FQDN,
-                    OperatingSysName = machine.OperatingSys.OSName,                     // <--- eager loaded environment
-                    OperatingSysBitness = machine.OperatingSys.Bitness,                 // <--- eager loaded environment
+                    OperatingSysName = machine.OperatingSys.OSName,                     // <--- eager loaded.
+                    OperatingSysBitness = machine.OperatingSys.Bitness,                 // <--- eager loaded.
                     NumProcessors = machine.NumProcessors,
                     TotalMemGbs = machine.TotalMemGbs
                 };
@@ -100,13 +109,13 @@ namespace Overseer.WebApp.Controllers
 
                 if (machine.PerformanceData != null)
                 {
-                    List<int> readingTimes = new List<int>();
+                    List<string> readingTimes = new List<string>();
                     List<float> cpuChartData = new List<float>(), memChartData = new List<float>();
 
                     int i = 1;
                     foreach (PerformanceInfo perfInfo in machine.PerformanceData)
                     {
-                        readingTimes.Add(i);
+                        readingTimes.Add(perfInfo.ReadingDateTime.ToString("HH:mm"));
                         cpuChartData.Add((float)perfInfo.CpuUtil);
                         memChartData.Add((float)perfInfo.MemUtil);
                         i++;
@@ -201,8 +210,6 @@ namespace Overseer.WebApp.Controllers
             
             return PartialView(viewModel);
         }
-
-
 
         // MachineConfiguration - page to change machine details & configure machine level monitoring settings
         // GET: 
