@@ -7,7 +7,9 @@
         var accordContent = $(accord).find('.accord-content');
 
         if ($(accordContent).hasClass('accord-content-hidden')) {
-            $(accordContent).animate({height: $(accordContent).get(0).scrollHeight}, 600);
+            $(accordContent).animate({ height: $(accordContent).get(0).scrollHeight }, 600, function () {
+                $(accordContent).css('height', 'auto'); // reset to auto height (for responsiveness)
+            });
         } else {
             $(accordContent).animate({ height: 0 }, 600);
         }

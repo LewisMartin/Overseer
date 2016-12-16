@@ -15,6 +15,9 @@ namespace Overseer.WebApp.DAL.Core
         // get environment and include all related values
         TestEnvironment GetWithAllRelatedValues(int id);
 
+        // get all data necessary for 'Environmentseer' page
+        TestEnvironment GetEnvironmentseerData(int id);
+
         // get environment by creator (userId)
         IEnumerable<TestEnvironment> GetEnvironmentsByCreator(int userId);
 

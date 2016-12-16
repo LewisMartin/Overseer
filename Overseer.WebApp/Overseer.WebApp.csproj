@@ -355,6 +355,8 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Machine\_MonitoringSummary.cshtml" />
     <Content Include="Views\Machine\_MonitoringSystemInfo.cshtml" />
+    <Content Include="Views\Environment\_EnvironmentInfo.cshtml" />
+    <Content Include="Views\Environment\_MonitoringSummary.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

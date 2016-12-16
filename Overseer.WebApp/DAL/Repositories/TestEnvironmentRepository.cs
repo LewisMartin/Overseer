@@ -30,6 +30,15 @@ namespace Overseer.WebApp.DAL.Repositories
             return dbContext.TestEnvironment.FirstOrDefault(e => e.Creator == userId && e.EnvironmentName == name);
         }
 
+        public TestEnvironment GetEnvironmentseerData(int id)
+        {
+            return dbContext.TestEnvironment.Include(e => e.MonitoringSettings)
+                .Include(e => e.DownTimeCategory)
+                .Include(e => e.Machines.Select(m => m.SystemInformationData))
+                .Include(e => e.Machines.Select(m => m.OperatingSys))
+                .FirstOrDefault(e => e.EnvironmentID == id);
+        }
+
         public bool CheckEnvironmentExistsByCreatorAndName(int userId, string name)
         {
             return dbContext.TestEnvironment.Any(e => e.Creator == userId && e.EnvironmentName == name);

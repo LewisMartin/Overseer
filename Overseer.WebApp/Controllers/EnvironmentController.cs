@@ -23,12 +23,12 @@ namespace Overseer.WebApp.Controllers
         {
             EnvironmentseerViewModel viewModel = new EnvironmentseerViewModel();
 
-            TestEnvironment testEnv = _unitOfWork.TestEnvironments.GetWithAllRelatedValues(environmentId);
+            TestEnvironment testEnv = _unitOfWork.TestEnvironments.GetEnvironmentseerData(environmentId);
 
             if (testEnv != null)
             {
-                viewModel.environmentId = testEnv.EnvironmentID;
-                viewModel.environmentDetails = new EnvironmentDetailsViewModel()
+                viewModel.EnvironmentId = testEnv.EnvironmentID;
+                viewModel.EnvironmentDetails = new EnvironmentDetailsViewModel()
                 {
                     EnvironmentName = testEnv.EnvironmentName,
                     PrivateEnvironment = testEnv.IsPrivate,
@@ -39,8 +39,41 @@ namespace Overseer.WebApp.Controllers
 
                 if (!testEnv.Status && testEnv.DownTimeCatID != null)
                 {
-                    viewModel.environmentDetails.DownTimeCategory = testEnv.DownTimeCategory.Name;
+                    viewModel.EnvironmentDetails.DownTimeCategory = testEnv.DownTimeCategory.Name;
                 }
+
+                foreach (Machine machine in testEnv.Machines)
+                {
+                    if (testEnv.MonitoringSettings.MonitoringEnabled && machine.SystemInformationData != null)
+                    {
+                        viewModel.BasicMachineDetails.Add(new BasicMachineDetailsViewModel()
+                        {
+                            MachineId = machine.MachineID,
+                            Name = machine.DisplayName,
+                            OS = machine.SystemInformationData.OSNameFriendly,
+                            Bitness = machine.SystemInformationData.OSBitness,
+                            Cores = (int)machine.SystemInformationData.ProcessorCount,
+                            Memory = (float)machine.SystemInformationData.TotalMem,
+                            LatestMonitoringUpdate = ((DateTime)machine.LastSnapshot).ToString("MM/dd/yyyy H:mm")
+                        });
+                    }
+                    else
+                    {
+                        viewModel.BasicMachineDetails.Add(new BasicMachineDetailsViewModel()
+                        {
+                            MachineId = machine.MachineID,
+                            Name = machine.DisplayName,
+                            OS = machine.OperatingSys.OSName,
+                            Bitness = "x" + machine.OperatingSys.Bitness.ToString(),
+                            Cores = machine.NumProcessors,
+                            Memory = machine.TotalMemGbs,
+                            LatestMonitoringUpdate = "Never"
+                        });
+                    }
+                }
+
+                viewModel.BaseAppUrl = GetBaseApplicationUrl();
+                viewModel.RefreshInterval = GetMillisecondsToNextUpdate(testEnv.EnvironmentID);
 
                 return View(viewModel);
             }
@@ -206,6 +239,21 @@ namespace Overseer.WebApp.Controllers
             var Req = ControllerContext.RequestContext.HttpContext.Request;
 
             return Req.Url.Scheme + "://" + Req.Url.Authority + Req.ApplicationPath.TrimEnd('/');
+        }
+
+        private int GetMillisecondsToNextUpdate(int environmentId)
+        {
+            MonitoringSettings settings = _unitOfWork.MonitoringSettings.Get(environmentId);
+
+            int interval = (int)settings.MonitoringUpdateInterval;
+            DateTime currentTime = DateTime.UtcNow;
+            DateTime scheduledTime = new DateTime(currentTime.Year, currentTime.Month, currentTime.Day, currentTime.Hour, 0, 0);
+            scheduledTime = scheduledTime.AddMinutes((currentTime.Minute % interval == 0) ? currentTime.Minute + interval : ((currentTime.Minute + interval - 1) / interval) * interval);
+
+            TimeSpan timeDifference = scheduledTime - currentTime;
+            int nextUpdateDue = (int)timeDifference.TotalMilliseconds;
+
+            return (nextUpdateDue + 60000);
         }
     }
 }

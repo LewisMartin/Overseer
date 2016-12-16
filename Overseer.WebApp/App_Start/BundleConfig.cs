@@ -39,12 +39,18 @@ namespace Overseer.WebApp
                         "~/Content/Scripts/Custom Scripts/EnvironmentAjax.js"
                 ));
 
-            // bundle for monitoring auto-refresh
+            // bundle for 'Machineseer' page
             bundles.Add(new ScriptBundle("~/Machineseer/Scripts").Include(
                         "~/Content/Scripts/Custom Scripts/RefreshMonitoringData.js",
                         "~/Content/Scripts/Custom Scripts/ContentAccordion.js",
                         "~/Content/Scripts/Chart.js"
                 ));
+
+            // bundle for 'Environmentseer' page
+            bundles.Add(new ScriptBundle("~/Environmentseer/Scripts").Include(
+                        "~/Content/Scripts/Custom Scripts/ContentAccordion.js",
+                        "~/Content/Scripts/Chart.js"
+            ));
 
             // bundles for scripts used in specific pages
             bundles.Add(new ScriptBundle("~/Environment/MachineConfiguration/Scripts").Include(

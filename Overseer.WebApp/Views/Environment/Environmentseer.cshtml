@@ -1,34 +1,92 @@
 ﻿@model Overseer.WebApp.ViewModels.Environment.EnvironmentseerViewModel
 
+@section AdditionalScripts
+{
+    @Scripts.Render("~/Environmentseer/Scripts")
+}
+
 @{
     ViewBag.Title = "Environmentseer";
 }
 
 <div id="Page-Title">
     <div class="fl-left">
-        <i class="fa fa-tachometer a-fw" aria-hidden="true"></i>&nbsp Environments<i class="fa fa-angle-right a-fw breadcrumb-spacer" aria-hidden="true"></i>@Model.environmentDetails.EnvironmentName
+        <i class="fa fa-tachometer a-fw" aria-hidden="true"></i>&nbsp Environments<i class="fa fa-angle-right a-fw breadcrumb-spacer" aria-hidden="true"></i>@Model.EnvironmentDetails.EnvironmentName
     </div>
 </div>
 
-<div id="Page-Content">
-    <section>
-        <div class="content-area">
-            <ul>
-                <li>Id: @Model.environmentId</li>
-                <li>Name: @Model.environmentDetails.EnvironmentName</li>
-                <li>Private: @Model.environmentDetails.PrivateEnvironment</li>
-                <li>Online: @Model.environmentDetails.Status</li>
-                @if (!Model.environmentDetails.Status)
-                {
-                    <li>Online: @Model.environmentDetails.DownTimeCategory</li>
-                }
-                <li>Monitoring Enabled: @Model.environmentDetails.MonitoringEnabled</li>
-                <li>Monitoring Update Interval: @Model.environmentDetails.MonitoringUpdateInterval</li>
-            </ul>
-            <br />
-            @Html.ActionLink("Configure Environment...", "EnvironmentConfiguration", "Environment", new { environmentId = @Model.environmentId }, null)
-            @Html.ActionLink("Add new machine to this environment...", "MachineCreation", "Machine", new { environmentId = @Model.environmentId}, null)
-        </div>
-    </section>
+<div id="Environmentseer" class="page-content" data-baseurl="@Model.BaseAppUrl" data-machineid="@Model.EnvironmentId" data-refreshrate="@Model.RefreshInterval">
+    <div class="content-area content-accord">
+        <h3>
+            @Model.EnvironmentDetails.EnvironmentName
+            <span class="latest-update">Next Scheduled Monitoring Update: </span>
+            <span class="icon info-i accord-toggle"><i class="fa fa-info-circle" aria-hidden="true"></i></span>
+            <a href="@Url.Action("EnvironmentConfiguration", "Environment", new { environmentId = @Model.EnvironmentId }, null)"><span class="icon config-i"><i class="fa fa-cog" aria-hidden="true"></i></span> </a>
+        </h3>
+        <section class="system-info accord-content accord-content-hidden">
+            <div class="info-basic">
+                <h4>Basic</h4>
+                <div class="system-info-flex">
+                    <div><span>Name:</span> @Model.EnvironmentDetails.EnvironmentName </div>
+                    <div><span>Status:</span> @if (!Model.EnvironmentDetails.Status) { @Model.EnvironmentDetails.DownTimeCategory } else { @Model.EnvironmentDetails.Status } </div>
+                    <div><span>Private:</span> @Model.EnvironmentDetails.PrivateEnvironment </div>
+                </div>
+            </div>
+            <div class="info-mon-settings">
+                <h4>Monitoring</h4>
+                <div class="system-info-flex">
+                    <div><span>Enabled:</span> @Model.EnvironmentDetails.MonitoringEnabled </div>
+                    <div><span>Update Interval:</span> @Model.EnvironmentDetails.MonitoringUpdateInterval </div>
+                </div>
+            </div>
+            <div class="info-machines">
+                <h4>
+                    Machines
+                    <a href="@Url.Action("MachineCreation", "Machine", new { environmentId = @Model.EnvironmentId }, null)"><span class="icon add-i"><i class="fa fa-plus" aria-hidden="true"></i></span> </a>
+                </h4>
+                <div class="content-table proc-table">
+                    <table class="seer-tbl" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <th>Name</th>
+                            <th>OS</th>
+                            <th>Bitness</th>
+                            <th>Cores</th>
+                            <th>Memory</th>
+                            <th>Last Monitoring Submission</th>
+                        </tr>
+                        @if (Model.BasicMachineDetails != null)
+                        {
+                            int rowCounter = 0;
+                            foreach (var machine in Model.BasicMachineDetails)
+                            {
+                                rowCounter++;
+                                <tr class='@((rowCounter % 2) == 0 ? "alt-row" : "")'>
+                                    <td><a href="@Url.Action("Machineseer", "Machine", new { machineId = @machine.MachineId }, null)">@machine.Name</a></td>
+                                    <td>@machine.OS</td>
+                                    <td>@machine.Bitness</td>
+                                    <td>@machine.Cores</td>
+                                    <td>@machine.Memory</td>
+                                    <td>@machine.LatestMonitoringUpdate</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div> 
+        </section>
+    </div>
 </div>
 
