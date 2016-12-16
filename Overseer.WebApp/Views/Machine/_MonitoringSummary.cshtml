@@ -53,59 +53,143 @@
         {
             foreach (var procGroup in Model.ProcessInfo.MonitoredProcesses)
             {
-                <h4>@procGroup.ProcessName</h4>
-                <ul>
-                    @foreach (var proc in procGroup.Processes)
-                    {
-                        <li>
-                            <ul>
-                                <li>PID: @proc.PID</li>
-                                <li>Status: @proc.Status</li>
-                                <li>StartTime: @proc.StartTime</li>
-                                <li>CpuTime: @proc.CpuTime</li>
-                                <li>ThreadCount: @proc.ThreadCount</li>
-                                <li>WorkingSet: (@proc.WorkingSet/1024) kb</li>
-                                <li>Private Bytes: (@proc.PrivateBytes/1024) kb</li>
-                                <li>Virtual Bytes: (@proc.VirtualBytes/1024) kb</li>
-                            </ul>
-                        </li>
-                    }
-                </ul>
+                <div class="content-accord">
+                    <h4 class="accord-toggle">@procGroup.ProcessName</h4>
+                    <div class="accord-content accord-content-hidden">
+                        <div class="content-table proc-table">
+                            <table class="seer-tbl" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <th>PID</th>
+                                    <th>Status</th>
+                                    <th>Start Time</th>
+                                    <th>Cpu Time</th>
+                                    <th>Thread Count</th>
+                                    <th>Working Set</th>
+                                    <th>Private Bytes</th>
+                                    <th>Virtual Bytes</th>
+                                </tr>
+                                @if (Model.EventLogInfo.EventLogs != null)
+                                {
+                                    int rowCounter = 0;
+                                    foreach (var proc in procGroup.Processes)
+                                    {
+                                        rowCounter++;
+                                        <tr class='@((rowCounter % 2) == 0 ? "alt-row" : "")'>
+                                            <td>@proc.PID</td>
+                                            <td>@proc.Status</td>
+                                            <td>@proc.StartTime</td>
+                                            <td>@proc.CpuTime</td>
+                                            <td>@proc.ThreadCount</td>
+                                            <td>@(proc.WorkingSet/1024) kb</td>
+                                            <td>@(proc.PrivateBytes/1024) kb</td>
+                                            <td>@(proc.VirtualBytes/1024) kb</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                    </div>
+                </div>
             }
         }
     </div>
     <div class="content-area">
         <h3>EventLog Monitoring</h3>
-        @if (Model.EventLogInfo.EventLogs != null)
-        {
-            foreach (var log in Model.EventLogInfo.EventLogs)
-            {
-                <h4>@log.EventLogName</h4>
-                <ul>
-                    <li>@log.FriendlyLogName</li>
-                    <li>@log.Exists</li>
-                    <li>@log.TotalEvents</li>
-                    <li>@log.NumInfos</li>
-                    <li>@log.NumWarnings</li>
-                    <li>@log.NumErrors</li>
-                </ul>
-            }
-        }
+        <div class="content-table">
+            <table class="seer-tbl" cellpadding="0" cellspacing="0">
+                <tr>
+                    <th>Event Log</th>
+                    <th>Exists</th>
+                    <th>Friendly Name</th>
+                    <th>Infos</th>
+                    <th>Warnings</th>
+                    <th>Errors</th>
+                    <th>Total Events</th>
+                </tr>
+                @if (Model.EventLogInfo.EventLogs != null)
+                {
+                    int rowCounter = 0;
+                    foreach (var log in Model.EventLogInfo.EventLogs)
+                    {
+                        rowCounter++;
+                        <tr class='@((rowCounter % 2) == 0 ? "alt-row" : "")'>
+                            <td>@log.EventLogName</td>
+                            <td>@log.Exists</td>
+                            <td>@log.FriendlyLogName</td>
+                            <td>@log.NumInfos</td>
+                            <td>@log.NumWarnings</td>
+                            <td>@log.NumErrors</td>
+                            <td>@log.TotalEvents</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                }
+            </table>
+        </div>
+
     </div>
     <div class="content-area">
         <h3>Services Monitoring</h3>
-        @if (Model.ServiceInfo.Services != null)
-        {
-            foreach (var service in Model.ServiceInfo.Services)
-            {
-                <h4>@service.ServiceName</h4>
-                <ul>
-                    <li>@service.Exists</li>
-                    <li>@service.Status</li>
-                    <li>@service.StartupType</li>
-                </ul>
-            }
-        }
+        <div class="content-table">
+            <table class="seer-tbl" cellpadding="0" cellspacing="0">
+                <tr>
+                    <th>Service Name</th>
+                    <th>Exists</th>
+                    <th>Friendly Name</th>
+                    <th>Status</th>
+                    <th>Start-up Type</th>
+                </tr>
+                @if (Model.ServiceInfo.Services != null)
+                {
+                    int rowCounter = 0;
+                    foreach (var service in Model.ServiceInfo.Services)
+                    {
+                        rowCounter++;
+                        <tr class='@((rowCounter % 2) == 0 ? "alt-row" : "")'>
+                            <td>@service.ServiceName</td>
+                            <td>@service.Exists</td>
+                            <td>-</td>
+                            <td>@service.Status</td>
+                            <td>@service.StartupType</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                }
+            </table>
+        </div>
     </div>
 </section>
 

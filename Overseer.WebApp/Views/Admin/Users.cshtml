@@ -46,39 +46,41 @@
                         }
                     </h3>
                 </header>
-                <table class="seer-tbl usr-tbl" cellpadding="0" cellspacing="0">
-                    <tr>
-                        <th>ID</th>
-                        <th>User Name</th>
-                        <th>Full Name</th>
-                        <th>Email</th>
-                        <th>User Role</th>
-                        <th>Actions</th>
-                    </tr>
-                    @{ int rowCounter = 0; }
-                    @foreach (var result in Model.UserAccountData)
-                    {
-                        rowCounter++;
-                        <tr class='@((rowCounter % 2) == 0 ? "alt-row" : "")'>
-                            <td>@result.UserId</td>
-                            <td>@result.UserName</td>
-                            <td>@result.FullName</td>
-                            <td>@result.Email</td>
-                            <td>@result.UserRole</td>
-                            <td>
-                                <a href="@Url.Action("EditUser", "Admin", new { id = result.UserId })">
-                                    <i class="fa fa-pencil a-fw" aria-hidden="true"></i>
-                                </a>
-                                @if (result.UserId != 1)
-                                {
-                                    <a href="@Url.Action("ConfirmUserDeletion", "Admin", new { id = result.UserId })">
-                                        <i class="fa fa-trash-o a-fw" aria-hidden="true"></i>
-                                    </a>
-                                }
-                            </td>
+                <div class="content-table">
+                    <table class="seer-tbl usr-tbl" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <th>ID</th>
+                            <th>User Name</th>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>User Role</th>
+                            <th>Actions</th>
                         </tr>
-                    }
-                </table>
+                        @{ int rowCounter = 0; }
+                        @foreach (var result in Model.UserAccountData)
+                        {
+                            rowCounter++;
+                            <tr class='@((rowCounter % 2) == 0 ? "alt-row" : "")'>
+                                <td>@result.UserId</td>
+                                <td>@result.UserName</td>
+                                <td>@result.FullName</td>
+                                <td>@result.Email</td>
+                                <td>@result.UserRole</td>
+                                <td>
+                                    <a href="@Url.Action("EditUser", "Admin", new { id = result.UserId })">
+                                        <i class="fa fa-pencil a-fw" aria-hidden="true"></i>
+                                    </a>
+                                    @if (result.UserId != 1)
+                                    {
+                                        <a href="@Url.Action("ConfirmUserDeletion", "Admin", new { id = result.UserId })">
+                                            <i class="fa fa-trash-o a-fw" aria-hidden="true"></i>
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
             </div>
             <div class="ctrl-bar lower content-area pag-bar">
                 <div>
