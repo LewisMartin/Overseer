@@ -28,11 +28,6 @@ namespace Overseer.WebApp.ViewModels.Machine
 
     public class PerformanceInfoViewModel
     {
-        public PerformanceInfoViewModel()
-        {
-
-        }
-
         public int TotalNumProcesses { get; set; }
 
         public float AvgCpuUtil { get; set; }

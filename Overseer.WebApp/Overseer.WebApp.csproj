@@ -268,6 +268,7 @@
     <Compile Include="ViewModels\Environment\EnvironmentCreationViewModel.cs" />
     <Compile Include="ViewModels\Environment\EnvironmentDetailsViewModel.cs" />
     <Compile Include="ViewModels\Environment\EnvironmentseerViewModel.cs" />
+    <Compile Include="ViewModels\Environment\_EnvironmentMonitoringSummaryViewModel.cs" />
     <Compile Include="ViewModels\Machine\MachineConfigurationViewModel.cs" />
     <Compile Include="ViewModels\Machine\MachineCreationViewModel.cs" />
     <Compile Include="ViewModels\Machine\MachineDetailsViewModel.cs" />
@@ -355,8 +356,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Machine\_MonitoringSummary.cshtml" />
     <Content Include="Views\Machine\_MonitoringSystemInfo.cshtml" />
-    <Content Include="Views\Environment\_EnvironmentInfo.cshtml" />
-    <Content Include="Views\Environment\_MonitoringSummary.cshtml" />
+    <Content Include="Views\Environment\_EnvironmentMonitoringSummary.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

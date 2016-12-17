@@ -32,10 +32,22 @@ namespace Overseer.WebApp.DAL.Repositories
 
         public TestEnvironment GetEnvironmentseerData(int id)
         {
-            return dbContext.TestEnvironment.Include(e => e.MonitoringSettings)
+            return dbContext.TestEnvironment
+                .Include(e => e.MonitoringSettings)
                 .Include(e => e.DownTimeCategory)
                 .Include(e => e.Machines.Select(m => m.SystemInformationData))
                 .Include(e => e.Machines.Select(m => m.OperatingSys))
+                .FirstOrDefault(e => e.EnvironmentID == id);
+        }
+
+        public TestEnvironment GetEnvironmentMonitoringSummaryData(int id)
+        {
+            return dbContext.TestEnvironment
+                .Include(e => e.Machines.Select(m => m.PerformanceData))
+                .Include(e => e.Machines.Select(m => m.DiskData))
+                .Include(e => e.Machines.Select(m => m.ProcessData))
+                .Include(e => e.Machines.Select(m => m.EventLogData))
+                .Include(e => e.Machines.Select(m => m.ServiceData))
                 .FirstOrDefault(e => e.EnvironmentID == id);
         }
 

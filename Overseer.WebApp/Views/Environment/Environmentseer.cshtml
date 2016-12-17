@@ -88,5 +88,9 @@
             </div> 
         </section>
     </div>
+    @if (Model.EnvironmentDetails.MonitoringEnabled)
+    {
+        @Html.Action("_EnvironmentMonitoringSummary", "Environment", new { machineId = Model.EnvironmentId })
+    }
 </div>
 

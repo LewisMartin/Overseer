@@ -1,4 +1,5 @@
-﻿using Overseer.WebApp.DAL.DomainModels;
+﻿using Newtonsoft.Json;
+using Overseer.WebApp.DAL.DomainModels;
 using Overseer.WebApp.Helpers.AuthHelpers;
 using Overseer.WebApp.ViewModels.Environment;
 using System;
@@ -79,6 +80,35 @@ namespace Overseer.WebApp.Controllers
             }
 
             return HttpNotFound();
+        }
+
+        [HttpGet]
+        public PartialViewResult _EnvironmentMonitoringSummary(int environmentId)
+        {
+            TestEnvironment env = _unitOfWork.TestEnvironments.GetEnvironmentMonitoringSummaryData(environmentId);
+
+            _EnvironmentMonitoringSummaryViewModel viewModel = new _EnvironmentMonitoringSummaryViewModel();
+
+            List<string> machineNames = new List<string>();
+            List<float> cpuChartData = new List<float>(), memChartData = new List<float>();
+
+            if (env.Machines != null)
+            {
+                foreach (Machine machine in env.Machines)
+                {
+                    if ((machine.PerformanceData != null) && (machine.PerformanceData.Count > 0))    // permitting a machine has some performance readings
+                    {
+                        machineNames.Add(machine.DisplayName);
+                        cpuChartData.Add((float)(machine.PerformanceData.ElementAt(0).CpuUtil));    // most recent cpu reading
+                        memChartData.Add((float)(machine.PerformanceData.ElementAt(0).MemUtil));    // most recent mem reading
+                    }
+                }
+            }
+            viewModel.EnvPerformanceInfo.MachineNames = new System.Web.HtmlString(JsonConvert.SerializeObject(machineNames, Formatting.None));
+            viewModel.EnvPerformanceInfo.CpuChart = new System.Web.HtmlString(JsonConvert.SerializeObject(cpuChartData, Formatting.None));
+            viewModel.EnvPerformanceInfo.MemChart = new System.Web.HtmlString(JsonConvert.SerializeObject(memChartData, Formatting.None));
+
+            return PartialView(viewModel);
         }
 
         // EnvironmentConfiguration - page to change environment details & configure environment level monitoring settings

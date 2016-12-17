@@ -1,0 +1,101 @@
+﻿@model Overseer.WebApp.ViewModels.Environment._EnvironmentMonitoringSummaryViewModel
+
+<section>
+    <div id="PerfData" class="perf-flex">
+        <div id="CpuData" class="content-area perf-data">
+            <h3>Cpu Usage: <span>(perf)</span></h3>
+            <div class="chart-container" style="width: 100%;">
+                <canvas id="EnvCpuChart"></canvas>
+            </div>
+        </div>
+        <div id="MemData" class="content-area perf-data">
+            <h3>Memory Usage: <span>(perf)</span></h3>
+            <div class="chart-container" style="width: 100%;">
+                <canvas id="EnvMemChart"></canvas>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Chart.js
+    $(document).ready(function(){
+        var labelData = @Model.EnvPerformanceInfo.MachineNames;
+        var cpuData = @Model.EnvPerformanceInfo.CpuChart;
+        var memData = @Model.EnvPerformanceInfo.MemChart;
+
+        console.log(labelData);
+        console.log(cpuData);
+        console.log(memData);
+
+        var CpuChartContext = document.getElementById('EnvCpuChart').getContext('2d');
+        var CpuChart = new Chart(CpuChartContext, {
+            type: 'bar',
+            data: {
+                labels: labelData,
+                datasets: [{
+                    label: 'Current Cpu Util',
+                    data: cpuData,
+                    borderColor: '#f39c12',
+                    backgroundColor: '#f39c12',
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: { 
+                            display: true,
+                            beginAtZero: true,
+                            steps: 5,
+                            max: 100
+                        }
+                    }],
+                    xAxes: [{
+                        barPercentage: 0.08,
+                        gridLines: {
+                            display: false
+                        }
+                    }]
+                },
+                legend: {
+                    display: false
+                }
+            }
+        });
+
+        var MemChartContext = document.getElementById('EnvMemChart').getContext('2d');
+        var MemChart = new Chart(MemChartContext, {
+            type: 'bar',
+            data: {
+                labels: labelData,
+                datasets: [{
+                    label: '% Committed Bytes in use',
+                    data: memData,
+                    borderColor: '#3498db',
+                    backgroundColor: '#3498db',
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: { 
+                            display: true,
+                            beginAtZero: true,
+                            steps: 5,
+                            max: 100
+                        }
+                    }],
+                    xAxes: [{
+                        barPercentage: 0.08,
+                        gridLines: {
+                            display: false
+                        }
+                    }]
+                },
+                legend: {
+                    display: false
+                }
+            }
+        });
+    });
+</script>

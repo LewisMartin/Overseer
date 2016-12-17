@@ -18,6 +18,9 @@ namespace Overseer.WebApp.DAL.Core
         // get all data necessary for 'Environmentseer' page
         TestEnvironment GetEnvironmentseerData(int id);
 
+        // get all data for monitoring summary partial view loaded within 'Environmentseer' page
+        TestEnvironment GetEnvironmentMonitoringSummaryData(int id);
+
         // get environment by creator (userId)
         IEnumerable<TestEnvironment> GetEnvironmentsByCreator(int userId);
 
