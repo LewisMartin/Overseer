@@ -1,11 +1,11 @@
 ﻿@model Overseer.WebApp.ViewModels.Machine._MonitoringSummaryViewModel
 
 <section>
-    <div id="PerfData" class="perf-flex">
+    <div id="PerfData" class="flex-container">
         <div id="CpuData" class="content-area perf-data">
             <h3>Cpu Usage: <span>(perf)</span></h3>
             <div class="chart-container" style="width: 100%;">
-                <canvas id="CpuChart"></canvas>
+                <canvas id="CpuChart" height="180"></canvas>
             </div>
             <div class="perf-footer">
                 <span>Current Usage: @(Model.PerformanceInfo.AvgCpuUtil)% </span>
@@ -16,7 +16,7 @@
         <div id="MemData" class="content-area perf-data">
             <h3>Memory Usage: <span>(perf)</span></h3>
             <div class="chart-container" style="width: 100%;">
-                <canvas id="MemChart"></canvas>
+                <canvas id="MemChart" height="180"></canvas>
             </div>
             <div class="perf-footer">
                 <span>Current Usage: @(Model.PerformanceInfo.AvgMemUtil)% </span>
@@ -217,6 +217,7 @@
                 }]
             },
             options: {
+                maintainAspectRatio: false,
                 scales: {
                     yAxes: [{
                         ticks: { 
@@ -250,6 +251,7 @@
                 }]
             },
             options: {
+                maintainAspectRatio: false,
                 scales: {
                     yAxes: [{
                         ticks: { 

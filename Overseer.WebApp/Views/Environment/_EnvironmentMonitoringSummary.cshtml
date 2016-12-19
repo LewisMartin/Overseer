@@ -1,17 +1,90 @@
 ﻿@model Overseer.WebApp.ViewModels.Environment._EnvironmentMonitoringSummaryViewModel
 
 <section>
-    <div id="PerfData" class="perf-flex">
+    <div id="PerfData" class="flex-container">
         <div id="CpuData" class="content-area perf-data">
             <h3>Cpu Usage: <span>(perf)</span></h3>
             <div class="chart-container" style="width: 100%;">
-                <canvas id="EnvCpuChart"></canvas>
+                <canvas id="EnvCpuChart" height="180"></canvas>
             </div>
         </div>
         <div id="MemData" class="content-area perf-data">
             <h3>Memory Usage: <span>(perf)</span></h3>
             <div class="chart-container" style="width: 100%;">
-                <canvas id="EnvMemChart"></canvas>
+                <canvas id="EnvMemChart" height="180"></canvas>
+            </div>
+        </div>
+    </div>
+    <div id="DiskData" class="content-area disk-data">
+        <h3>Disk Usage:</h3>
+        <div class="chart-container" style="width: 100%;">
+            <canvas id="EnvDiskChart" height="180"></canvas>
+            <div id="chartjs-tooltip"></div>
+        </div>
+    </div>
+    <div id="ProcData" class="content-area proc-data">
+        <h3>Process Instances:</h3>
+        <div class="chart-container" style="width: 100%;">
+            <canvas id="EnvProcChart"></canvas>
+        </div>
+    </div>
+    <div class="flex-container">
+        <div id="EnvEventLogData" class="content-area eventlog-data">
+            <h3>Events:</h3>
+            <div class="flex-container">
+                <div class="chart-container el-chart-container" style="width: 50%;">
+                    <canvas id="EnvEventLogChart"></canvas>
+                </div>
+                <div class="content-table el-content-table fl-right" style="width: 50%;">
+                    <table class="seer-tbl" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <th>Machine</th>
+                            <th>Event Log</th>
+                            <th>Error Count</th>
+                        </tr>
+                        @{int rowCounter = 0;
+                            if (Model.EnvEventLogInfo.EventLogConcerns != null)
+                            {
+                                foreach (var concern in Model.EnvEventLogInfo.EventLogConcerns)
+                                {
+                                    rowCounter++;
+                                    <tr class='@((rowCounter % 2) == 0 ? "alt-row" : "")'>
+                                        <td>@concern.MachineName</td>
+                                        <td>@concern.EventLogName</td>
+                                        <td>@concern.ErrorCount</td>
+                                    </tr>
+                                }
+
+                                for (int i = rowCounter; i < 5; i++)
+                                {
+                                    rowCounter++;
+                                    <tr class='@((rowCounter % 2) == 0 ? "alt-row" : "")'>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                for (int i = 0; i < 5; i++)
+                                {
+                                    rowCounter++;
+                                    <tr class='@((rowCounter % 2) == 0 ? "alt-row" : "")'>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                    </tr>
+                                }
+                            }}
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="EnvServiceData" class="content-area service-data">
+            <h3>Services:</h3>
+            <div class="srv-chart-container" style="width: 100%; height: 200px">
+                <canvas id="EnvServiceChart"></canvas>
             </div>
         </div>
     </div>
@@ -20,30 +93,55 @@
 <script>
     // Chart.js
     $(document).ready(function(){
-        var labelData = @Model.EnvPerformanceInfo.MachineNames;
-        var cpuData = @Model.EnvPerformanceInfo.CpuChart;
-        var memData = @Model.EnvPerformanceInfo.MemChart;
+        // performance chart data
+        var PerfMachineNames = @Model.EnvPerformanceInfo.MachineNames;
+        var CpuData = @Model.EnvPerformanceInfo.CpuChart;
+        var MemData = @Model.EnvPerformanceInfo.MemChart;
 
-        console.log(labelData);
-        console.log(cpuData);
-        console.log(memData);
+        console.log(PerfMachineNames);
+        console.log(CpuData);
+        console.log(MemData);
 
+        // disk chart data
+        var DiskMachineNames = @Model.EnvDiskInfo.MachineNames;
+        var DiskLabels = @Model.EnvDiskInfo.DiskLabelsData;
+        var DiskData = @Model.EnvDiskInfo.DiskChartData;
+
+        console.log(DiskMachineNames);
+        console.log(DiskLabels);    // should be array of arrays
+        console.log(DiskData);      // should be array of arrays
+
+        // process chart data
+        var ProcessMachineNames = @Model.EnvProcessInfo.MachineNames;
+        var ProcessNames = @Model.EnvProcessInfo.ProcessNames;
+        var ProcessData = @Model.EnvProcessInfo.ProcessData;
+
+        drawCpuChart(PerfMachineNames, CpuData);
+        drawMemChart(PerfMachineNames, MemData);
+        drawDiskChart(DiskMachineNames, DiskLabels, DiskData);
+        drawProcessChart(ProcessMachineNames, ProcessNames, ProcessData);
+        drawEventLogChart();
+        drawServiceChart();
+    });
+
+    function drawCpuChart(labels, data){
         var CpuChartContext = document.getElementById('EnvCpuChart').getContext('2d');
         var CpuChart = new Chart(CpuChartContext, {
             type: 'bar',
             data: {
-                labels: labelData,
+                labels: labels,
                 datasets: [{
                     label: 'Current Cpu Util',
-                    data: cpuData,
+                    data: data,
                     borderColor: '#f39c12',
                     backgroundColor: '#f39c12',
                 }]
             },
             options: {
+                maintainAspectRatio: false,
                 scales: {
                     yAxes: [{
-                        ticks: { 
+                        ticks: {
                             display: true,
                             beginAtZero: true,
                             steps: 5,
@@ -51,7 +149,7 @@
                         }
                     }],
                     xAxes: [{
-                        barPercentage: 0.08,
+                        barPercentage: 0.1,
                         gridLines: {
                             display: false
                         }
@@ -62,23 +160,26 @@
                 }
             }
         });
+    }
 
+    function drawMemChart(labels, data){
         var MemChartContext = document.getElementById('EnvMemChart').getContext('2d');
         var MemChart = new Chart(MemChartContext, {
             type: 'bar',
             data: {
-                labels: labelData,
+                labels: labels,
                 datasets: [{
                     label: '% Committed Bytes in use',
-                    data: memData,
+                    data: data,
                     borderColor: '#3498db',
                     backgroundColor: '#3498db',
                 }]
             },
             options: {
+                maintainAspectRatio: false,
                 scales: {
                     yAxes: [{
-                        ticks: { 
+                        ticks: {
                             display: true,
                             beginAtZero: true,
                             steps: 5,
@@ -86,7 +187,7 @@
                         }
                     }],
                     xAxes: [{
-                        barPercentage: 0.08,
+                        barPercentage: 0.1,
                         gridLines: {
                             display: false
                         }
@@ -97,5 +198,229 @@
                 }
             }
         });
-    });
+    }
+
+    function drawDiskChart(labels, diskLabelData, diskUsageData){
+        var datasetsValue = [];
+        for(var i = 0; i < diskUsageData.length; i++)
+        {
+            //var barColor = ColorLuminance('bcbddc', -(i*0.1));
+            var barColor = CalcColor('#b7b8e7', -(i*0.2));
+
+            datasetsValue[i] = {
+                backgroundColor: barColor,
+                borderColor : barColor,
+                hoverBackgroundColor: barColor,
+                label : "Disk " + (i+1),
+                data : diskUsageData[i]
+            }
+        }
+
+        var DiskChartContext = document.getElementById('EnvDiskChart').getContext('2d');
+        var DiskChart = new Chart(DiskChartContext, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: datasetsValue
+            },
+            options: {
+                maintainAspectRatio: false,
+                barDatasetSpacing: 30,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            display: true,
+                            beginAtZero: true,
+                            steps: 5,
+                            max: 100
+                        }
+                    }],
+                    xAxes: [{
+                        categoryPercentage: 0.2,
+                        gridLines: {
+                            display: false
+                        }
+                    }]
+                },
+                legend: {
+                    display: false
+                },
+                tooltips: {
+                    enabled:true,
+                    callbacks:{
+                        label: function(tooltipItem, data) {
+                            var myArr = diskLabelData;
+                            var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
+                            //This will be the tooltip.body
+                            return [(myArr[tooltipItem.index][tooltipItem.datasetIndex]), (tooltipItem.yLabel + '%')];
+                        }
+                    }
+                }
+            }
+        });
+
+        // hiding any 0 width bars
+        /*
+        for (var idx = 0; idx < DiskChart.data.datasets[0].bars.length; idx++) {
+
+            if (idx <= data.labels.indexOf('TestMachine')) {
+                DiskChart.datasets[0].bars[idx].fillColor = "rgba(192,192,192,0.5)";
+                DiskChart.datasets[0].bars[idx].strokeColor = "rgba(192,192,192,0.5)";
+                DiskChart.datasets[0].bars[idx].highlightFill = "rgba(192,192,192,0.8)";
+                DiskChart.datasets[0].bars[idx].highlightStroke = "rgba(192,192,192,0.8)";
+            }
+        }
+        DiskChart.update();
+        */
+    }
+
+    function drawProcessChart(labels, procs, procData){
+        var processDataset = [];
+        var processBarColors = ["#F1DAC4", "#F6E27F", "#E2C391", "#A69CAC", "#9BBEC7", "#F06543", "#3581B8", "#271F30", "#98DFAF", "#B6244F"];
+
+        // create datasets
+        for(var i = 0; i<procs.length; i++){
+            processDataset[i] = {
+                backgroundColor: processBarColors[i],
+                borderColor : processBarColors[i],
+                hoverBackgroundColor: processBarColors[i],
+                label : procs[i],
+                data : procData[i]
+            }
+        }
+
+
+        var ProcessChartContext = document.getElementById('EnvProcChart').getContext('2d');
+        var ProcessChart = new Chart(ProcessChartContext, {
+            type: 'horizontalBar',
+            data: {
+                labels: labels,
+                datasets: processDataset
+            },
+            options: {
+                maintainAspectRatio: false,
+                tooltips: {
+                    enabled: true
+                },
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            beginAtZero:true,
+                            fontFamily: "'Open Sans Bold', sans-serif",
+                            fontSize:11
+                        },
+                        scaleLabel:{
+                            display:false
+                        },
+                        gridLines: {
+                        },
+                        stacked: true
+                    }],
+                    yAxes: [{
+                        barThickness: 20,
+                        gridLines: {
+                            display:false,
+                            color: "#fff",
+                            zeroLineColor: "#fff",
+                            zeroLineWidth: 0
+                        },
+                        ticks: {
+                            fontFamily: "'Open Sans Bold', sans-serif",
+                            fontSize:11
+                        },
+                        stacked: true
+                    }]
+                },
+                legend:{
+                    display:true
+                },
+                pointLabelFontFamily : "Quadon Extra Bold",
+                scaleFontFamily : "Quadon Extra Bold",
+            }
+        });
+    }
+
+    function drawEventLogChart(){
+        var EventLogData = @Model.EnvEventLogInfo.EventLogData;
+        
+        console.log(EventLogData);
+
+        var EventLogChartContext = document.getElementById("EnvEventLogChart").getContext('2d');
+        var EventLogChart = new Chart(EventLogChartContext, {
+            type: 'pie',
+            data: {
+                labels: ["Informative", "Warnings", "Errors"],
+                datasets: [{
+                    backgroundColor: [
+                      "#22a7f0",
+                      "#f4b350",
+                      "#c0392b",
+                    ],
+                    data: EventLogData
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                legend: {
+                    display: true,
+                    position: 'bottom'
+                }
+            }
+        });
+    }
+
+    function drawServiceChart(){
+        var ServiceData = @Model.EnvServiceInfo.ServiceData;
+
+        var ServiceChartContext = document.getElementById("EnvServiceChart").getContext('2d');
+        var ServiceChart = new Chart(ServiceChartContext, {
+            type: 'doughnut',
+            data: {
+                labels: ["Up", "Down", "Not found"],
+                datasets: [{
+                    backgroundColor: [
+                      "#2ecc71",
+                      "#c0392b",
+                      "#c9cccf",
+                    ],
+                    data: ServiceData
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                legend: {
+                    display: true,
+                    position: 'bottom'
+                }
+            }
+        });
+    }
+
+
+    //https://www.sitepoint.com/javascript-generate-lighter-darker-color/
+    function ColorLuminance(hex, lum) {
+
+        // validate hex string
+        hex = String(hex).replace(/[^0-9a-f]/gi, '');
+        if (hex.length < 6) {
+            hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+        }
+        lum = lum || 0;
+
+        // convert to decimal and change luminosity
+        var rgb = "#", c, i;
+        for (i = 0; i < 3; i++) {
+            c = parseInt(hex.substr(i*2,2), 16);
+            c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+            rgb += ("00"+c).substr(c.length);
+        }
+
+        return rgb;
+    }
+
+    // http://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color-or-rgb-and-blend-colors
+    function CalcColor(color, percent) {
+        var f=parseInt(color.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
+        return "#"+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
+    }
 </script>

@@ -286,6 +286,12 @@ h4 .add-i
     height: 0px;
 }
 
+.flex-container /* Generic flex container */ 
+{
+    display: -webkit-flex;
+    display: flex;
+}
+
 /* ---------- Header Styles ---------- */
 #Dashboard-Header
 {
@@ -535,7 +541,9 @@ nav i
 }
 .page-content
 {
+    max-width: 1024px;
     padding: 20px;
+    margin: 0 auto;
 }
 .content-area
 {
@@ -900,4 +908,41 @@ select[multiple]
 {
     padding-top: 15px !important;
 }
+
+#EnvEventLogData 
+{
+  width: 66%;
+  margin-right: 15px;
+}
+#EnvEventLogData 
+{
+  width: 66%;
+  margin-right: 15px;
+}
+#EnvEventLogData th 
+{
+    font-size:12px;
+}
+#EnvEventLogData td 
+{
+    font-size:11px;
+}
+#EnvServiceData 
+{
+  width: 33%;
+}
+.el-chart-container
+{
+    padding-right: 10px;
+}
+.el-content-table
+{
+    padding-left: 0px !important;
+}
+
+.srv-chart-container 
+{
+    padding: 10px;
+}
+
 /* ---------- Monitoring Pages Styles ---------- */

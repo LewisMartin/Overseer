@@ -89,24 +89,161 @@ namespace Overseer.WebApp.Controllers
 
             _EnvironmentMonitoringSummaryViewModel viewModel = new _EnvironmentMonitoringSummaryViewModel();
 
-            List<string> machineNames = new List<string>();
+            // data for performance graphs
+            List<string> perfMachineNames = new List<string>();
             List<float> cpuChartData = new List<float>(), memChartData = new List<float>();
 
+            // data for disk monitoring graphs
+            List<string> diskMachineNames = new List<string>();
+            List<List<string>> diskLabelData = new List<List<string>>();
+            List<List<float>> diskChartData = new List<List<float>>();
+
+            // data for process monitoring charts
+            List<string> processMachineNames = new List<string>(), processNames = new List<string>();
+            List<List<int>> processData = new List<List<int>>();
+
+            // data for event log monitoring chart
+            int[] eventlogData = new int[3];
+
+            // data for service monitoring chart
+            int[] serviceData = new int[3];
+
+            // populating the above with data
             if (env.Machines != null)
             {
                 foreach (Machine machine in env.Machines)
                 {
+                    // performance data
                     if ((machine.PerformanceData != null) && (machine.PerformanceData.Count > 0))    // permitting a machine has some performance readings
                     {
-                        machineNames.Add(machine.DisplayName);
+                        perfMachineNames.Add(machine.DisplayName);
                         cpuChartData.Add((float)(machine.PerformanceData.ElementAt(0).CpuUtil));    // most recent cpu reading
                         memChartData.Add((float)(machine.PerformanceData.ElementAt(0).MemUtil));    // most recent mem reading
                     }
+
+                    // disk data
+                    if ((machine.DiskData != null) && (machine.DiskData.Count > 0))                 // permitting the machine has some disk data
+                    {
+                        diskMachineNames.Add(machine.DisplayName);
+
+                        List<string> tempDiskLabelList = new List<string>();
+                        List<float> tempDiskUsageList = new List<float>();
+
+                        int diskCount = 0;
+                        foreach (DiskInfo disk in machine.DiskData)
+                        {
+                            if (diskChartData.Count <= diskCount) // add a list to store 1st/2nd/3rd/4th...nth disk readings for all machines
+                            {
+                                diskChartData.Add(new List<float>());
+                            }
+
+                            diskChartData[diskCount].Add((100 - (float)((disk.FreeSpace / disk.TotalSpace) * 100)));
+
+                            tempDiskLabelList.Add(disk.DriveLetter);
+                            diskCount++;
+                        }
+
+                        diskLabelData.Add(tempDiskLabelList);
+                    }
+
+                    // process data
+                    if ((machine.ProcessData != null) && (machine.ProcessData.Count > 0))           // permitting the machine has some monitored process data
+                    {
+                        processMachineNames.Add(machine.DisplayName);
+
+                        // loop over process settings to get list of processes
+                        foreach (ProcessSettings procSetting in machine.ProcessConfig)
+                        {
+                            if (!(processNames.Contains(procSetting.ProcessName)))
+                            {
+                                processNames.Add(procSetting.ProcessName);
+                                processData.Add(new List<int>());
+                            }
+                        }
+
+                        // loop over and add counts of processes for each
+                        for (int i = 0; i < processNames.Count; i++)
+                        {
+                            int instanceCount = 0;
+                            foreach (ProcessInfo proc in machine.ProcessData)
+                            {
+                                if (proc.ProcessName == processNames[i])
+                                {
+                                    instanceCount++;
+                                }
+                            }
+                            processData[i].Add(instanceCount);
+                        }
+                    }
+
+                    // event log data
+                    if ((machine.EventLogData != null) && (machine.EventLogData.Count > 0))
+                    {          
+                        foreach (EventLogInfo log in machine.EventLogData)
+                        {
+                            eventlogData[0] += log.NumInfos;
+                            eventlogData[1] += log.NumWarnings;
+                            eventlogData[2] += log.NumErrors;
+
+                            if (log.NumErrors > 0)
+                            {
+                                viewModel.EnvEventLogInfo.EventLogConcerns.Add(new EventLogConcern()
+                                {
+                                    MachineId = machine.MachineID,
+                                    MachineName = machine.DisplayName,
+                                    EventLogName = log.EventLogName,
+                                    ErrorCount = log.NumErrors
+                                });
+                            }
+                        }
+                    }
+
+                    // service data
+                    if ((machine.ServiceData != null) && (machine.ServiceData.Count > 0))
+                    {
+                        foreach (ServiceInfo service in machine.ServiceData)
+                        {
+                            if (!service.Exists)
+                            {
+                                serviceData[2] += 1;
+                            }
+                            else
+                            {
+                                if (service.Status == "Running")
+                                {
+                                    serviceData[0] += 1;
+                                }
+                                else
+                                {
+                                    serviceData[1] += 1;
+                                }
+                            }
+                        }
+                    }
                 }
+
+                // map performance data to view model
+                viewModel.EnvPerformanceInfo.MachineNames = new System.Web.HtmlString(JsonConvert.SerializeObject(perfMachineNames, Formatting.None));
+                viewModel.EnvPerformanceInfo.CpuChart = new System.Web.HtmlString(JsonConvert.SerializeObject(cpuChartData, Formatting.None));
+                viewModel.EnvPerformanceInfo.MemChart = new System.Web.HtmlString(JsonConvert.SerializeObject(memChartData, Formatting.None));
+
+                // map disk data to view model
+                viewModel.EnvDiskInfo.MachineNames = new System.Web.HtmlString(JsonConvert.SerializeObject(diskMachineNames, Formatting.None));
+                viewModel.EnvDiskInfo.DiskLabelsData = new System.Web.HtmlString(JsonConvert.SerializeObject(diskLabelData, Formatting.None));
+                viewModel.EnvDiskInfo.DiskChartData = new System.Web.HtmlString(JsonConvert.SerializeObject(diskChartData, Formatting.None));
+
+                // map process data to view model
+                viewModel.EnvProcessInfo.MachineNames = new System.Web.HtmlString(JsonConvert.SerializeObject(processMachineNames, Formatting.None));
+                viewModel.EnvProcessInfo.ProcessNames = new System.Web.HtmlString(JsonConvert.SerializeObject(processNames, Formatting.None));
+                viewModel.EnvProcessInfo.ProcessData = new System.Web.HtmlString(JsonConvert.SerializeObject(processData, Formatting.None));
+
+                // map event log data to view model
+                viewModel.EnvEventLogInfo.EventLogConcerns = viewModel.EnvEventLogInfo.EventLogConcerns.OrderByDescending(p => p.ErrorCount).Take(5).ToList();
+                viewModel.EnvEventLogInfo.EventLogData = new System.Web.HtmlString(JsonConvert.SerializeObject(eventlogData, Formatting.None));
+
+                // map service data to view model
+                viewModel.EnvServiceInfo.ServiceData = new System.Web.HtmlString(JsonConvert.SerializeObject(serviceData, Formatting.None));
             }
-            viewModel.EnvPerformanceInfo.MachineNames = new System.Web.HtmlString(JsonConvert.SerializeObject(machineNames, Formatting.None));
-            viewModel.EnvPerformanceInfo.CpuChart = new System.Web.HtmlString(JsonConvert.SerializeObject(cpuChartData, Formatting.None));
-            viewModel.EnvPerformanceInfo.MemChart = new System.Web.HtmlString(JsonConvert.SerializeObject(memChartData, Formatting.None));
 
             return PartialView(viewModel);
         }

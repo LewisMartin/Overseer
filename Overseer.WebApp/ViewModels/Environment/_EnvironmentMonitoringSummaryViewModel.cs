@@ -38,21 +38,47 @@ namespace Overseer.WebApp.ViewModels.Environment
 
     public class EnvDiskInfoViewModel
     {
-        public HtmlString DiskChart { get; set; }
+        public HtmlString MachineNames { get; set; }
+
+        public HtmlString DiskLabelsData { get; set; }
+
+        public HtmlString DiskChartData { get; set; }
     }
 
     public class EnvProcessInfoViewModel
     {
-        public HtmlString ProcessChart { get; set; }
+        public HtmlString MachineNames { get; set; }
+
+        public HtmlString ProcessNames { get; set; }
+
+        public HtmlString ProcessData { get; set; }
     } 
 
     public class EnvEventLogInfoViewModel
     {
-        public HtmlString EventLogChart { get; set; }
+        public EnvEventLogInfoViewModel()
+        {
+            EventLogConcerns = new List<EventLogConcern>();
+        }
+
+        public HtmlString EventLogData { get; set; }
+
+        public List<EventLogConcern> EventLogConcerns { get; set; }
+    }
+
+    public class EventLogConcern
+    {
+        public Guid MachineId { get; set; }
+
+        public string MachineName { get; set; }
+
+        public string EventLogName { get; set; }
+
+        public int ErrorCount { get; set; }
     }
 
     public class EnvServiceInfoViewModel
     {
-        public HtmlString ServiceChart { get; set; }
+        public HtmlString ServiceData { get; set; }
     }
 }

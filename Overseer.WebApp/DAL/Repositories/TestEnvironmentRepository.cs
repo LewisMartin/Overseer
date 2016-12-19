@@ -45,8 +45,11 @@ namespace Overseer.WebApp.DAL.Repositories
             return dbContext.TestEnvironment
                 .Include(e => e.Machines.Select(m => m.PerformanceData))
                 .Include(e => e.Machines.Select(m => m.DiskData))
+                .Include(e => e.Machines.Select(m => m.ProcessConfig))
                 .Include(e => e.Machines.Select(m => m.ProcessData))
+                .Include(e => e.Machines.Select(m => m.EventLogConfig))
                 .Include(e => e.Machines.Select(m => m.EventLogData))
+                .Include(e => e.Machines.Select(m => m.ServiceConfig))
                 .Include(e => e.Machines.Select(m => m.ServiceData))
                 .FirstOrDefault(e => e.EnvironmentID == id);
         }
