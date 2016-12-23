@@ -54,7 +54,8 @@ namespace Overseer.WebApp
 
             // bundles for scripts used in specific pages
             bundles.Add(new ScriptBundle("~/Environment/MachineConfiguration/Scripts").Include(
-                        "~/Content/Scripts/Custom Scripts/EditableListBox.js"
+                        "~/Content/Scripts/Custom Scripts/EditableListBox.js",
+                        "~/Content/Scripts/Custom Scripts/DynamicAlertsConfig.js"
                 ));
 
             // bundle for custom site styles

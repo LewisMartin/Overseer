@@ -146,7 +146,7 @@ namespace Overseer.WebApp.WebApi
                 _unitOfWork.DiskMonitoring.Add(new DiskInfo()
                 {
                     MachineID = machineId,
-                    DriveLetter = drive.Name,
+                    DriveLetter = drive.Letter,
                     VolumeLabel = drive.VolumeLabel,
                     DriveType = drive.DriveType,
                     DriveFormat = drive.DriveFormat,
@@ -212,12 +212,219 @@ namespace Overseer.WebApp.WebApi
                 });
             }
 
-            // persist all changes
+            _unitOfWork.Save();
+
+            // ALERTS CHECKING & CONFIG
+            UpdateHistoricalAlerts(machineId);
+            _unitOfWork.MonitoringAlerts.AddRange(PerformAlertChecking(machineId, monData));
             _unitOfWork.Save();
 
             return new HttpResponseMessage()
             {
                 Content = new StringContent("Monitoring data submitted for: " + monData.SystemInfo.MachineName)
+            };
+        }
+
+        private void UpdateHistoricalAlerts(Guid machineId)
+        {
+            var currentAlerts = _unitOfWork.MonitoringAlerts.GetAllAlertsByMachine(machineId);
+
+            foreach (MonitoringAlert alert in currentAlerts)
+            {
+                alert.Historical = true;
+            }
+
+            _unitOfWork.Save();
+        }
+
+        private List<MonitoringAlert> PerformAlertChecking(Guid machineId, MonitoringData data)
+        {
+            List<MonitoringAlert> monitoringAlerts = new List<MonitoringAlert>();
+
+            var perfSettings = _unitOfWork.PerformanceMonitoringSettings.Get(machineId);
+            var diskSettings = _unitOfWork.DiskMonitoringSettings.Get(machineId);
+            var processSettings = _unitOfWork.ProcessMonitoringSettings.GetByMachine(machineId);
+            var eventlogSettings = _unitOfWork.EventLogMonitoringSettings.GetByMachine(machineId);
+            var serviceSettings = _unitOfWork.ServiceMonitoringSettings.GetByMachine(machineId);
+
+            if(perfSettings != null)
+                monitoringAlerts.AddRange(PerformanceAlertChecking(machineId, data.PerformanceInfo, perfSettings));
+            if(diskSettings != null)
+                monitoringAlerts.AddRange(DiskAlertChecking(machineId, data.DiskInfo, diskSettings));
+            if(processSettings != null)
+                monitoringAlerts.AddRange(ProcessAlertChecking(machineId, data.ProcessInfo, processSettings.ToList()));
+            if(eventlogSettings != null)
+                monitoringAlerts.AddRange(EventLogAlertChecking(machineId, data.EventLogInfo, eventlogSettings.ToList()));
+            if(serviceSettings != null)
+                monitoringAlerts.AddRange(ServiceAlertChecking(machineId, data.ServiceInfo, serviceSettings.ToList()));
+
+            return monitoringAlerts;
+        }
+
+        private List<MonitoringAlert> PerformanceAlertChecking(Guid machineId, PerformanceInformation info, PerformanceSettings settings)
+        {
+            List<MonitoringAlert> perfAlerts = new List<MonitoringAlert>();
+
+            if (settings.AvgCpuUtilAlertsOn)
+            {
+                if (info.AvgCpuUtil >= settings.AvgCpuUtilAlertValue)
+                    perfAlerts.Add(CreateMonitoringAlert(machineId, 0, "Cpu", 1, "AvgCpuUtil", info.AvgCpuUtil.ToString()));
+                else if (info.AvgCpuUtil >= settings.AvgCpuUtilWarnValue)
+                    perfAlerts.Add(CreateMonitoringAlert(machineId, 0, "Cpu", 0, "AvgCpuUtil", info.AvgCpuUtil.ToString()));
+            }
+
+            if (settings.CpuHighUtilAlertsOn)
+            {
+                if (info.HighCpuUtilIndicator >= settings.CpuHighUtilAlertValue)
+                    perfAlerts.Add(CreateMonitoringAlert(machineId, 0, "Cpu", 1, "CpuHighUtil", info.AvgCpuUtil.ToString()));
+                else if (info.HighCpuUtilIndicator >= settings.CpuHighUtilWarnValue)
+                    perfAlerts.Add(CreateMonitoringAlert(machineId, 0, "Cpu", 0, "CpuHighUtil", info.AvgCpuUtil.ToString()));
+            }
+
+            if (settings.AvgMemUtilAlertsOn)
+            {
+                if (info.AvgMemUtil >= settings.AvgMemUtilAlertValue)
+                    perfAlerts.Add(CreateMonitoringAlert(machineId, 0, "Mem", 1, "AvgMemUtil", info.AvgMemUtil.ToString()));
+                else if (info.AvgMemUtil >= settings.AvgMemUtilWarnValue)
+                    perfAlerts.Add(CreateMonitoringAlert(machineId, 0, "Mem", 0, "AvgMemUtil", info.AvgMemUtil.ToString()));
+            }
+
+            if (settings.MemHighUtilAlertsOn)
+            {
+                if (info.HighMemUtilIndicator >= settings.MemHighUtilAlertsValue)
+                    perfAlerts.Add(CreateMonitoringAlert(machineId, 0, "Mem", 1, "MemHighUtil", info.AvgMemUtil.ToString()));
+                else if (info.HighMemUtilIndicator >= settings.MemHighUtilWarnValue)
+                    perfAlerts.Add(CreateMonitoringAlert(machineId, 0, "Mem", 0, "MemHighUtil", info.AvgMemUtil.ToString()));
+            }
+
+            return perfAlerts;
+        }
+
+        private List<MonitoringAlert> DiskAlertChecking(Guid machineId, DiskInformation info, DiskSettings settings)
+        {
+            List<MonitoringAlert> diskAlerts = new List<MonitoringAlert>();
+
+            if(settings.UsedSpaceAlertsOn)
+            {
+                foreach (SingleDrive drive in info.Drives)
+                {
+                    if ((100 - ((drive.FreeSpace / drive.TotalSpace) * 100)) >= settings.UsedSpaceAlertValue)
+                        diskAlerts.Add(CreateMonitoringAlert(machineId, 1, drive.Letter, 1, "UsedSpace", (100 - ((drive.FreeSpace / drive.TotalSpace) * 100)).ToString()));
+                    else if ((100 - ((drive.FreeSpace / drive.TotalSpace) * 100)) >= settings.UsedSpaceWarningValue)
+                        diskAlerts.Add(CreateMonitoringAlert(machineId, 1, drive.Letter, 0, "UsedSpace", (100 - ((drive.FreeSpace / drive.TotalSpace) * 100)).ToString()));
+                }
+            }
+                
+            return diskAlerts;
+        }
+
+        private List<MonitoringAlert> ProcessAlertChecking(Guid machineId, ProcessInformation info, List<ProcessSettings> settings)
+        {
+            List<MonitoringAlert> procAlerts = new List<MonitoringAlert>();
+
+            foreach (SingleProc proc in info.Processes)
+            {
+                ProcessSettings procSet = settings.Find(s => s.ProcessName == proc.Name);
+
+                if (procSet.WorkingSetAlertsOn)
+                {
+                    if (proc.WorkingSet >= procSet.WSAlertValue)
+                        procAlerts.Add(CreateMonitoringAlert(machineId, 2, proc.Name, 1, "WorkingSet", (proc.WorkingSet).ToString() + "kb"));
+                    else if (proc.WorkingSet >= procSet.WSWarnValue)
+                        procAlerts.Add(CreateMonitoringAlert(machineId, 2, proc.Name, 0, "WorkingSet", (proc.WorkingSet).ToString() + "kb"));
+                }
+
+                if (procSet.PrivateBytesAlertsOn)
+                {
+                    if(proc.PrivateBytes >= procSet.PBAlertValue)
+                        procAlerts.Add(CreateMonitoringAlert(machineId, 2, proc.Name, 1, "PrivateBytes", (proc.PrivateBytes).ToString() + "kb"));
+                    else if(proc.PrivateBytes >= procSet.PBWarnValue)
+                        procAlerts.Add(CreateMonitoringAlert(machineId, 2, proc.Name, 0, "PrivateBytes", (proc.PrivateBytes).ToString() + "kb"));
+                }
+
+                if (procSet.VirtualBytesAlertsOn)
+                {
+                    if(proc.VirtualBytes >= procSet.VBAlertValue)
+                        procAlerts.Add(CreateMonitoringAlert(machineId, 2, proc.Name, 1, "VirtualBytes", (proc.VirtualBytes).ToString() + "kb"));
+                    else if(proc.VirtualBytes >= procSet.VBWarnValue)
+                        procAlerts.Add(CreateMonitoringAlert(machineId, 2, proc.Name, 0, "VirtualBytes", (proc.VirtualBytes).ToString() + "kb"));
+                }
+            }
+
+            return procAlerts;
+        }
+
+        private List<MonitoringAlert> EventLogAlertChecking(Guid machineId, EventLogInformation info, List<EventLogSettings> settings)
+        {
+            List<MonitoringAlert> logAlerts = new List<MonitoringAlert>();
+
+            foreach (SingleLog log in info.EventLogs)
+            {
+                EventLogSettings logSet = settings.Find(s => s.EventLogName == log.Name);
+
+                if (log.Exists)
+                {
+                    if (logSet.ErrorCountAlertsOn)
+                    {
+                        if (log.ErrorTotal >= logSet.ErrorCountAlertValue)
+                            logAlerts.Add(CreateMonitoringAlert(machineId, 3, log.Name, 1, "ErrorCount", (log.ErrorTotal).ToString()));
+                        else if (log.ErrorTotal >= logSet.ErrorCountWarnValue)
+                            logAlerts.Add(CreateMonitoringAlert(machineId, 3, log.Name, 0, "ErrorCount", (log.ErrorTotal).ToString()));
+                    }
+
+                    if (logSet.WarningCountAlertsOn)
+                    {
+                        if (log.WarningTotal >= logSet.WarningCountAlertValue)
+                            logAlerts.Add(CreateMonitoringAlert(machineId, 3, log.Name, 1, "WarningCount", (log.WarningTotal).ToString()));
+                        else if (log.WarningTotal >= logSet.WarningCountAlertValue)
+                            logAlerts.Add(CreateMonitoringAlert(machineId, 3, log.Name, 0, "WarningCount", (log.WarningTotal).ToString()));
+                    }
+                }
+                else
+                {
+                    if (logSet.NotFoundAlertsOn)
+                        logAlerts.Add(CreateMonitoringAlert(machineId, 3, log.Name, (int)logSet.NotFoundSeverity, "EventLogNotFound", ""));
+                }
+            }
+
+            return logAlerts;
+        }
+
+        private List<MonitoringAlert> ServiceAlertChecking(Guid machineId, ServiceInformation info, List<ServiceSettings> settings)
+        {
+            List<MonitoringAlert> serviceAlerts = new List<MonitoringAlert>();
+
+            foreach(SingleService service in info.Services)
+            {
+                ServiceSettings serviceSet = settings.Find(s => s.ServiceName == service.Name);
+
+                if (service.Exists)
+                {
+                    if (serviceSet.NotRunningAlertsOn)
+                        serviceAlerts.Add(CreateMonitoringAlert(machineId, 4, service.Name, (int)serviceSet.NotRunningSeverity, "ServiceNotRunning", ""));
+                }
+                else
+                {
+                    if (serviceSet.NotFoundAlertsOn)
+                        serviceAlerts.Add(CreateMonitoringAlert(machineId, 4, service.Name, (int)serviceSet.NotFoundSeverity, "ServiceNotFound", ""));
+                }
+            }
+
+            return serviceAlerts;
+        }
+
+        private MonitoringAlert CreateMonitoringAlert(Guid machId, int cat, string src, int sev, string trigN, string trigV)
+        {
+            return new MonitoringAlert
+            {
+                MachineId = machId,
+                Category = cat,
+                Source = src,
+                Severity = sev,
+                TriggerName = trigN,
+                TriggerValue = trigV,
+                AlertCreationTime = DateTime.Now.ToLocalTime(),
+                Historical = false
             };
         }
     }

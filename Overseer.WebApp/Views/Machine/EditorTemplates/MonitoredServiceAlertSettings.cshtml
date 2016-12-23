@@ -1,0 +1,14 @@
+﻿@model Overseer.WebApp.ViewModels.Machine.MonitoredServiceAlertSettings
+
+<span>Service '@Html.DisplayFor(m => m.ServiceName)' alert configuration:</span>
+@Html.HiddenFor(m => m.ServiceName);
+<div class="flex-container">
+    <div>
+        @Html.TextBoxFor(m => m.NotFoundSeverity)
+        @Html.CheckBoxFor(m => m.NotFoundAlertsOn)
+    </div>
+    <div>
+        @Html.TextBoxFor(m => m.NotRunningSeverity)
+        @Html.CheckBoxFor(m => m.NotRunningAlertsOn)
+    </div>
+</div>

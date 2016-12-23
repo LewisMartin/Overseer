@@ -74,7 +74,7 @@ namespace Overseer.DTOs.MonitoringAgent
     }
     public struct SingleDrive
     {
-        public string Name;
+        public string Letter;
         public string VolumeLabel;
         public string DriveType;
         public string DriveFormat;

@@ -22,6 +22,8 @@ namespace Overseer.WebApp.DAL.Core
 
         // monitoring settings repos
         IMonitoringSettingsRepository MonitoringSettings { get; set; }
+        IPerformanceSettingsRepository PerformanceMonitoringSettings { get; set; }
+        IDiskSettingsRepository DiskMonitoringSettings { get; set; }
         IProcessSettingsRepository ProcessMonitoringSettings { get; set; }
         IEventLogSettingsRepository EventLogMonitoringSettings { get; set; }
         IServiceSettingsRepository ServiceMonitoringSettings { get; set; }
@@ -33,6 +35,9 @@ namespace Overseer.WebApp.DAL.Core
         IProcessMonitoringRepository ProcessMonitoring { get; set; }
         IEventLogMonitoringRepository EventLogMonitoring { get; set; }
         IServiceMonitoringRepository ServiceMonitoring { get; set; }
+
+        // other
+        IMonitoringAlertRepository MonitoringAlerts { get; set; }
 
         // persist all entity changes across all the above repositories
         int Save();

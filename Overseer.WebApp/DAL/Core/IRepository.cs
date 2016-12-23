@@ -22,6 +22,9 @@ namespace Overseer.WebApp.DAL.Core
         // method to add an entity to the collection
         void Add(TEntity entity);
 
+        // method to add a range of entities to the collection
+        void AddRange(ICollection<TEntity> entities);
+
         // method to delete an entity
         void Delete(TEntity entity);
     }

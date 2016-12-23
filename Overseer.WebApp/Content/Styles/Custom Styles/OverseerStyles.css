@@ -45,6 +45,11 @@ i
 	cursor: pointer;
 }
 
+button:hover 
+{
+    cursor: pointer;
+}
+
  @media screen{
   body>div#Dashboard-Header{
    position:fixed;
@@ -190,16 +195,28 @@ h4
     position: relative;
     width: 100%;
     height: 36px;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: normal;
     line-height: 36px;
     padding: 0px 15px;
     background-color: #f9f9f9;
 }
+h4>span 
+{
+    font-size: 10px;
+}
 h4 .add-i
 {
     position: absolute;
     right: 10px;
+}
+h5 
+{
+    width: 100%;
+    height: 28px;
+    padding: 0px 25px;
+    font-size: 14px;
+    font-weight: normal;
 }
 .seer-tbl
 {
@@ -787,7 +804,7 @@ select[multiple]
 {
     font-size: 13px;
 }
-.system-info>div>.system-info-flex
+.system-info .system-info-flex
 {
     padding: 20px 5px;
 }
@@ -809,6 +826,15 @@ select[multiple]
     margin-right: 10px;
     font-size: 14px;
     color: #34373c;
+}
+.system-info-flex input, .system-info-flex select
+{
+    width: 100%;
+    height: 30px;
+    border: 1px solid #9da4ac;
+    padding-left: 8px;
+    color: #9aa1a9;
+    margin-top: 10px;
 }
 .perf-flex
 {
@@ -946,3 +972,65 @@ select[multiple]
 }
 
 /* ---------- Monitoring Pages Styles ---------- */
+
+/* ---------- Configuration Pages Styles ---------- */
+
+.mon-list-box 
+{
+    height: 200px !important;
+}
+.dynamic-mon-list
+{
+    
+}
+.dynamic-mon-list > .list-edit-btns
+{
+    width: 20%;
+    margin-left: 8px;
+    margin-top: 28px;
+}
+.dynamic-mon-list > .list-edit-fields
+{
+    width: 80%;
+}
+.list-edit-btns button
+{
+    width: 30px;
+    height: 30px;
+    margin-bottom: 10px;
+    background-color: #ffffff;
+    border: 1px solid #9da4ac; 
+}
+#DynamicAlertsConfig
+{
+    margin-top: 25px;
+}
+.alerts-config
+{
+    padding: 20px;
+}
+.alerts-config > div
+{
+    width: 25%;
+    padding: 0px 10px;
+}
+.alerts-config input
+{
+    width: 100%;
+    height: 30px;
+    border: 1px solid #9da4ac;
+    padding-left: 8px;
+    color: #9aa1a9;
+    margin-top: 10px;
+}
+.alert-config > .alert-checkbox
+{
+    width: 20%;
+    margin-top: 18px;
+}
+.alert-config > .alert-fields
+{
+    width: 80%;
+}
+
+/* ---------- Configuration Pages Styles ---------- */

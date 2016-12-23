@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Web.Mvc;
+using System.Linq;
 
 namespace Overseer.WebApp.Controllers
 {
@@ -308,8 +309,33 @@ namespace Overseer.WebApp.Controllers
                 CurrentMonitoredProcesses = currentMonitoredProcs,
                 CurrentMonitoredEventLogs = currentMonitoredLogs,
                 CurrentMonitoredServices = currentMonitoredServices,
-                SidebarRefreshUrl = GetBaseApplicationUrl()
+                BaseAppUrl = GetBaseApplicationUrl()
             };
+
+            PerformanceSettings perfSettings = _unitOfWork.PerformanceMonitoringSettings.Get(machineId);
+            if (perfSettings != null)
+            {
+                viewModel.AvgCpuUtilAlertsOn = perfSettings.AvgCpuUtilAlertsOn;
+                viewModel.AvgCpuUtilWarnValue = perfSettings.AvgCpuUtilWarnValue != null ? (int)perfSettings.AvgCpuUtilWarnValue : 0;
+                viewModel.AvgCpuUtilAlertValue = perfSettings.AvgCpuUtilAlertValue != null ? (int)perfSettings.AvgCpuUtilAlertValue : 0;
+                viewModel.HighCpuUtilAlertsOn = perfSettings.CpuHighUtilAlertsOn;
+                viewModel.HighCpuUtilWarnValue = perfSettings.CpuHighUtilWarnValue != null ? (int)perfSettings.CpuHighUtilWarnValue : 0;
+                viewModel.HighCpuUtilAlertValue = perfSettings.CpuHighUtilAlertValue != null ? (int)perfSettings.CpuHighUtilAlertValue : 0;
+                viewModel.AvgMemUtilAlertsOn = perfSettings.AvgMemUtilAlertsOn;
+                viewModel.AvgMemUtilWarnValue = perfSettings.AvgMemUtilWarnValue != null ? (int)perfSettings.AvgMemUtilWarnValue : 0;
+                viewModel.AvgMemUtilAlertValue = perfSettings.AvgMemUtilAlertValue != null ? (int)perfSettings.AvgMemUtilAlertValue : 0;
+                viewModel.HighMemUtilAlertsOn = perfSettings.MemHighUtilAlertsOn;
+                viewModel.HighMemUtilWarnValue = perfSettings.MemHighUtilWarnValue != null ? (int)perfSettings.MemHighUtilWarnValue : 0;
+                viewModel.HighMemUtilAlertValue = perfSettings.MemHighUtilAlertsValue != null ? (int)perfSettings.MemHighUtilAlertsValue : 0;
+            }
+
+            DiskSettings diskSettings = _unitOfWork.DiskMonitoringSettings.Get(machineId);
+            if (diskSettings != null)
+            {
+                viewModel.UsedSpaceAlertsOn = diskSettings.UsedSpaceAlertsOn;
+                viewModel.UsedSpaceWarnValue = diskSettings.UsedSpaceWarningValue;
+                viewModel.UsedSpaceAlertValue = diskSettings.UsedSpaceAlertValue;
+            }
 
             return View(viewModel);
         }
@@ -339,10 +365,57 @@ namespace Overseer.WebApp.Controllers
             machineToUpdate.NumProcessors = viewModel.NumProcessors;
             machineToUpdate.TotalMemGbs = viewModel.TotalMemGbs;
 
-            // delete and recreate records in process, eventlog & service monitoring tables.
-            _unitOfWork.ProcessMonitoringSettings.DeleteByMachine(viewModel.MachineId);
-            _unitOfWork.EventLogMonitoringSettings.DeleteByMachine(viewModel.MachineId);
-            _unitOfWork.ServiceMonitoringSettings.DeleteByMachine(viewModel.MachineId);
+            // updating/maintaining performance & disk monitoring settings
+            var tempPerfSetting = _unitOfWork.PerformanceMonitoringSettings.Get(viewModel.MachineId);
+            if (tempPerfSetting != null)
+            {
+                _unitOfWork.PerformanceMonitoringSettings.Delete(tempPerfSetting);
+            }
+            var tempDiskSetting = _unitOfWork.DiskMonitoringSettings.Get(viewModel.MachineId);
+            if (tempDiskSetting != null)
+            {
+                _unitOfWork.DiskMonitoringSettings.Delete(tempDiskSetting);
+            }
+
+            _unitOfWork.PerformanceMonitoringSettings.Add(new PerformanceSettings()
+            {
+                MachineID = viewModel.MachineId,
+                AvgCpuUtilAlertsOn = viewModel.AvgCpuUtilAlertsOn,
+                AvgCpuUtilWarnValue = viewModel.AvgCpuUtilWarnValue,
+                AvgCpuUtilAlertValue = viewModel.AvgCpuUtilAlertValue,
+                CpuHighUtilAlertsOn = viewModel.HighCpuUtilAlertsOn,
+                CpuHighUtilWarnValue = viewModel.HighCpuUtilWarnValue,
+                CpuHighUtilAlertValue = viewModel.HighCpuUtilAlertValue,
+                AvgMemUtilAlertsOn = viewModel.AvgMemUtilAlertsOn,
+                AvgMemUtilWarnValue = viewModel.AvgMemUtilWarnValue,
+                AvgMemUtilAlertValue = viewModel.AvgMemUtilAlertValue,
+                MemHighUtilAlertsOn = viewModel.HighMemUtilAlertsOn,
+                MemHighUtilWarnValue = viewModel.HighMemUtilWarnValue,
+                MemHighUtilAlertsValue = viewModel.HighMemUtilAlertValue
+            });
+            // update disk monitoring settings
+            _unitOfWork.DiskMonitoringSettings.Add(new DiskSettings()
+            {
+                MachineID = viewModel.MachineId,
+                UsedSpaceAlertsOn = viewModel.UsedSpaceAlertsOn,
+                UsedSpaceWarningValue = viewModel.UsedSpaceWarnValue,
+                UsedSpaceAlertValue = viewModel.UsedSpaceAlertValue
+            });
+
+            // updating/maintaining dynamic monitoring settings (process/event-log/service)
+            var procSettings = _unitOfWork.ProcessMonitoringSettings.GetByMachine(viewModel.MachineId);
+
+            foreach (var setting in procSettings)
+            {
+                if (!viewModel.UpdatedMonitoredProcesses.Contains(setting.ProcessName))
+                {
+                    _unitOfWork.ProcessMonitoringSettings.Delete(setting);  // process no longer in monitored list - remove from db
+                }
+                else
+                {
+                    viewModel.UpdatedMonitoredProcesses.Remove(setting.ProcessName);    // process already exists - remove from list so it's not added again
+                }
+            }
 
             if (viewModel.UpdatedMonitoredProcesses != null)
             {
@@ -356,6 +429,20 @@ namespace Overseer.WebApp.Controllers
                 }
             }
 
+            var logSettings = _unitOfWork.EventLogMonitoringSettings.GetByMachine(viewModel.MachineId);
+
+            foreach (var setting in logSettings)
+            {
+                if (!viewModel.UpdatedMonitoredEventLogs.Contains(setting.EventLogName))
+                {
+                    _unitOfWork.EventLogMonitoringSettings.Delete(setting);
+                }
+                else
+                {
+                    viewModel.UpdatedMonitoredEventLogs.Remove(setting.EventLogName);
+                }
+            }
+
             if (viewModel.UpdatedMonitoredEventLogs != null)
             {
                 foreach (string eventLogName in viewModel.UpdatedMonitoredEventLogs)
@@ -366,6 +453,20 @@ namespace Overseer.WebApp.Controllers
                         EventLogName = eventLogName,
                         EventBacklogSize = 100
                     });
+                }
+            }
+
+            var serviceSettings = _unitOfWork.ServiceMonitoringSettings.GetByMachine(viewModel.MachineId);
+
+            foreach (var setting in serviceSettings)
+            {
+                if (!viewModel.UpdatedMonitoredServices.Contains(setting.ServiceName))
+                {
+                    _unitOfWork.ServiceMonitoringSettings.Delete(setting);
+                }
+                else
+                {
+                    viewModel.UpdatedMonitoredServices.Remove(setting.ServiceName);
                 }
             }
 
@@ -384,6 +485,128 @@ namespace Overseer.WebApp.Controllers
             _unitOfWork.Save();
 
             return Json(new { success = true, successmsg = ("<i>Changes made successfully!</i>") }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public PartialViewResult _DynamicMonitoringAlertsConfig(Guid machineId)
+        {
+            _DynamicMonitoringAlertsConfigViewModel viewModel = new _DynamicMonitoringAlertsConfigViewModel();
+
+            viewModel.MachineId = machineId;
+
+            var procSettings = _unitOfWork.ProcessMonitoringSettings.GetByMachine(machineId);
+            var logSettings = _unitOfWork.EventLogMonitoringSettings.GetByMachine(machineId);
+            var serviceSettings = _unitOfWork.ServiceMonitoringSettings.GetByMachine(machineId);
+
+            foreach (var procsetting in procSettings)
+            {
+                viewModel.ProcessAlertSettings.Add(new MonitoredProcessAlertSettings()
+                {
+                    ProcessName = procsetting.ProcessName,
+                    WorkingSetAlertsOn = procsetting.WorkingSetAlertsOn,
+                    WSWarnValue = procsetting.WSWarnValue != null ? (int)procsetting.WSWarnValue : 0,
+                    WSAlertValue = procsetting.WSAlertValue != null ? (int)procsetting.WSAlertValue : 0,
+                    PrivateBytesAlertsOn = procsetting.PrivateBytesAlertsOn,
+                    PBWarnValue = procsetting.PBWarnValue != null ? (int)procsetting.PBWarnValue : 0,
+                    PBAlertValue = procsetting.PBAlertValue != null ? (int)procsetting.PBAlertValue : 0,
+                    VirtualBytesAlertsOn = procsetting.VirtualBytesAlertsOn,
+                    VBWarnValue = procsetting.VBWarnValue != null ? (int)procsetting.VBWarnValue : 0,
+                    VBAlertValue = procsetting.VBAlertValue != null ? (int)procsetting.VBAlertValue : 0
+                });
+            }
+
+            foreach (var logsetting in logSettings)
+            {
+                viewModel.EventLogAlertSettings.Add(new MonitoredEventLogAlertSettings()
+                {
+                    EventLogName = logsetting.EventLogName,
+                    WarningCountAlertsOn = logsetting.WarningCountAlertsOn,
+                    WarningCountWarnValue = logsetting.WarningCountWarnValue != null ? (int)logsetting.WarningCountWarnValue : 0,
+                    WarningCountAlertValue = logsetting.WarningCountAlertValue != null ? (int)logsetting.WarningCountAlertValue : 0,
+                    ErrorCountAlertsOn = logsetting.ErrorCountAlertsOn,
+                    ErrorCountWarnValue = logsetting.ErrorCountWarnValue != null ? (int)logsetting.ErrorCountWarnValue : 0,
+                    ErrorCountAlertValue = logsetting.ErrorCountAlertValue != null ? (int)logsetting.ErrorCountAlertValue : 0,
+                    NotFoundAlertsOn = logsetting.NotFoundAlertsOn,
+                    NotFoundSeverity = logsetting.NotFoundSeverity != null ? (int)logsetting.NotFoundSeverity : 0
+                });
+            }
+
+            foreach (var servicesetting in serviceSettings)
+            {
+                viewModel.ServiceAlertSettings.Add(new MonitoredServiceAlertSettings()
+                {
+                    ServiceName = servicesetting.ServiceName,
+                    NotFoundAlertsOn = servicesetting.NotFoundAlertsOn,
+                    NotFoundSeverity = servicesetting.NotFoundSeverity != null ? (int)servicesetting.NotFoundSeverity : 0,
+                    NotRunningAlertsOn = servicesetting.NotRunningAlertsOn,
+                    NotRunningSeverity = servicesetting.NotRunningSeverity != null ? (int)servicesetting.NotRunningSeverity : 0
+                });
+            }
+
+            return PartialView(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult DynamicMonitoringAlertsConfig(_DynamicMonitoringAlertsConfigViewModel viewModel)
+        {
+            var procSettings = _unitOfWork.ProcessMonitoringSettings.GetByMachine(viewModel.MachineId);
+            var logSettings = _unitOfWork.EventLogMonitoringSettings.GetByMachine(viewModel.MachineId);
+            var serviceSettings = _unitOfWork.ServiceMonitoringSettings.GetByMachine(viewModel.MachineId);
+
+            foreach (var persistedSetting in procSettings)
+            {
+                foreach (var updatedSetting in viewModel.ProcessAlertSettings)
+                {
+                    if (updatedSetting.ProcessName == persistedSetting.ProcessName)
+                    {
+                        persistedSetting.WorkingSetAlertsOn = updatedSetting.WorkingSetAlertsOn;
+                        persistedSetting.WSWarnValue = updatedSetting.WSWarnValue;
+                        persistedSetting.WSAlertValue = updatedSetting.WSAlertValue;
+                        persistedSetting.PrivateBytesAlertsOn = updatedSetting.PrivateBytesAlertsOn;
+                        persistedSetting.PBWarnValue = updatedSetting.PBWarnValue;
+                        persistedSetting.PBAlertValue = updatedSetting.PBAlertValue;
+                        persistedSetting.VirtualBytesAlertsOn = updatedSetting.VirtualBytesAlertsOn;
+                        persistedSetting.VBWarnValue = updatedSetting.VBWarnValue;
+                        persistedSetting.VBAlertValue = updatedSetting.VBAlertValue;
+                    }
+                }
+            }
+
+            foreach (var persistedSetting in logSettings)
+            {
+                foreach (var updatedSetting in viewModel.EventLogAlertSettings)
+                {
+                    if (updatedSetting.EventLogName == persistedSetting.EventLogName)
+                    {
+                        persistedSetting.WarningCountAlertsOn = updatedSetting.WarningCountAlertsOn;
+                        persistedSetting.WarningCountWarnValue = updatedSetting.WarningCountWarnValue;
+                        persistedSetting.WarningCountAlertValue = updatedSetting.WarningCountAlertValue;
+                        persistedSetting.ErrorCountAlertsOn = updatedSetting.ErrorCountAlertsOn;
+                        persistedSetting.ErrorCountWarnValue = updatedSetting.ErrorCountWarnValue;
+                        persistedSetting.ErrorCountAlertValue = updatedSetting.ErrorCountAlertValue;
+                        persistedSetting.NotFoundAlertsOn = updatedSetting.NotFoundAlertsOn;
+                        persistedSetting.NotFoundSeverity = updatedSetting.NotFoundSeverity;
+                    }
+                }
+            }
+
+            foreach (var persistedSetting in serviceSettings)
+            {
+                foreach (var updatedSetting in viewModel.ServiceAlertSettings)
+                {
+                    if (updatedSetting.ServiceName == persistedSetting.ServiceName)
+                    {
+                        persistedSetting.NotFoundAlertsOn = updatedSetting.NotFoundAlertsOn;
+                        persistedSetting.NotFoundSeverity = updatedSetting.NotFoundSeverity;
+                        persistedSetting.NotRunningAlertsOn = updatedSetting.NotRunningAlertsOn;
+                        persistedSetting.NotRunningSeverity = updatedSetting.NotRunningSeverity;
+                    }
+                }
+            }
+
+            _unitOfWork.Save();
+
+            return Json(new { success = true, successmsg = ("<i>Dynamic monitoring alerts configured!</i>") }, JsonRequestBehavior.AllowGet);
         }
 
         // MachineCreation - page for creating new machines

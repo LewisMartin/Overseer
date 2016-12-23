@@ -1,0 +1,21 @@
+﻿@model Overseer.WebApp.ViewModels.Machine.MonitoredProcessAlertSettings
+
+<span>Process '@Html.DisplayFor(m => m.ProcessName)' alert configuration:</span>
+@Html.HiddenFor(m => m.ProcessName);
+<div class="flex-container">
+    <div>
+        @Html.TextBoxFor(m => m.WSWarnValue)
+        @Html.TextBoxFor(m => m.WSAlertValue)
+        @Html.CheckBoxFor(m => m.WorkingSetAlertsOn)
+    </div>
+    <div>
+        @Html.TextBoxFor(m => m.PBWarnValue)
+        @Html.TextBoxFor(m => m.PBAlertValue)
+        @Html.CheckBoxFor(m => m.PrivateBytesAlertsOn)
+    </div>
+    <div>
+        @Html.TextBoxFor(m => m.VBWarnValue)
+        @Html.TextBoxFor(m => m.VBAlertValue)
+        @Html.CheckBoxFor(m => m.VirtualBytesAlertsOn)
+    </div>
+</div>

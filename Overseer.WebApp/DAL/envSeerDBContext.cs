@@ -12,8 +12,7 @@ namespace Overseer.WebApp.DAL
             //Database.SetInitializer<OverseerDBContext>(new CreateDatabaseIfNotExists<OverseerDBContext>());
         }
 
-        // DbSets (tables)
-        // We need to create:
+        // DbSets (tables):
         // User (Rename this to 'UserAccount' at some point)
         public DbSet<UserAccount> Users { get; set; }
         // Role (Rename this to 'UserRole' at some point)
@@ -38,8 +37,10 @@ namespace Overseer.WebApp.DAL
         public DbSet<SystemInfo> SystemInfoMonitoring { get; set; }
         // PerfMon
         public DbSet<PerformanceInfo> PerformanceMonitoring { get; set; }
+        public DbSet<PerformanceSettings> PerformanceMonitoringSettings { get; set; }
         // DiskMon
         public DbSet<DiskInfo> DiskMonitoring { get; set; }
+        public DbSet<DiskSettings> DiskMonitoringSettings { get; set; }
         // ProcessMon
         public DbSet<ProcessInfo> ProcessMonitoring { get; set; }
         public DbSet<ProcessSettings> ProcessMonitoringSettings { get; set; }
@@ -49,5 +50,7 @@ namespace Overseer.WebApp.DAL
         // ServiceMon
         public DbSet<ServiceInfo> ServiceMonitoring { get; set; }
         public DbSet<ServiceSettings> ServiceMonitoringSettings { get; set; }
+        // Monitoring Alerts
+        public DbSet<MonitoringAlert> MonitoringAlerts { get; set; }
     }
 }

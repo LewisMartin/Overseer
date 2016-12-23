@@ -19,7 +19,15 @@ namespace Overseer.WebApp.DAL.DomainModels
         [StringLength(25)]
         public string ServiceName { get; set; }
 
-        // public bool RequestStart { get; set; }
+        // public bool RequestStart { get; set; } - future feature
+
+        public bool NotFoundAlertsOn { get; set; }
+
+        public int? NotFoundSeverity { get; set; }
+
+        public bool NotRunningAlertsOn { get; set; }
+
+        public int? NotRunningSeverity { get; set; }
 
         // navigation properties
         public Machine Machine { get; set; }

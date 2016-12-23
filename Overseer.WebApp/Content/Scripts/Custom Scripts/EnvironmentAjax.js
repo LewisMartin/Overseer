@@ -1,8 +1,8 @@
 ﻿$(function () {
-    $('form').submit(function () {
+    $('#EnvironmentAjaxForm').submit(function () {
         console.log("submitted");
 
-        var form = $('form').data('ajax');
+        var form = $('#EnvironmentAjaxForm').data('ajax');
 
         var formReset;
         var successMsg;
@@ -34,14 +34,14 @@
         toggleMonitoringLists(true);
 
         if ($(this).valid()) {
-            $('form').find(':submit').attr("disabled", true)
+            $('#EnvironmentAjaxForm').find(':submit').attr("disabled", true)
 
             $.ajax({
                 url: this.action,
                 type: this.method,
                 data: $(this).serialize(),
                 complete: function () {
-                    $('form').find(':submit').attr("disabled", false);
+                    $('#EnvironmentAjaxForm').find(':submit').attr("disabled", false);
                 },
                 success: function (result) {
                     toggleMonitoringLists(false);
@@ -53,7 +53,7 @@
 
                         if (formReset) {
                             var fieldsToIgnore = ["parentEnv"];
-                            resetForm($('form'), fieldsToIgnore);
+                            resetForm($('#EnvironmentAjaxForm'), fieldsToIgnore);
                         }
 
                         refreshSidenav();

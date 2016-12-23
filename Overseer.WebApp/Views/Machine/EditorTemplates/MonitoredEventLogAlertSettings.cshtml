@@ -1,0 +1,20 @@
+﻿@model Overseer.WebApp.ViewModels.Machine.MonitoredEventLogAlertSettings
+
+<span>Event log '@Html.DisplayFor(m => m.EventLogName)' alert configuration:</span>
+@Html.HiddenFor(m => m.EventLogName);
+<div class="flex-container">
+    <div>
+        @Html.TextBoxFor(m => m.WarningCountWarnValue)
+        @Html.TextBoxFor(m => m.WarningCountAlertValue)
+        @Html.CheckBoxFor(m => m.WarningCountAlertsOn)
+    </div>
+    <div>
+        @Html.TextBoxFor(m => m.ErrorCountWarnValue)
+        @Html.TextBoxFor(m => m.ErrorCountAlertValue)
+        @Html.CheckBoxFor(m => m.ErrorCountAlertsOn)
+    </div>
+    <div>
+        @Html.TextBoxFor(m => m.NotFoundSeverity)
+        @Html.CheckBoxFor(m => m.NotFoundAlertsOn)
+    </div>
+</div>

@@ -14,14 +14,14 @@ namespace Overseer.WebApp.DAL.DomainModels
         [Key]
         [Column(Order = 1)]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ReadingNumber { get; set; }   // allows us to keep historical readings for more effective performance graphing
+        public int ReadingNumber { get; set; }                  // allows us to keep historical readings for more effective performance graphing
 
         [Column(TypeName = "DateTime2")]
         public DateTime ReadingDateTime { get; set; }
 
         public float? CpuUtil { get; set; }
 
-        public float? HighCpuUtilIndicator { get; set; }
+        public float? HighCpuUtilIndicator { get; set; }        // percentage of readings taken by monitoring agent that were over 75%
 
         public float? TotalProcesses { get; set; }
 

@@ -35,7 +35,7 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
             foreach (SingleDrive drive in _DiskInfo.Drives)
             {
                 SnapshotData += String.Format(" {0} drive: [Volume label: {1}, Drive type: {2}, Drive format: {3}, Total size: {4}, Free space: {5}]",
-                    drive.Name, drive.VolumeLabel, drive.DriveType, drive.DriveFormat, drive.TotalSpace, drive.FreeSpace);
+                    drive.Letter, drive.VolumeLabel, drive.DriveType, drive.DriveFormat, drive.TotalSpace, drive.FreeSpace);
             }
             SnapshotData += " >";
 
@@ -82,7 +82,7 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
             {
                 _DiskInfo.Drives.Add(new SingleDrive()
                 {
-                    Name = drive.Name,
+                    Letter = drive.Name,
                     VolumeLabel = drive.VolumeLabel,
                     DriveType = drive.DriveType.ToString(),
                     DriveFormat = drive.DriveFormat,

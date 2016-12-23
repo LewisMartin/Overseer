@@ -197,14 +197,17 @@
     <Compile Include="Controllers\UserAccountController.cs" />
     <Compile Include="Controllers\UserAuthController.cs" />
     <Compile Include="DAL\Core\IDiskMonitoringRepository.cs" />
+    <Compile Include="DAL\Core\IDiskSettingsRepository.cs" />
     <Compile Include="DAL\Core\IDownTimeCategoryRepository.cs" />
     <Compile Include="DAL\Core\IEventLogMonitoringRepository.cs" />
     <Compile Include="DAL\Core\IEventLogSettingsRepository.cs" />
     <Compile Include="DAL\Core\IMachineRepository.cs" />
     <Compile Include="DAL\Core\IMonitoringAgentCredentialRepository.cs" />
+    <Compile Include="DAL\Core\IMonitoringAlertRepository.cs" />
     <Compile Include="DAL\Core\IMonitoringSettingsRepository.cs" />
     <Compile Include="DAL\Core\IOperatingSystemRepository.cs" />
     <Compile Include="DAL\Core\IPerformanceMonitoringRepository.cs" />
+    <Compile Include="DAL\Core\IPerformanceSettingsRepository.cs" />
     <Compile Include="DAL\Core\IProcessMonitoringRepository.cs" />
     <Compile Include="DAL\Core\IProcessSettingsRepository.cs" />
     <Compile Include="DAL\Core\IRepository.cs" />
@@ -215,27 +218,33 @@
     <Compile Include="DAL\Core\IUnitOfWork.cs" />
     <Compile Include="DAL\Core\IUserRoleRepository.cs" />
     <Compile Include="DAL\DomainModels\DiskInfo.cs" />
+    <Compile Include="DAL\DomainModels\DiskSettings.cs" />
     <Compile Include="DAL\DomainModels\DownTimeCategory.cs" />
     <Compile Include="DAL\DomainModels\EventLogSettings.cs" />
     <Compile Include="DAL\DomainModels\MonitoringAgentCredential.cs" />
+    <Compile Include="DAL\DomainModels\MonitoringAlert.cs" />
     <Compile Include="DAL\DomainModels\MonitoringSettings.cs" />
     <Compile Include="DAL\DomainModels\EventLogInfo.cs" />
     <Compile Include="DAL\DomainModels\OperatingSys.cs" />
     <Compile Include="DAL\DomainModels\PerformanceInfo.cs" />
+    <Compile Include="DAL\DomainModels\PerformanceSettings.cs" />
     <Compile Include="DAL\DomainModels\ProcessInfo.cs" />
     <Compile Include="DAL\DomainModels\ProcessSettings.cs" />
     <Compile Include="DAL\DomainModels\ServiceInfo.cs" />
     <Compile Include="DAL\DomainModels\ServiceSettings.cs" />
     <Compile Include="DAL\DomainModels\SystemInfo.cs" />
     <Compile Include="DAL\Repositories\DiskMonitoringRepository.cs" />
+    <Compile Include="DAL\Repositories\DiskSettingsRepository.cs" />
     <Compile Include="DAL\Repositories\DownTimeCategoryRepository.cs" />
     <Compile Include="DAL\Repositories\EventLogMonitoringRepository.cs" />
     <Compile Include="DAL\Repositories\EventLogSettingsRepository.cs" />
     <Compile Include="DAL\Repositories\MachineRepository.cs" />
     <Compile Include="DAL\Repositories\MonitoringAgentCredentialRepository.cs" />
+    <Compile Include="DAL\Repositories\MonitoringAlertRepository.cs" />
     <Compile Include="DAL\Repositories\MonitoringSettingsRepository.cs" />
     <Compile Include="DAL\Repositories\OperatingSystemRepository.cs" />
     <Compile Include="DAL\Repositories\PerformanceMonitoringRepository.cs" />
+    <Compile Include="DAL\Repositories\PerformanceSettingsRepository.cs" />
     <Compile Include="DAL\Repositories\ProcessMonitoringRepository.cs" />
     <Compile Include="DAL\Repositories\ProcessSettingsRepository.cs" />
     <Compile Include="DAL\Repositories\Repository.cs" />
@@ -273,6 +282,7 @@
     <Compile Include="ViewModels\Machine\MachineCreationViewModel.cs" />
     <Compile Include="ViewModels\Machine\MachineDetailsViewModel.cs" />
     <Compile Include="ViewModels\Machine\MachineseerViewModel.cs" />
+    <Compile Include="ViewModels\Machine\_DynamicMonitoringAlertsConfigViewModel.cs" />
     <Compile Include="ViewModels\Machine\_MonitoringSummaryViewModel.cs" />
     <Compile Include="ViewModels\Machine\_MonitoringSystemInfoViewModel.cs" />
     <Compile Include="ViewModels\Navigation\EnvironmentLinkViewModel.cs" />
@@ -287,6 +297,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Scripts\Custom Scripts\ContentAccordion.js" />
+    <Content Include="Content\Scripts\Custom Scripts\DynamicAlertsConfig.js" />
     <Content Include="Content\Scripts\Custom Scripts\EditableListBox.js" />
     <Content Include="Content\Scripts\Custom Scripts\EnvironmentAjax.js" />
     <Content Include="Content\Scripts\Custom Scripts\RefreshMonitoringData.js" />
@@ -357,6 +368,10 @@
     <Content Include="Views\Machine\_MonitoringSummary.cshtml" />
     <Content Include="Views\Machine\_MonitoringSystemInfo.cshtml" />
     <Content Include="Views\Environment\_EnvironmentMonitoringSummary.cshtml" />
+    <Content Include="Views\Machine\_DynamicMonitoringAlertsConfig.cshtml" />
+    <Content Include="Views\Machine\EditorTemplates\MonitoredProcessAlertSettings.cshtml" />
+    <Content Include="Views\Machine\EditorTemplates\MonitoredEventLogAlertSettings.cshtml" />
+    <Content Include="Views\Machine\EditorTemplates\MonitoredServiceAlertSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

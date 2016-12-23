@@ -25,6 +25,8 @@ namespace Overseer.WebApp.DAL.Core
 
         // monitoring settings repos
         public IMonitoringSettingsRepository MonitoringSettings { get; set; }
+        public IPerformanceSettingsRepository PerformanceMonitoringSettings { get; set; }
+        public IDiskSettingsRepository DiskMonitoringSettings { get; set; }
         public IProcessSettingsRepository ProcessMonitoringSettings { get; set; }
         public IEventLogSettingsRepository EventLogMonitoringSettings { get; set; }
         public IServiceSettingsRepository ServiceMonitoringSettings { get; set; }
@@ -36,6 +38,9 @@ namespace Overseer.WebApp.DAL.Core
         public IProcessMonitoringRepository ProcessMonitoring { get; set; }
         public IEventLogMonitoringRepository EventLogMonitoring { get; set; }
         public IServiceMonitoringRepository ServiceMonitoring { get; set; }
+
+        // other
+        public IMonitoringAlertRepository MonitoringAlerts { get; set; }
 
         // constructor 
         public UnitOfWork(OverseerDBContext context)
@@ -52,6 +57,8 @@ namespace Overseer.WebApp.DAL.Core
             DownTimeCategories = new DownTimeCategoryRepository(_dbContext);
 
             MonitoringSettings = new MonitoringSettingsRepository(_dbContext);
+            PerformanceMonitoringSettings = new PerformanceSettingsRepository(_dbContext);
+            DiskMonitoringSettings = new DiskSettingsRepository(_dbContext);
             ProcessMonitoringSettings = new ProcessSettingsRepository(_dbContext);
             EventLogMonitoringSettings = new EventLogSettingsRepository(_dbContext);
             ServiceMonitoringSettings = new ServiceSettingsRepository(_dbContext);
@@ -62,6 +69,8 @@ namespace Overseer.WebApp.DAL.Core
             ProcessMonitoring = new ProcessMonitoringRepository(_dbContext);
             EventLogMonitoring = new EventLogMonitoringRepository(_dbContext);
             ServiceMonitoring = new ServiceMonitoringRepository(_dbContext);
+
+            MonitoringAlerts = new MonitoringAlertRepository(_dbContext);
         }
 
         // saving changes via out dbcontext

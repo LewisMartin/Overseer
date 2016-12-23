@@ -27,6 +27,12 @@ namespace Overseer.WebApp.DAL.Repositories
             dbContext.Set<TEntity>().Add(entity);
         }
 
+        // add multiple entities
+        public void AddRange(ICollection<TEntity> entities)
+        {
+            dbContext.Set<TEntity>().AddRange(entities);
+        }
+
         // delete an entity
         public void Delete(TEntity entity)
         {

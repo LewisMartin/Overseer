@@ -81,7 +81,7 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
                 {
                     _CpuReadings.Add(_CpuUtilCounter.NextValue());
 
-                    if ((_CpuReadings[_CpuReadings.Count() - 1]) >= 80)
+                    if ((_CpuReadings[_CpuReadings.Count() - 1]) >= 75)
                     {
                         lock (_Lock_CpuHighUtilCounter)
                         {
@@ -104,7 +104,7 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
                 {
                     _MemReadings.Add(_MemUtilCounter.NextValue());
 
-                    if ((_MemReadings[_MemReadings.Count() - 1]) >= 80)
+                    if ((_MemReadings[_MemReadings.Count() - 1]) >= 75)
                     {
                         lock (_Lock_MemHighUtilCounter)
                         {
