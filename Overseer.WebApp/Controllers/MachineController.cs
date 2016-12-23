@@ -679,15 +679,6 @@ namespace Overseer.WebApp.Controllers
             }
         }
 
-        // Note: this needs to be mved to service layer
-        // method to get base url of application
-        private string GetBaseApplicationUrl()
-        {
-            var Req = ControllerContext.RequestContext.HttpContext.Request;
-
-            return Req.Url.Scheme + "://" + Req.Url.Authority + Req.ApplicationPath.TrimEnd('/');
-        }
-
         private int GetMillisecondsToNextUpdate(int environmentId)
         {
             MonitoringSettings settings = _unitOfWork.MonitoringSettings.Get(environmentId);

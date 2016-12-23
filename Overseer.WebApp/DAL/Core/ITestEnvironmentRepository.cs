@@ -9,6 +9,9 @@ namespace Overseer.WebApp.DAL.Core
 {
     public interface ITestEnvironmentRepository : IRepository<TestEnvironment>
     {
+        // get environment and include all child machines
+        TestEnvironment GetEnvironmentAndChildMachines(int id);
+
         // get environment and include monitoring settings
         TestEnvironment GetWithMonitoringSettings(int id);
 
@@ -26,9 +29,6 @@ namespace Overseer.WebApp.DAL.Core
 
         // get environment by creator (userId)
         IEnumerable<TestEnvironment> GetEnvironmentsAndChildMachinesByCreator(int userId);
-
-        // get environment by creator & environment name (used to validate against duplication)
-        TestEnvironment GetEnvironmentByCreatorAndName(int userId, string name);
 
         // check if an environment name has already been used by a user
         bool CheckEnvironmentExistsByCreatorAndName(int userId, string name);

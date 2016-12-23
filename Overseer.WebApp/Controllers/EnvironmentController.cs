@@ -13,12 +13,6 @@ namespace Overseer.WebApp.Controllers
     [CustomAuth]
     public class EnvironmentController : BaseController
     {
-        // GET: OverSeer - the page compiling monitoring of all environments
-        public ActionResult Overseer()
-        {
-            return View();
-        }
-
         // GET: Environmentseer - page showing monitoring of all machines within specific environment
         public ActionResult Environmentseer(int environmentId)
         {
@@ -397,15 +391,6 @@ namespace Overseer.WebApp.Controllers
 
                 return Json(new { success = true, successmsg = ("<i>'" + viewModel.EnvironmentName + "' created successfully!</i>") }, JsonRequestBehavior.AllowGet);
             }
-        }
-
-        // Note: this needs to be mved to service layer
-        // method to get base url of application
-        private string GetBaseApplicationUrl()
-        {
-            var Req = ControllerContext.RequestContext.HttpContext.Request;
-
-            return Req.Url.Scheme + "://" + Req.Url.Authority + Req.ApplicationPath.TrimEnd('/');
         }
 
         private int GetMillisecondsToNextUpdate(int environmentId)

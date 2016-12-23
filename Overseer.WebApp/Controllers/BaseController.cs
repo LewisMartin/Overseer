@@ -27,5 +27,14 @@ namespace Overseer.WebApp.Controllers
 
             base.Dispose(disposing);
         }
+
+        // Note: this needs to be mved to service layer
+        // method to get base url of application
+        protected string GetBaseApplicationUrl()
+        {
+            var Req = ControllerContext.RequestContext.HttpContext.Request;
+
+            return Req.Url.Scheme + "://" + Req.Url.Authority + Req.ApplicationPath.TrimEnd('/');
+        }
     }
 }

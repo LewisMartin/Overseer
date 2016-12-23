@@ -194,6 +194,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MachineController.cs" />
     <Compile Include="Controllers\NavigationController.cs" />
+    <Compile Include="Controllers\OverviewController.cs" />
     <Compile Include="Controllers\UserAccountController.cs" />
     <Compile Include="Controllers\UserAuthController.cs" />
     <Compile Include="DAL\Core\IDiskMonitoringRepository.cs" />
@@ -289,6 +290,8 @@
     <Compile Include="ViewModels\Navigation\MachineLinkViewModel.cs" />
     <Compile Include="ViewModels\Navigation\_EnvironmentNavigationViewModel.cs" />
     <Compile Include="ViewModels\Navigation\_SidebarNavViewModel.cs" />
+    <Compile Include="ViewModels\Overview\OverseerViewModel.cs" />
+    <Compile Include="ViewModels\Overview\_OverviewEnvironmentViewModel.cs" />
     <Compile Include="ViewModels\UserAuth\LoginViewModel.cs" />
     <Compile Include="ViewModels\UserAuth\RegisterViewModel.cs" />
     <Compile Include="WebApi\Controllers\BaseApiController.cs" />
@@ -356,7 +359,7 @@
     <Content Include="Views\Admin\ConfirmUserDeletion.cshtml" />
     <Content Include="Views\Admin\EditUser.cshtml" />
     <Content Include="Views\Navigation\_SidebarNav.cshtml" />
-    <Content Include="Views\Environment\Overseer.cshtml" />
+    <Content Include="Views\Overview\Overseer.cshtml" />
     <Content Include="Views\Environment\Environmentseer.cshtml" />
     <Content Include="Views\Machine\Machineseer.cshtml" />
     <Content Include="Views\Environment\EnvironmentConfiguration.cshtml" />
@@ -372,6 +375,7 @@
     <Content Include="Views\Machine\EditorTemplates\MonitoredProcessAlertSettings.cshtml" />
     <Content Include="Views\Machine\EditorTemplates\MonitoredEventLogAlertSettings.cshtml" />
     <Content Include="Views\Machine\EditorTemplates\MonitoredServiceAlertSettings.cshtml" />
+    <Content Include="Views\Overview\_OverviewEnvironment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,6 +1,7 @@
 ﻿@model Overseer.WebApp.ViewModels.Navigation._EnvironmentNavigationViewModel
 
-<li>Overseer (All Environments)</li>
+<li>@Html.ActionLink("Overseer (All Environments)", "Overseer", "Overview")</li>
+
 @foreach (var environment in Model.environmentNavDetails)
 {
     // need to add action link which links to the environmentseer page passing the environment id as a param

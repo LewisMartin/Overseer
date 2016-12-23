@@ -1033,4 +1033,67 @@ select[multiple]
     width: 80%;
 }
 
+.ind
+{
+    text-align: center !important;
+    padding-left: 0px !important;
+}
+.indicator 
+{
+  width: 18px;
+  height: 18px;
+  margin: 0 auto;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 16px;
+  font-size:12px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: -moz-none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+}
+.info
+{
+  	border: 1px solid #4cae4c;
+  	color: #4cae4c;
+}
+.info:before
+{
+    font-family: FontAwesome;
+    content: "\f00c";       /* fa-check */
+}
+.warn
+{
+	border: 1px solid #eea236;
+  	color: #eea236;
+}
+.warn:before
+{
+    font-family: FontAwesome;
+    content: "\f12a";       /* fa-exclamation */
+}
+.alert
+{
+  	border: 1px solid #b12024;
+  	color: #b12024;
+    line-height: 15px;
+}
+.alert:before
+{
+    font-family: FontAwesome;
+    content: "\f00d";       /* fa-times */
+}
+.na
+{
+    border: 1px solid #e0e0de;
+  	color: #e0e0de;
+    line-height: 14px;
+}
+.na:before
+{
+    content: "-";
+}
+
 /* ---------- Configuration Pages Styles ---------- */

@@ -18,7 +18,7 @@ namespace Overseer.WebApp.DAL.Repositories
 
         public IEnumerable<MonitoringAlert> GetActiveAlertsByMachine(Guid machineId)
         {
-            return dbContext.MonitoringAlerts.Where(a => a.MachineId == machineId && a.Historical == false).ToList();
+            return dbContext.MonitoringAlerts.Where(a => a.MachineId == machineId && a.Historical == false).OrderBy(a => a.Severity).ToList();
         }
 
         public IEnumerable<MonitoringAlert> GetHistoricalAlertsByMachine(Guid machineId)

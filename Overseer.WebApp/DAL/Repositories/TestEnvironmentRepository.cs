@@ -15,6 +15,11 @@ namespace Overseer.WebApp.DAL.Repositories
             // calling the base constructor
         }
 
+        public TestEnvironment GetEnvironmentAndChildMachines(int id)
+        {
+            return dbContext.TestEnvironment.Include(e => e.Machines).FirstOrDefault(e => e.EnvironmentID == id);
+        }
+
         public TestEnvironment GetWithMonitoringSettings(int id)
         {
             return dbContext.TestEnvironment.Include(e => e.MonitoringSettings).FirstOrDefault(e => e.EnvironmentID == id);
@@ -23,11 +28,6 @@ namespace Overseer.WebApp.DAL.Repositories
         public TestEnvironment GetWithAllRelatedValues(int id)
         {
             return dbContext.TestEnvironment.Include(e => e.MonitoringSettings).Include(e => e.DownTimeCategory).FirstOrDefault(e => e.EnvironmentID == id);
-        }
-
-        public TestEnvironment GetEnvironmentByCreatorAndName(int userId, string name)
-        {
-            return dbContext.TestEnvironment.FirstOrDefault(e => e.Creator == userId && e.EnvironmentName == name);
         }
 
         public TestEnvironment GetEnvironmentseerData(int id)

@@ -1,0 +1,18 @@
+﻿@model Overseer.WebApp.ViewModels.Overview.OverseerViewModel
+
+@{
+    ViewBag.Title = "Overseer";
+}
+
+<div id="Page-Title">
+    <div class="fl-left">
+        <i class="fa fa-tachometer a-fw" aria-hidden="true"></i>&nbsp Environments<i class="fa fa-angle-right a-fw breadcrumb-spacer" aria-hidden="true"></i>Overview
+    </div>
+</div>
+
+<div id="Environmentseer" class="page-content" data-baseurl="@Model.BaseAppUrl">
+    @foreach (int EnvironmentId in Model.EnvironmentIds)
+    { 
+        @Html.Action("_OverviewEnvironment", "Overview", new { environmentId = EnvironmentId })
+    }
+</div>
