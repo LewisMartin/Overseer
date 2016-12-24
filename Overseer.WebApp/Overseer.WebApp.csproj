@@ -197,6 +197,7 @@
     <Compile Include="Controllers\OverviewController.cs" />
     <Compile Include="Controllers\UserAccountController.cs" />
     <Compile Include="Controllers\UserAuthController.cs" />
+    <Compile Include="Controllers\UserProfileController.cs" />
     <Compile Include="DAL\Core\IDiskMonitoringRepository.cs" />
     <Compile Include="DAL\Core\IDiskSettingsRepository.cs" />
     <Compile Include="DAL\Core\IDownTimeCategoryRepository.cs" />
@@ -294,6 +295,8 @@
     <Compile Include="ViewModels\Overview\_OverviewEnvironmentViewModel.cs" />
     <Compile Include="ViewModels\UserAuth\LoginViewModel.cs" />
     <Compile Include="ViewModels\UserAuth\RegisterViewModel.cs" />
+    <Compile Include="ViewModels\UserProfile\ProfileEditorViewModel.cs" />
+    <Compile Include="ViewModels\UserProfile\ProfileViewerViewModel.cs" />
     <Compile Include="WebApi\Controllers\BaseApiController.cs" />
     <Compile Include="WebApi\Controllers\MonitoringAgentEndpointController.cs" />
     <Compile Include="WebApi\Controllers\MonitoringConfigEndpointController.cs" />
@@ -305,6 +308,7 @@
     <Content Include="Content\Scripts\Custom Scripts\EnvironmentAjax.js" />
     <Content Include="Content\Scripts\Custom Scripts\RefreshMonitoringData.js" />
     <Content Include="Content\Scripts\Custom Scripts\ToggleField.js" />
+    <Content Include="Content\Scripts\Custom Scripts\UserProfileAjax.js" />
     <Content Include="Content\Styles\bootstrap.css" />
     <Content Include="Content\Styles\bootstrap.min.css" />
     <Content Include="Content\Styles\Custom Styles\OverseerStyles.css" />
@@ -376,6 +380,8 @@
     <Content Include="Views\Machine\EditorTemplates\MonitoredEventLogAlertSettings.cshtml" />
     <Content Include="Views\Machine\EditorTemplates\MonitoredServiceAlertSettings.cshtml" />
     <Content Include="Views\Overview\_OverviewEnvironment.cshtml" />
+    <Content Include="Views\UserProfile\ProfileViewer.cshtml" />
+    <Content Include="Views\UserProfile\ProfileEditor.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

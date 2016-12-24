@@ -1,0 +1,99 @@
+﻿@model Overseer.WebApp.ViewModels.UserProfile.ProfileEditorViewModel
+
+@section AdditionalScripts
+{
+    @Scripts.Render("~/UserProfile/Scripts")
+}
+
+@{
+    ViewBag.Title = "ProfileEditor";
+}
+
+<div id="Page-Title">
+    <div class="fl-left">
+        <i class="fa fa-tachometer a-fw" aria-hidden="true"></i>
+        &nbsp Profile
+        <i class="fa fa-angle-right a-fw breadcrumb-spacer" aria-hidden="true"></i>
+        Editor
+        <i class="fa fa-angle-right a-fw breadcrumb-spacer" aria-hidden="true"></i>
+        @Model.UserName
+    </div>
+</div>
+
+<div id="ProfileEditor" class="page-content">
+    <div class="content-area">
+        <h3>
+            @(Model.FirstName + " " + Model.LastName)
+        </h3>
+        <div>
+            @using (Html.BeginForm("ProfileEditor", "UserProfile", FormMethod.Post, new { id = "ProfileEditorForm" }))
+            {
+                <input type="hidden" name="UserId" value="@Model.UserId" />
+                <div class="center-input">
+                    @Html.TextBoxFor(m => m.FirstName, new { placeholder = "First Name" })
+                </div>
+                <div class="center-input">
+                    @Html.TextBoxFor(m => m.LastName, new { placeholder = "Last Name" })
+                </div>
+                <div class="center-input">
+                    @Html.TextBoxFor(m => m.UserName, new { placeholder = "Username" })
+                </div>
+                <div class="center-input">
+                    @Html.TextBoxFor(m => m.EmailAddress, new { placeholder = "Corporate Email" })
+                </div>
+                <div class="center-input">
+                    @Html.DropDownListFor(m => m.ChosenRoleID, Model.RoleChoices, "Choose a role..")
+                </div>
+                <div class="tf-container">
+                    <div class="left-input">
+                        @Html.CheckBoxFor(m => m.PasswordChanged, new { @class = "tf-checkbox" })
+                        <label for="tf-checkbox">change password?</label>
+                    </div>
+                    <div class="center-input">
+                        @Html.PasswordFor(m => m.Password, new { placeholder = "Password", @class = "tf-target" })
+                    </div>
+                    <div class="center-input">
+                        @Html.PasswordFor(m => m.ConfirmPassword, new { placeholder = "Confirm New Password", @class = "tf-target" })
+                    </div>
+                </div>
+
+                <div class="center-input form-val">
+                    <div class="form-val-msg">
+                        @Html.ValidationMessageFor(m => m.FirstName, "")
+                    </div>
+                    <div class="form-val-msg">
+                        @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-val-msg">
+                        @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-val-msg">
+                        @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-val-msg">
+                        @Html.ValidationMessageFor(m => m.EmailAddress, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-val-msg">
+                        @Html.ValidationMessageFor(m => m.ChosenRoleID, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-val-msg">
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-val-msg">
+                        @Html.ValidationMessage("DuplicateUserError", "")
+                    </div>
+                    <div class="form-val-msg">
+                        @Html.ValidationMessage("UnchangedPassError", "")
+                    </div>
+                </div>
+
+                <div class="form-footer">
+                    <input type="submit" value="Save" class="submit-button" />
+                </div>
+            }
+        </div>
+    </div>
+    <div id="responsemsg">
+
+    </div>
+</div>

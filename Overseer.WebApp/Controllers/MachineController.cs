@@ -13,12 +13,6 @@ namespace Overseer.WebApp.Controllers
     [CustomAuth]
     public class MachineController : BaseController
     {
-        // GET: Machine
-        public ActionResult Index()
-        {
-            return View();
-        }
-
         // GET: Machineseer - page showing monitoirng of specific machine
         public ActionResult Machineseer(Guid machineId)
         {

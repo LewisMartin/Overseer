@@ -9,6 +9,8 @@ namespace Overseer.WebApp.DAL.Core
     // UserAuth specific repository interface - inherits all generic opperations from generic repository interface
     public interface IUserAccountRepository : IRepository<UserAccount>
     {
+        UserAccount GetWithUserRole(int userId);
+
         // here we declare any additional data access methods unique to the UserAccount table
         UserAccount GetUserByUsername(string name);
 

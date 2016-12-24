@@ -1,0 +1,53 @@
+﻿@model Overseer.WebApp.ViewModels.UserProfile.ProfileViewerViewModel
+
+@{
+    ViewBag.Title = "ProfileViewer";
+}
+
+<div id="Page-Title">
+    <div class="fl-left">
+        <i class="fa fa-tachometer a-fw" aria-hidden="true"></i>
+        &nbsp Profile
+        <i class="fa fa-angle-right a-fw breadcrumb-spacer" aria-hidden="true"></i>
+        @Model.UserName
+    </div>
+</div>
+
+<div id="ProfileViewer" class="page-content">
+    <div class="content-area">
+        <h3>
+            @(Model.FirstName + " " + Model.LastName)
+            @if (Model.AllowEdit)
+            {
+                <a href="@Url.Action("ProfileEditor", "UserProfile", new { userId = ViewBag.SessionUserId }, null)"><span class="icon edit-i"><i class="fa fa-pencil" aria-hidden="true"></i></span> </a>
+            }
+        </h3>
+        <div>
+            <ul>
+                <li>First Name: @Model.FirstName</li>
+                <li>Last Name: @Model.LastName</li>
+                <li>User Name: @Model.UserName</li>
+                <li>Email: @Model.EmailAddress</li>
+                <li>Role: @Model.Role</li>
+            </ul>
+        </div>
+    </div>
+    <div class="content-area">
+        <h3>
+            @(Model.FirstName + " " + Model.LastName + "'s Environments:")
+        </h3>
+        <div>
+            @foreach (var environment in Model.CreatedEnvironments)
+            {
+                <div>
+                    <h5><a href="@Url.Action("Environmentseer", "Environment", new { environmentId = @environment.EnvironmentId }, null)">@environment.EnvironmentName</a></h5>
+                    <span>@environment.MachineCount machines</span>
+                    <span>@environment.Status</span>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+

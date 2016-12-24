@@ -27,9 +27,9 @@ namespace Overseer.WebApp.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            // return login view
             return View();
         }
+
         // POST: login page
         [HttpPost]
         public ActionResult Login(LoginViewModel userCreds)
@@ -80,8 +80,7 @@ namespace Overseer.WebApp.Controllers
             // log out using the new Microsoft Identity stuff
             HttpContext.GetOwinContext().Authentication.SignOut();
 
-            // redirect to login page
-            return RedirectToAction("Login", "UserAuth");
+            return RedirectToAction("Login", "UserAuth"); // redirect to login page
         }
 
         // GET: registration page
@@ -94,6 +93,7 @@ namespace Overseer.WebApp.Controllers
             // pass viewmodel to view
             return View(RegisterGetModel);
         }
+
         // POST: registration page
         [HttpPost]
         public ActionResult Register(RegisterViewModel newUserDetails)
@@ -103,17 +103,10 @@ namespace Overseer.WebApp.Controllers
             {
                 if (UserNameAvailable(newUserDetails.UserName))
                 {
-                    // instantiate our hashing provider
-                    var crypto = new SimpleCrypto.PBKDF2();
+                    var crypto = new SimpleCrypto.PBKDF2();     // instantiate our hashing provider
+                    crypto.GenerateSalt();                      // generate a new salt to use for this user
 
-                    // new repository based implementation
-                    // generate a new salt to use for this user
-                    crypto.GenerateSalt();
-
-                    // generate a new eUserAuth ntity that we'll add to the database
                     UserAccount newUser = new UserAccount();
-
-                    // populate the new user object with the data from our ViewModel
                     newUser.UserName = newUserDetails.UserName;
                     newUser.FirstName = newUserDetails.FirstName;
                     newUser.LastName = newUserDetails.LastName;
@@ -122,8 +115,7 @@ namespace Overseer.WebApp.Controllers
                     newUser.Password = crypto.Compute(newUserDetails.Password);
                     newUser.PasswordSalt = crypto.Salt;
 
-                    // add the user & save changes via unit of work
-                    _unitOfWork.Users.Add(newUser);
+                    _unitOfWork.Users.Add(newUser);             // add user
                     _unitOfWork.Save();
 
                     // model validation passed, login complete - clear modelstate, add additional success message to viewdata and return blank registration form

@@ -19,6 +19,11 @@ namespace Overseer.WebApp.DAL.Repositories
             // calling base constructor
         }
 
+        public UserAccount GetWithUserRole(int userId)
+        {
+            return dbContext.Users.Include(u => u.UserRole).FirstOrDefault(u => u.UserID == userId);
+        }
+
         // implementation of model specific operation (IUserAuthRepository)
         public UserAccount GetUserByUsername(string name)
         {

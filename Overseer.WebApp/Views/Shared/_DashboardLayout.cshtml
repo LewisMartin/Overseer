@@ -27,7 +27,7 @@
                     <input type="checkbox" id="User-Area-Toggle">
                     <label for="User-Area-Toggle"><i class="fa fa-user"></i> @Html.Encode(User.Identity.Name) </label>
                     <ul>
-                        <li>Profile</li>
+                        <li>@Html.ActionLink("Profile", "ProfileViewer", "UserProfile", new { userId = ViewBag.SessionUserId }, null)</li>
                         <li>@Html.ActionLink("Sign Out", "LogOut", "UserAuth")</li>
                     </ul>
                 </div>

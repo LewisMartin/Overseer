@@ -9,6 +9,8 @@ namespace Overseer.WebApp.DAL.Core
     // UserRole specific repository interface
     public interface IUserRoleRepository : IRepository<UserRole>
     {
+        IEnumerable<UserRole> GetAllRoles();
+
         // method to get all roles apart from the admin role
         IEnumerable<UserRole> GetNonAdminRoles();
     }

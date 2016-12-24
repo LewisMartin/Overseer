@@ -3,6 +3,7 @@ using Overseer.WebApp.DAL.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
 
@@ -19,6 +20,38 @@ namespace Overseer.WebApp.Controllers
             _unitOfWork = new UnitOfWork(new OverseerDBContext());
         }
 
+        // override 'OnActionExecuting' to provide logged in user details to viewbag for use in layout file
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            base.OnActionExecuting(filterContext);
+
+            ViewBag.SessionUserId = GetLoggedInUserId();
+        }
+
+        // Note: these need to be moved to service layer
+        // get the currently logged in user
+        protected int GetLoggedInUserId()
+        {
+            var userClaims = User.Identity as ClaimsIdentity;
+
+            int loggedInUserId = 0;
+
+            if (userClaims.FindFirst(ClaimTypes.NameIdentifier) != null)
+            {
+                loggedInUserId = loggedInUserId = Int32.Parse(userClaims.FindFirst(ClaimTypes.NameIdentifier).Value);
+            }
+
+            return loggedInUserId;
+        }
+
+        // method to get base url of application
+        protected string GetBaseApplicationUrl()
+        {
+            var Req = ControllerContext.RequestContext.HttpContext.Request;
+
+            return Req.Url.Scheme + "://" + Req.Url.Authority + Req.ApplicationPath.TrimEnd('/');
+        }
+
         // overriding dispose method to add disposal of UnitOfWork class
         protected override void Dispose(bool disposing)
         {
@@ -26,15 +59,6 @@ namespace Overseer.WebApp.Controllers
             _unitOfWork.Dispose();
 
             base.Dispose(disposing);
-        }
-
-        // Note: this needs to be mved to service layer
-        // method to get base url of application
-        protected string GetBaseApplicationUrl()
-        {
-            var Req = ControllerContext.RequestContext.HttpContext.Request;
-
-            return Req.Url.Scheme + "://" + Req.Url.Authority + Req.ApplicationPath.TrimEnd('/');
         }
     }
 }

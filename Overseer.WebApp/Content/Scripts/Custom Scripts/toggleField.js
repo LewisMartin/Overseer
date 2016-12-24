@@ -2,25 +2,43 @@
 
     // enable/disable field on document ready
     $('.tf-checkbox').each(function () {
+        var toggle = whichToggle(this, 'tf-container');
+        var targets = $(toggle).find('.tf-target');
+        var invertedTargets = $(toggle).find('.tf-inverse-target');
+
         if ($(this).is(':checked')) {
-            $(this).siblings('.tf-target').prop('disabled', false);
-            $(this).siblings('.tf-inverse-target').prop('disabled', true);
+            $(targets).each(function () { $(this).prop('disabled', false) });
+            $(invertedTargets).each(function () { $(this).prop('disabled', true) });
         }
         else {
-            $(this).siblings('.tf-target').prop('disabled', true);
-            $(this).siblings('.tf-inverse-target').prop('disabled', false);
+            $(targets).each(function () { $(this).prop('disabled', true) });
+            $(invertedTargets).each(function () { $(this).prop('disabled', false) });
         }
     })
 
     // enable/disable field whenever checkbox is changed
     $('.tf-checkbox').change(function () {
+        console.log("toggle");
+
+        var toggle = whichToggle(this, 'tf-container');
+        var targets = $(toggle).find('.tf-target');
+        var invertedTargets = $(toggle).find('.tf-inverse-target');
+
         if (this.checked) {
-            $(this).siblings('.tf-target').prop('disabled', false);
-            $(this).siblings('.tf-inverse-target').prop('disabled', true);
+            $(targets).each(function () { $(this).prop('disabled', false) });
+            $(invertedTargets).each(function () { $(this).prop('disabled', true) });
         }
         else {
-            $(this).siblings('.tf-target').prop('disabled', true);
-            $(this).siblings('.tf-inverse-target').prop('disabled', false);
+            console.log("disabling");
+            $(targets).each(function () { $(this).prop('disabled', true) });
+            $(invertedTargets).each(function () { $(this).prop('disabled', false) });
         }
     });
+
+    // method to find which accordion to change content of
+    function whichToggle(element, selector) {
+        while ((element = element.parentNode) && !element.classList.contains(selector));
+        console.log(element);
+        return element;
+    }
 });

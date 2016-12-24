@@ -14,6 +14,11 @@ namespace Overseer.WebApp.DAL.Repositories
             // calling base constructor
         }
 
+        public IEnumerable<UserRole> GetAllRoles()
+        {
+            return dbContext.UserRoles.ToList();
+        }
+
         // method to get all the non admin user roles
         public IEnumerable<UserRole> GetNonAdminRoles()
         {

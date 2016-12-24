@@ -66,7 +66,7 @@ namespace Overseer.WebApp.DAL.Repositories
 
         public IEnumerable<TestEnvironment> GetEnvironmentsAndChildMachinesByCreator(int userId)
         {
-            return dbContext.TestEnvironment.Include(c => c.Machines).Where(c => c.Creator == userId).ToList();
+            return dbContext.TestEnvironment.Include(c => c.Machines).Include(c => c.DownTimeCategory).Where(c => c.Creator == userId).ToList();
         }
     }
 }

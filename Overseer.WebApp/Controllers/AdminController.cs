@@ -295,6 +295,7 @@ namespace Overseer.WebApp.Controllers
                     }
                 }
 
+                userToUpdate.UserName = editedUserDetails.UserName;
                 userToUpdate.FirstName = editedUserDetails.FirstName;
                 userToUpdate.LastName = editedUserDetails.LastName;
                 userToUpdate.Email = editedUserDetails.EmailAddress;
