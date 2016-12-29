@@ -26,5 +26,8 @@ namespace Overseer.WebApp.DAL.Core
 
         // return whether or not a certain machine exists for a given environment
         bool CheckMachineExistsByEnvironmentAndDisplayName(int environmentId, string displayName);
+
+        // query for machines using user settings on discovery page
+        IEnumerable<Machine> DiscoverySearchQuery(string searchTerm, int? envId, int? bitness, int? cores, int? mem);
     }
 }

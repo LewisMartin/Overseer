@@ -1,0 +1,44 @@
+﻿@model Overseer.WebApp.ViewModels.Search._QueryViewModel
+
+<ul>
+    @if (Model.UserQueryResults.Count > 0)
+    {
+        foreach (var result in Model.UserQueryResults)
+        {
+            <li>
+                <ul>
+                    <li>@result.ResultName</li>
+                </ul>
+            </li>
+        }
+    }
+    else if (Model.EnvironmentQueryResults.Count > 0)
+    {
+        foreach (var result in Model.EnvironmentQueryResults)
+        {
+            <li>
+                <ul>
+                    <li>@result.ResultName</li>
+                </ul>
+            </li>
+        }
+    }
+    else if (Model.MachineQueryResults.Count > 0)
+    {
+        foreach (var result in Model.MachineQueryResults)
+        {
+            <li>
+                <ul>
+                    <li>@result.ResultName</li>
+                </ul>
+            </li>
+        }
+    }
+    else
+    {
+        <li>
+            0 Results..
+        </li>
+    }
+</ul>
+

@@ -1,0 +1,142 @@
+﻿@model Overseer.WebApp.ViewModels.Search.SearchViewModel
+
+@section AdditionalScripts
+{
+    @Scripts.Render("~/Discovery/Scripts")
+}
+
+@{
+    ViewBag.Title = "Search";
+}
+
+<div id="Page-Title">
+    <div class="fl-left">
+        <i class="fa fa-search a-fw" aria-hidden="true"></i>&nbsp Search
+    </div>
+</div>
+
+<div class="page-content" data-baseurl="@Model.BaseAppUrl">
+    @using (Html.BeginForm("_Query", "Search", FormMethod.Post, new { id = "DiscoverySearchForm" }))
+    {
+        <div id="SearchBasic" class="flex-container">
+            <div id="SearchBasicQuery" class="fl-left content-area srch-container">
+                <button name="button" value="search" type="submit" class="srch-btn">
+                    <i class="fa fa-search a-fw" aria-hidden="true"></i>
+                </button>
+                <div class="srch-trm">
+                    @Html.TextBoxFor(m => m.SearchTerm, new { placeholder = "Name.." })
+                </div>
+            </div>
+            <div id="SearchBasicType" class="fl-right content-area horiz-select-container">
+                <div class="horiz-select flex-container">
+                    <div class="horiz-select-option horiz-select-selected" data-srchval="user">
+                        User
+                    </div>
+                    <div class="horiz-select-option" data-srchval="environment">
+                        Environment
+                    </div>
+                    <div class="horiz-select-option" data-srchval="machine">
+                        Machine
+                    </div>
+                </div>
+            <input id="SearchType" type="hidden" name="SearchType" value="@Model.SearchType" />
+            </div>
+        </div>
+        <div class="content-area">
+            <h3>Advanced search options <span>0 active</span></h3>
+            <div id="UserAdvOps" class="adv-ops flex-container">
+                <div class="tf-container flex-container">
+                    <div class="tf-fields">
+                        <label>User Role:</label>
+                        @Html.DropDownListFor(m => m.AdvancedUserOps.RoleId, Model.AdvancedUserOps.RoleOptions, new { @class = "tf-target" })
+                    </div>
+                    <div class="tf-checkbox-container">
+                        @Html.CheckBoxFor(m => m.AdvancedUserOps.RoleToggle, new { @class = "tf-checkbox" })
+                    </div>
+                </div>
+                <div class="tf-container flex-container">
+                    <div class="tf-fields">
+                        <label>Number of created environments:</label>
+                        @Html.EditorFor(m => m.AdvancedUserOps.CreatedEnvironmentCount, new { htmlAttributes = new { @class = "tf-target" }})
+                    </div>
+                    <div class="tf-checkbox-container">
+                        @Html.CheckBoxFor(m => m.AdvancedUserOps.CreatedEnvironmentCountToggle, new { @class = "tf-checkbox" })
+                    </div>
+                </div>
+            </div>
+            <div id="EnvironmentAdvOps" class="adv-ops" style="display: none;">
+                <div class="tf-container flex-container">
+                    <div class="tf-fields">
+                        <label>Status:</label>
+                        @Html.DropDownListFor(m => m.AdvancedEnvOps.Status, Model.AdvancedEnvOps.StatusOptions, new { @class = "tf-target" })
+                    </div>
+                    <div class="tf-checkbox-container">
+                        @Html.CheckBoxFor(m => m.AdvancedEnvOps.SatusToggle, new { @class = "tf-checkbox" })
+                    </div>
+                </div>
+                <div class="tf-container flex-container">
+                    <div class="tf-fields">
+                        <label>Number of child machines:</label>
+                        @Html.EditorFor(m => m.AdvancedEnvOps.MachineCount, new { htmlAttributes = new { @class = "tf-target" } })
+                    </div>
+                    <div class="tf-checkbox-container">
+                        @Html.CheckBoxFor(m => m.AdvancedEnvOps.MachineCountToggle, new { @class = "tf-checkbox" })
+                    </div>
+                </div>
+                <div class="tf-container flex-container">
+                    <div class="tf-fields">
+                        <label>Status:</label>
+                        @Html.DropDownListFor(m => m.AdvancedEnvOps.MonitoringSettings, Model.AdvancedEnvOps.MonitoringSettingsOptions, new { @class = "tf-target" })
+                    </div>
+                    <div class="tf-checkbox-container">
+                        @Html.CheckBoxFor(m => m.AdvancedEnvOps.MonitoringSettingsToggle, new { @class = "tf-checkbox" })
+                    </div>
+                </div>
+            </div>
+            <div id="MachineAdvOps" class="adv-ops" style="display: none;">
+                <div class="tf-container flex-container">
+                    <div class="tf-fields">
+                        <label>Parent Environment:</label>
+                        @Html.DropDownListFor(m => m.AdvancedMachineOps.EnvironmentId, Model.AdvancedMachineOps.EnvironmentOptions, new { @class = "tf-target" })
+                    </div>
+                    <div class="tf-checkbox-container">
+                        @Html.CheckBoxFor(m => m.AdvancedMachineOps.EnvironmentToggle, new { @class = "tf-checkbox" })
+                    </div>
+                </div>
+                <div class="tf-container flex-container">
+                    <div class="tf-fields">
+                        <label>OS Bitness:</label>
+                        @Html.DropDownListFor(m => m.AdvancedMachineOps.OSBitness, Model.AdvancedMachineOps.OSBitnessOptions, new { @class = "tf-target" })
+                    </div>
+                    <div class="tf-checkbox-container">
+                        @Html.CheckBoxFor(m => m.AdvancedMachineOps.OSBitnessToggle, new { @class = "tf-checkbox" })
+                    </div>
+                </div>
+                <div class="tf-container flex-container">
+                    <div class="tf-fields">
+                        <label>Cpu Cores:</label>
+                        @Html.EditorFor(m => m.AdvancedMachineOps.CpuCores, new { htmlAttributes = new { @class = "tf-target" } })
+                    </div>
+                    <div class="tf-checkbox-container">
+                        @Html.CheckBoxFor(m => m.AdvancedMachineOps.CpuCoresToggle, new { @class = "tf-checkbox" })
+                    </div>
+                </div>
+                <div class="tf-container flex-container">
+                    <div class="tf-fields">
+                        <label>Memory:</label>
+                        @Html.EditorFor(m => m.AdvancedMachineOps.Memory, new { htmlAttributes = new { @class = "tf-target" } })
+                    </div>
+                    <div class="tf-checkbox-container">
+                        @Html.CheckBoxFor(m => m.AdvancedMachineOps.MemoryToggle, new { @class = "tf-checkbox" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="content-area">
+        <h3>Results</h3>
+        <div id="DiscoverySearchResults">
+
+        </div>
+    </div>
+</div>

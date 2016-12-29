@@ -8,7 +8,7 @@
             @Html.Action("_EnvironmentNavigation", "Navigation")
         </ul>
     </li>
-    <li><div><span><i class="fa fa-search fa-fw" aria-hidden="true"></i></span>&nbsp Discover</div></li>
+    <li><div><span><i class="fa fa-search fa-fw" aria-hidden="true"></i></span>&nbsp @Html.ActionLink("Discover", "Index", "Search")</div></li>
     @{
         var ClaimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
 

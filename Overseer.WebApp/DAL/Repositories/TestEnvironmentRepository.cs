@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Data.Entity;
+using System.Linq.Expressions;
 
 namespace Overseer.WebApp.DAL.Repositories
 {
@@ -67,6 +68,22 @@ namespace Overseer.WebApp.DAL.Repositories
         public IEnumerable<TestEnvironment> GetEnvironmentsAndChildMachinesByCreator(int userId)
         {
             return dbContext.TestEnvironment.Include(c => c.Machines).Include(c => c.DownTimeCategory).Where(c => c.Creator == userId).ToList();
+        }
+
+        public IEnumerable<TestEnvironment> DiscoverySearchQuery(string searchTerm, int? machineCount, bool? monSettings, bool? status)
+        {
+            var initialMatches = dbContext.TestEnvironment.Include(e => e.MonitoringSettings).Include(e => e.DownTimeCategory).Include(e => e.Machines).Where(e => e.EnvironmentName.Contains(searchTerm)).AsQueryable();
+
+            if (machineCount != null || monSettings != null || status != null)
+            {
+                return initialMatches.Where(e => e.Machines.Count >= (machineCount != null ? machineCount : e.Machines.Count)
+                            && e.MonitoringSettings.MonitoringEnabled == (monSettings != null ? monSettings : e.MonitoringSettings.MonitoringEnabled)
+                            && e.Status == (status != null ? status : e.Status)).ToList();
+            }
+            else
+            {
+                return initialMatches.AsEnumerable();
+            }
         }
     }
 }

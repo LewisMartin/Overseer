@@ -25,5 +25,8 @@ namespace Overseer.WebApp.DAL.Core
 
         // gets a subset of the users returned via the above query
         IEnumerable<UserAccount> GetRangeUserMatches(int startPos, int range, string searchTerm);
+
+        // query for user using user settings on discovery page
+        IEnumerable<UserAccount> DiscoverySearchQuery(string searchTerm, int? createdEnvCount, int? userRoleId);
     }
 }

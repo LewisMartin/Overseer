@@ -195,6 +195,7 @@
     <Compile Include="Controllers\MachineController.cs" />
     <Compile Include="Controllers\NavigationController.cs" />
     <Compile Include="Controllers\OverviewController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\UserAccountController.cs" />
     <Compile Include="Controllers\UserAuthController.cs" />
     <Compile Include="Controllers\UserProfileController.cs" />
@@ -293,6 +294,8 @@
     <Compile Include="ViewModels\Navigation\_SidebarNavViewModel.cs" />
     <Compile Include="ViewModels\Overview\OverseerViewModel.cs" />
     <Compile Include="ViewModels\Overview\_OverviewEnvironmentViewModel.cs" />
+    <Compile Include="ViewModels\Search\SearchViewModel.cs" />
+    <Compile Include="ViewModels\Search\_QueryViewModel.cs" />
     <Compile Include="ViewModels\UserAuth\LoginViewModel.cs" />
     <Compile Include="ViewModels\UserAuth\RegisterViewModel.cs" />
     <Compile Include="ViewModels\UserProfile\ProfileEditorViewModel.cs" />
@@ -303,6 +306,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Scripts\Custom Scripts\ContentAccordion.js" />
+    <Content Include="Content\Scripts\Custom Scripts\DiscoveryAjax.js" />
     <Content Include="Content\Scripts\Custom Scripts\DynamicAlertsConfig.js" />
     <Content Include="Content\Scripts\Custom Scripts\EditableListBox.js" />
     <Content Include="Content\Scripts\Custom Scripts\EnvironmentAjax.js" />
@@ -382,6 +386,8 @@
     <Content Include="Views\Overview\_OverviewEnvironment.cshtml" />
     <Content Include="Views\UserProfile\ProfileViewer.cshtml" />
     <Content Include="Views\UserProfile\ProfileEditor.cshtml" />
+    <Content Include="Views\Search\Index.cshtml" />
+    <Content Include="Views\Search\_Query.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

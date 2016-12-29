@@ -56,5 +56,27 @@ namespace Overseer.WebApp.DAL.Repositories
                                         || q.FirstName.Contains(searchTerm)
                                         || q.LastName.Contains(searchTerm)).OrderBy(k => k.UserID).Skip(startPos).Take(range).ToList();
         }
+
+        public IEnumerable<UserAccount> DiscoverySearchQuery(string searchTerm, int? createdEnvCount, int? userRoleId)
+        {
+            var initialMatches = dbContext.Users.Include(u => u.TestEnvironments).Where(u => u.UserName.Contains(searchTerm) || u.FirstName.Contains(searchTerm) || u.LastName.Contains(searchTerm) || u.Email.Contains(searchTerm));
+
+            if (createdEnvCount != null && userRoleId != null)
+            {
+                return initialMatches.Where(u => u.TestEnvironments.Count == createdEnvCount && u.UserRoleID == userRoleId);
+            }
+            else if (createdEnvCount != null)
+            {
+                return initialMatches.Where(u => u.TestEnvironments.Count == createdEnvCount);
+            }
+            else if (userRoleId != null)
+            {
+                return initialMatches.Where(u => u.UserRoleID == userRoleId);
+            }
+            else
+            {
+                return initialMatches;
+            }
+        }
     }
 }

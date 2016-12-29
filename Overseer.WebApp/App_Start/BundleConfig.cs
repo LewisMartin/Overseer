@@ -39,6 +39,13 @@ namespace Overseer.WebApp
                         "~/Content/Scripts/Custom Scripts/UserProfileAjax.js"
                 ));
 
+            // bundle for scripts used in discovery page
+            bundles.Add(new ScriptBundle("~/Discovery/Scripts").Include(
+                    "~/Content/Scripts/jquery.validate.js",
+                    "~/Content/Scripts/jquery.validate.unobtrusive.js",
+                    "~/Content/Scripts/Custom Scripts/DiscoveryAjax.js"
+            ));
+
             // bundle for scripts used in environment pages
             bundles.Add(new ScriptBundle("~/Environment/Scripts").Include(
                         "~/Content/Scripts/jquery.validate.js",

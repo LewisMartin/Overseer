@@ -32,5 +32,8 @@ namespace Overseer.WebApp.DAL.Core
 
         // check if an environment name has already been used by a user
         bool CheckEnvironmentExistsByCreatorAndName(int userId, string name);
+
+        // query for environment using user settings on discovery page
+        IEnumerable<TestEnvironment> DiscoverySearchQuery(string searchTerm, int? machineCount, bool? monSettings, bool? status);
     }
 }

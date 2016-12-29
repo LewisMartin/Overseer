@@ -63,5 +63,22 @@ namespace Overseer.WebApp.DAL.Repositories
         {
             return dbContext.Machine.FirstOrDefault(m => m.ParentEnv == environmentId && m.DisplayName == displayName);
         }
+
+        public IEnumerable<Machine> DiscoverySearchQuery(string searchTerm, int? envId, int? bitness, int? cores, int? mem)
+        {
+            var initialMatches = dbContext.Machine.Include(m => m.OperatingSys).Where(m => m.DisplayName.Contains(searchTerm) || m.ComputerName.Contains(searchTerm)).AsQueryable();
+
+            if (envId != null || bitness != null || cores != null || mem != null)
+            {
+                return initialMatches.Where(m => m.ParentEnv == (envId.HasValue ? envId.Value : m.ParentEnv)
+                                            && m.OperatingSys.Bitness == (bitness != null ? bitness : m.OperatingSys.Bitness)
+                                            && m.NumProcessors >= (cores != null ? cores : m.NumProcessors)
+                                            && m.TotalMemGbs >= (mem != null ? (float?)mem : m.TotalMemGbs)).ToList();
+            }
+            else
+            {
+                return initialMatches.AsEnumerable();
+            }
+        }
     }
 }
