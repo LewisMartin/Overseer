@@ -66,10 +66,17 @@ namespace Overseer.WebApp.ViewModels.Search
         public string ParentEnvironmentName { get; set; }
     }
 
-    public struct MatchedProperty
+    public class MatchedProperty
     {
+        public MatchedProperty()
+        {
+            PropertyValue = new List<string>();
+        }
+
         public string PropertyName;
 
-        public string PropertyValue;
+        public List<string> PropertyValue;
+
+        public string MatchedSubstring;
     }
 }

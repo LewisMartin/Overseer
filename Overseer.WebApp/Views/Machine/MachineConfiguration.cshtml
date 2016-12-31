@@ -60,10 +60,6 @@
                                 <label for="operatingSys">Operating System:</label>
                                 @Html.DropDownListFor(m => m.OperatingSystemId, Model.OperatingSystemOptions, new { @id = "operatingSys" })
                             </div>
-                            <div>
-                                <label for="processorCores">ProcessorCores:</label>
-                                @Html.EditorFor(m => m.NumProcessors, new { @id = "processorCores" })
-                            </div>
                         </div>
                     </div>
                     <div class="info-hardware">

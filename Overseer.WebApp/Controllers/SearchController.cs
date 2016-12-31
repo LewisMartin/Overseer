@@ -132,19 +132,19 @@ namespace Overseer.WebApp.Controllers
 
             if (user.UserName.Contains(term))
             {
-                temp.Add(new MatchedProperty() { PropertyName = "Username", PropertyValue = user.UserName });
+                temp.Add(CreateMatchedProperty(user.UserName, term, "UserName"));
             }
             if (user.FirstName.Contains(term))
             {
-                temp.Add(new MatchedProperty() { PropertyName = "First name", PropertyValue = user.FirstName });
+                temp.Add(CreateMatchedProperty(user.FirstName, term, "First Name"));
             }
             if (user.LastName.Contains(term))
             {
-                temp.Add(new MatchedProperty() { PropertyName = "Last name", PropertyValue = user.LastName });
+                temp.Add(CreateMatchedProperty(user.LastName, term, "Last Name"));
             }
             if (user.Email.Contains(term))
             {
-                temp.Add(new MatchedProperty() { PropertyName = "Email", PropertyValue = user.Email });
+                temp.Add(CreateMatchedProperty(user.Email, term, "Email"));
             }
 
             return temp;
@@ -154,12 +154,26 @@ namespace Overseer.WebApp.Controllers
         {
             List<MatchedProperty> temp = new List<MatchedProperty>();
 
+            if (env.EnvironmentName.Contains(term))
+            {
+                temp.Add(CreateMatchedProperty(env.EnvironmentName, term, "Environment Name"));
+            }
+
             return temp;
         }
 
         private List<MatchedProperty> GetMatchedMachineProperties(string term, Machine machine)
         {
             List<MatchedProperty> temp = new List<MatchedProperty>();
+
+            if (machine.DisplayName.Contains(term))
+            {
+                temp.Add(CreateMatchedProperty(machine.DisplayName, term, "Display Name"));
+            }
+            if (machine.ComputerName.Contains(term))
+            {
+                temp.Add(CreateMatchedProperty(machine.ComputerName, term, "Computer Name"));
+            }
 
             return temp;
         }
@@ -194,6 +208,13 @@ namespace Overseer.WebApp.Controllers
             {
                 return false;
             }
+        }
+
+        private MatchedProperty CreateMatchedProperty(string value, string term, string prop)
+        {
+            List<string> split = value.Split(new string[] { term }, StringSplitOptions.None).ToList();
+
+            return new MatchedProperty() { PropertyName = prop, PropertyValue = split, MatchedSubstring = term };
         }
     }
 }

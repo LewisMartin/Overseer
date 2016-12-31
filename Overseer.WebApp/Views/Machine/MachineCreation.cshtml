@@ -15,37 +15,65 @@
     </div>
 </div>
 
-<div id="Page-Content">
+<div id="MachineCreation" class="page-content">
     <section>
-        <div class="content-area edit-usr">
-            <h3>Create new machine:</h3>
-            <div class="form-container">
+        <div class="content-area">
+            <h3>Configure:</h3>
+            <div class="system-info">
                 @using (Html.BeginForm("MachineCreation", "Machine", FormMethod.Post, new { data_ajax = "MachineCreate", id = "EnvironmentAjaxForm" }))
                 {
-                    <label for="parentEnv">Add machine to environment:</label>
-                    @Html.DropDownListFor(m => m.ParentEnvironmentId, Model.ParentEnvironmentOptions, new { @id = "parentEnv" })
-
-                    <label for="displayName">Display Name:</label>
-                    @Html.TextBoxFor(m => m.DisplayName, new { @id = "displayName" })
-
-                    <label for="machineName">Machine Name:</label>
-                    @Html.TextBoxFor(m => m.MachineName, new { @id = "machineName" })
-
-                    <label for="IPV4">IPV4 Address:</label>
-                    @Html.TextBoxFor(m => m.IpAddress, new { @id = "IPV4" })
-
-                    <label for="FQDN">Fully Qualified Domain Name:</label>
-                    @Html.TextBoxFor(m => m.FQDN, new { @id = "FQDN" })
-
-                    <label for="operatingSys">Operating System:</label>
-                    @Html.DropDownListFor(m => m.OperatingSystemId, Model.OperatingSystemOptions, new { @id = "operatingSys" })
-
-                    <label for="processorCores">ProcessorCores:</label>
-                     @Html.EditorFor(m => m.NumProcessors, new { @id = "processorCores" })
-
-                    <label for="totalMem">Total RAM:</label>
-                    @Html.EditorFor(m => m.TotalMemGbs, new { @id = "totalMem" })
-
+                    <div class="info-basic">
+                        <h4>Basic</h4>
+                        <div class="system-info-flex">
+                            <div>
+                                <label for="parentEnv">Add machine to environment:</label>
+                                @Html.DropDownListFor(m => m.ParentEnvironmentId, Model.ParentEnvironmentOptions, new { @id = "parentEnv" })
+                            </div>
+                            <div>
+                                <label for="displayName">Display Name:</label>
+                                @Html.TextBoxFor(m => m.DisplayName, new { @id = "displayName" })
+                            </div>
+                            <div>
+                                <label for="machineName">Machine Name:</label>
+                                @Html.TextBoxFor(m => m.MachineName, new { @id = "machineName" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-network">
+                        <h4>Network</h4>
+                        <div class="system-info-flex">
+                            <div>
+                                <label for="IPV4">IPV4 Address:</label>
+                                @Html.TextBoxFor(m => m.IpAddress, new { @id = "IPV4" })
+                            </div>
+                            <div>
+                                <label for="FQDN">Fully Qualified Domain Name:</label>
+                                @Html.TextBoxFor(m => m.FQDN, new { @id = "FQDN" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-OS">
+                        <h4>OS</h4>
+                        <div class="system-info-flex">
+                            <div>
+                                <label for="operatingSys">Operating System:</label>
+                                @Html.DropDownListFor(m => m.OperatingSystemId, Model.OperatingSystemOptions, new { @id = "operatingSys" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-hardware">
+                        <h4>Hardware</h4>
+                        <div class="system-info-flex">
+                            <div>
+                                <label for="processorCores">ProcessorCores:</label>
+                                @Html.EditorFor(m => m.NumProcessors, new { @id = "processorCores" })
+                            </div>
+                            <div>
+                                <label for="totalMem">Total RAM:</label>
+                                @Html.EditorFor(m => m.TotalMemGbs, new { @id = "totalMem" })
+                            </div>
+                        </div>
+                    </div>
                     <div class="center-input form-val">
                         <div class="form-val-msg">
                             @Html.ValidationMessageFor(m => m.ParentEnvironmentId)
@@ -73,7 +101,7 @@
                         </div>
                     </div>
                     <div class="form-footer">
-                        <input type="submit" value="Create" class="pag-btn" data-baseurl="@Model.SidebarRefreshUrl"/>
+                        <input type="submit" value="Create" class="pag-btn" data-baseurl="@Model.SidebarRefreshUrl" />
                     </div>
                 }
             </div>

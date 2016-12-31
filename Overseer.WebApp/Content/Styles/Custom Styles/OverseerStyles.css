@@ -1224,4 +1224,55 @@ select[multiple]
     margin-top: 10px;
 }
 
+.query-results-list
+{
+    padding-bottom: 2px;
+}
+.query-result
+{
+    height: auto;
+    width: 100%;
+    padding: 15px 25px;
+}
+.no-results
+{
+    text-align: center;
+    font-size: 13px;
+    font-weight: normal;
+}
+.query-result:hover
+{
+    background-color: #f9f9f9;
+}
+.query-result-name
+{
+    width: 60%;
+    font-size: 13px;
+}
+.query-result-props
+{
+    width: 40%;
+    text-align: right;
+}
+.query-result-props li 
+{
+    margin-bottom: 5px;
+    font-size: 0px;
+}
+.query-result-props li>span
+{
+    font-size: 11px;
+}
+.query-result-props .matched-val
+{
+    font-weight: bold;
+    font-size: 11px;
+}
+.query-result-props .matched-prop
+{
+    margin-left: 3px;
+    color: #9aa1a9;
+    font-size: 10px;
+}
+
 /* ---------- Discover Page Styles ---------- */
