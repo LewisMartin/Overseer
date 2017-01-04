@@ -1,3 +1,4 @@
+/// <reference path="EditableListBox.js" />
 $(document).ready(function () {
 
 	// Top Menu Bar toggle functionality
@@ -42,14 +43,18 @@ $(document).ready(function () {
 	    if ($(subMenu).height() === 0) {
 	        console.log('increasing height');
 	        subMenu.css('height', 'auto');
-	        subMenu.addClass('nav-selected');
-	        subMenu.siblings('.menu-drop-down').addClass('nav-selected');
+	        subMenu.addClass('nav-open');
+	        subMenu.siblings('.menu-drop-down').addClass('nav-open');
 	    }
 	    else {
+	        if ($(subMenu).hasClass('nav-sub-menu-open'))
+	        {
+	            $(subMenu).removeClass('nav-sub-menu-open')
+	        }
 	        console.log('back to 0');
 	        subMenu.css('height', '0');
-	        subMenu.removeClass('nav-selected');
-	        subMenu.siblings('.menu-drop-down').removeClass('nav-selected');
+	        subMenu.removeClass('nav-open');
+	        subMenu.siblings('.menu-drop-down').removeClass('nav-open');
 	    }
 	})
 

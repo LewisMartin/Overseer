@@ -1,22 +1,22 @@
 ﻿@model Overseer.WebApp.ViewModels.Navigation._SidebarNavViewModel
 
 <ul>
-    <li><div><span><i class="fa fa-home fa-fw" aria-hidden="true"></i></span>&nbsp @Html.ActionLink("Home", "Index", "Home")</div></li>
+    <li @if (Model.activeController == "Home") { <text>class="nav-selected"</text> }><div><span><i class="fa fa-home fa-fw" aria-hidden="true"></i></span>&nbsp @Html.ActionLink("Home", "Index", "Home")</div></li>
     <li id="Environments-Menu-Item">
-        <div class="menu-drop-down"><span><i class="fa fa-dashboard fa-fw" aria-hidden="true"></i></span>&nbsp Environments</div>
-        <ul class="nav-sub-menu">          
+        <div class="menu-drop-down @if (Model.activeController == "Environment" || Model.activeController == "Machine" || Model.activeController == "Overview") { <text>nav-selected</text> }" ><span><i class="fa fa-dashboard fa-fw" aria-hidden="true"></i></span>&nbsp Environments</div>
+        <ul class="nav-sub-menu @if (Model.activeController == "Environment" || Model.activeController == "Machine" || Model.activeController == "Overview") { <text>nav-sub-menu-open</text> }">          
             @Html.Action("_EnvironmentNavigation", "Navigation")
         </ul>
     </li>
-    <li><div><span><i class="fa fa-search fa-fw" aria-hidden="true"></i></span>&nbsp @Html.ActionLink("Discover", "Index", "Search")</div></li>
+    <li @if (Model.activeController == "Search") { <text>class="nav-selected"</text> }><div><span><i class="fa fa-search fa-fw" aria-hidden="true"></i></span>&nbsp @Html.ActionLink("Discover", "Index", "Search")</div></li>
     @{
         var ClaimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
 
         if (ClaimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Role).Value.ToString() == "Administrator")
         {
             <li>
-                <div class="menu-drop-down"><span><i class="fa fa-cogs a-fw" aria-hidden="true"></i></span>&nbsp Admin</div>
-                <ul class="nav-sub-menu">
+                <div class="menu-drop-down @if (Model.activeController == "Admin") { <text>nav-selected</text> }"><span><i class="fa fa-cogs a-fw" aria-hidden="true"></i></span>&nbsp Admin</div>
+                <ul class="nav-sub-menu @if (Model.activeController == "Admin") { <text>nav-sub-menu-open</text> }">
                     <li>@Html.ActionLink("Site", "Site", "Admin")</li>
                     <li>@Html.ActionLink("Users", "Users", "Admin")</li>
                 </ul>

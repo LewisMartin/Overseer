@@ -9,5 +9,7 @@ namespace Overseer.WebApp.ViewModels.Navigation
     {
         // the user's id to test that we can identify user from within controller
         public string userId { get; set; }
+
+        public string activeController { get; set; }
     }
 }

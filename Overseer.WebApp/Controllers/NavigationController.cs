@@ -22,12 +22,12 @@ namespace Overseer.WebApp.Controllers
 
         // GET: SidebarNav
         //[ChildActionOnly]   // can only be called from within a view
-        public PartialViewResult _SidebarNav()
+        public PartialViewResult _SidebarNav(string activeCtrl)
         {
             // cast user identity as 'ClaimIdentity' in order to access it's other claims
             var userClaims = User.Identity as ClaimsIdentity;
 
-            _SidebarNavViewModel _sidebarNavViewModel = new _SidebarNavViewModel { userId = userClaims.FindFirst(ClaimTypes.NameIdentifier).Value };
+            _SidebarNavViewModel _sidebarNavViewModel = new _SidebarNavViewModel { userId = userClaims.FindFirst(ClaimTypes.NameIdentifier).Value, activeController = activeCtrl };
 
             return PartialView(_sidebarNavViewModel);
         }

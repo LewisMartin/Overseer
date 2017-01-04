@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Overseer.WebApp.Helpers.HtmlHelpers
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -37,7 +39,7 @@
 
     <!-- Sidebar Nav -->
     <nav id="Dashboard-Nav">
-        @Html.Action("_SidebarNav", "Navigation")
+        @Html.Action("_SidebarNav", "Navigation", new { activeCtrl = Html.ActiveController() })
     </nav>
 
     <!-- Scrollable Content -->

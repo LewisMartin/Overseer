@@ -543,12 +543,17 @@ nav i
 {
 	display: none;
 }
-.nav-selected 
+.nav-selected
+{
+    background-color: #9b2f24 !important;
+}
+.nav-open 
 {
     background-color: #aa3327;
 }
 .nav-sub-menu
 {
+    background-color: #aa3327 !important;
     height: 0px;
 	font-size:11px;
 	overflow: hidden;
@@ -556,6 +561,10 @@ nav i
     -moz-transition: all 400ms ease;
     -o-transition: all 400ms ease;
     transition: all 400ms ease;
+}
+.nav-sub-menu.nav-sub-menu-open
+{
+    height: auto;
 }
 .nav-sub-menu>li
 {
