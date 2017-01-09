@@ -1,0 +1,61 @@
+﻿@model Overseer.WebApp.ViewModels.Alert.AlertViewerViewModel
+
+@section AdditionalScripts
+{
+    @Scripts.Render("~/Alert/AlertViewer/Scripts")
+}
+
+@{
+    ViewBag.Title = "AlertViewer";
+}
+
+<div id="Page-Title">
+    <div class="fl-left">
+        <i class="fa fa-bell a-fw" aria-hidden="true"></i>&nbsp Alerts
+    </div>
+</div>
+
+<div id="AlertViewer" class="page-content" data-baseurl="@Model.BaseAppUrl">
+    @using (Html.BeginForm("AlertViewer", "Alert", FormMethod.Post, new { id = "AlertFilterForm" }))
+    {
+        <div id="FilterBasic" class="flex-container">
+            <div id="FilterAlertType" class="fl-right content-area horiz-select-container">
+                <div class="horiz-select flex-container">
+                    <div class="horiz-select-option horiz-select-selected" data-alrtval="all">
+                        All
+                    </div>
+                    <div class="horiz-select-option" data-alrtval="warning">
+                        Warning
+                    </div>
+                    <div class="horiz-select-option" data-alrtval="alert">
+                        Alert
+                    </div>
+                    <div class="horiz-select-option" data-alrtval="archived">
+                        Archived
+                    </div>
+                </div>
+                <input id="AlertType" type="hidden" name="AlertType" value="@Model.AlertType" />
+            </div>
+
+            <div>
+                @Html.DropDownListFor(m => m.EnvironmentFilter, Model.EnvironmentOptions, new { @id = "EnvironmentFilter" })
+            </div>
+
+            <div>
+                @Html.DropDownListFor(m => m.MachineFilter, Model.MachineOptions, new { @id = "MachineFilter" })
+            </div>
+
+            <button name="button" value="search" type="submit" class="filter-btn">
+                <i class="fa fa-filter a-fw" aria-hidden="true"></i>
+            </button>
+        </div>
+    }
+    <div id="FilteredAlerts" class="content-area">
+        @Html.Action("_AlertFilter", "Alert", new { alertType = "recent" })
+    </div>
+
+    <div id="ArchiveNotif">
+
+    </div>
+</div>
+

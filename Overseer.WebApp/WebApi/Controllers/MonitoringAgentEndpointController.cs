@@ -424,7 +424,8 @@ namespace Overseer.WebApp.WebApi
                 TriggerName = trigN,
                 TriggerValue = trigV,
                 AlertCreationTime = DateTime.Now.ToLocalTime(),
-                Historical = false
+                Historical = false,
+                Archived = false
             };
         }
     }

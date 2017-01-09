@@ -16,11 +16,11 @@ namespace Overseer.WebApp.DAL.DomainModels
         [ForeignKey("Machine")]
         public Guid MachineId { get; set; }
 
-        public int Category { get; set; }                   // 0: Perf, 1: Disk, 2: Process, 3: EventLog, 4: Service
+        public int Category { get; set; }                   // 0: Perf, 1: Disk, 2: Process, 3: EventLog, 4: Service - Add table for alert categories
 
         public string Source { get; set; }
 
-        public int Severity { get; set; }                   // 0: Warning, 1: Alert
+        public int Severity { get; set; }                   // 0: Warning, 1: Alert - Add table for alert severities
 
         public string TriggerName { get; set; }             // name of the monitored value that triggered the alert
 
@@ -30,6 +30,8 @@ namespace Overseer.WebApp.DAL.DomainModels
         public DateTime AlertCreationTime { get; set; }
 
         public bool Historical { get; set; }                // whether new monitoring data has come in since alert creation
+
+        public bool Archived { get; set; }
 
         // navigation properties
         public Machine Machine { get; set; }

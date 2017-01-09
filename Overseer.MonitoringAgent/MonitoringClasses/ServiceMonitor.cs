@@ -82,6 +82,7 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
             }
             catch (Exception wmiEx)
             {
+                _Logger.Log(wmiEx.Message);
                 return "Unid";
             }
 

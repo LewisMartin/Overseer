@@ -24,14 +24,30 @@
                     <input type="checkbox" id="Nav-Toggle">
                 </div>
             </div>
-            <div class="fl-right">
-                <div id="User-Area">
-                    <input type="checkbox" id="User-Area-Toggle">
-                    <label for="User-Area-Toggle"><i class="fa fa-user"></i> @Html.Encode(User.Identity.Name) </label>
-                    <ul>
-                        <li>@Html.ActionLink("Profile", "ProfileViewer", "UserProfile", new { userId = ViewBag.SessionUserId }, null)</li>
-                        <li>@Html.ActionLink("Sign Out", "LogOut", "UserAuth")</li>
-                    </ul>
+            <div class="header-content-right fl-right">
+                <div id="User-Area" class="fl-right">
+                    <div id="User-Area-Icon" class="icon-hover">
+                        <label for="User-Area-Toggle"><i class="fa fa-user"></i> @Html.Encode(User.Identity.Name)</label>
+                    </div>
+                    <div id="User-Drop-Down" class="drop-down drop-down-hidden">
+                        <ul>
+                            <li>@Html.ActionLink("Profile", "ProfileViewer", "UserProfile", new { userId = ViewBag.SessionUserId }, null)</li>
+                            <li>@Html.ActionLink("Sign Out", "LogOut", "UserAuth")</li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="Notif-Area" class="fl-right">
+                    <div id="Notif-Icons" class="flex-container">
+                        @Html.Action("_AlertNotifications", "Alert")
+                    </div>
+                    <div id="Notif-Drop-Down">
+                        <div id="Warning-Drop-Down" class="drop-down alert-drop-down drop-down-hidden">
+                            @Html.Action("_WarningDropDown", "Alert")
+                        </div>
+                        <div id="Alert-Drop-Down" class="drop-down alert-drop-down drop-down-hidden">
+                            @Html.Action("_AlertDropDown", "Alert")
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

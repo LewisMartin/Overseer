@@ -138,8 +138,5 @@ namespace Overseer.DTOs.MonitoringAgent
         public string Status;
         public string StartUpType;
     }
-    public class MonitoredInformation
-    {
-
-    }
+    public class MonitoredInformation { }
 }

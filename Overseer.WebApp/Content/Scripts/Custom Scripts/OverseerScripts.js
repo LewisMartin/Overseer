@@ -58,6 +58,8 @@ $(document).ready(function () {
 	    }
 	})
 
+    // handle notification drop downs
+	detectDropDown();
 });
 
 // now just need to find out how to get it to hide again
@@ -67,3 +69,36 @@ $('#Environments-Menu-Item').on('mouseover', '.env-menu-item', function () {
 $('#Environments-Menu-Item').on('mouseout', '.env-menu-item', function () {
     $(this).find('.pop-out-menu').css('height', '0');
 });
+
+function detectDropDown()
+{
+    $('#User-Area-Icon').click(function () {
+        if ($('#User-Drop-Down').hasClass('drop-down-hidden')) {
+            $('#Alert-Drop-Down').addClass('drop-down-hidden');
+            $('#Warning-Drop-Down').addClass('drop-down-hidden');
+            $('#User-Drop-Down').removeClass('drop-down-hidden');
+        } else {
+            $('#User-Drop-Down').addClass('drop-down-hidden');
+        }
+    });
+
+    $('#Alert-Icon').click(function () {
+        if ($('#Alert-Drop-Down').hasClass('drop-down-hidden')) {
+            $('#User-Drop-Down').addClass('drop-down-hidden');
+            $('#Warning-Drop-Down').addClass('drop-down-hidden');
+            $('#Alert-Drop-Down').removeClass('drop-down-hidden');
+        } else {
+            $('#Alert-Drop-Down').addClass('drop-down-hidden');
+        }
+    });
+
+    $('#Warning-Icon').click(function () {
+        if ($('#Warning-Drop-Down').hasClass('drop-down-hidden')) {
+            $('#User-Drop-Down').addClass('drop-down-hidden');
+            $('#Alert-Drop-Down').addClass('drop-down-hidden');
+            $('#Warning-Drop-Down').removeClass('drop-down-hidden');
+        } else {
+            $('#Warning-Drop-Down').addClass('drop-down-hidden');
+        }
+    });
+}

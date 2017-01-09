@@ -1,0 +1,24 @@
+﻿@model Overseer.WebApp.ViewModels.Alert._DropDownAlertViewModel
+
+<ul>
+    @foreach (var alert in Model.Alerts)
+    {
+        <li>
+            <a href="@Url.Action("Machineseer", "Machine", new { MachineId = @alert.MachineId }, null)">
+                <div class="severity">
+                    <i class="fa fa-times-circle"></i>
+                </div>
+                <div class="category">
+                    <text>@alert.CategoryName</text>
+                    <text>@alert.Source</text>
+                </div>
+                <div class="machine">
+                    <text>@alert.MachineName (@alert.EnvironmentName)</text>
+                </div>
+            </a>
+        </li>
+    }
+    <li>
+        <a href="@Url.Action("AlertViewer", "Alert", new { initAlertType = "alerts" }, null)">View more alerts..</a>
+    </li>
+</ul>

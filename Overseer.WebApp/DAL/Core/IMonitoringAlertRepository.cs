@@ -16,5 +16,13 @@ namespace Overseer.WebApp.DAL.Core
         IEnumerable<MonitoringAlert> GetHistoricalAlertsByMachine(Guid machineId);
 
         void DeleteAlertsByMachine(Guid machineId);
+
+        int GetAlertCount(int userId);
+
+        int GetWarningCount(int userId);
+
+        IEnumerable<MonitoringAlert> GetMostRecentAlerts(int userId, int range, int? sev);
+
+        IEnumerable<MonitoringAlert> AlertFilterQuery(int userId, bool archived, int? severity, int? envId, Guid? machineId);
     }
 }

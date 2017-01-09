@@ -1,0 +1,18 @@
+﻿@model Overseer.WebApp.ViewModels.Alert._DropDownAlertViewModel
+
+<ul>
+    @foreach (var warning in Model.Alerts)
+    {
+        <li>
+            <i class="fa fa-exclamation-circle"></i>
+            <text>@warning.CategoryName</text>
+            <text>@warning.Source</text>
+            <text>@warning.MachineName (@warning.EnvironmentName)</text>
+        </li>
+    }
+    <li>
+        <a href="@Url.Action("AlertViewer", "Alert", new { initAlertType = "warnings" }, null)">View more warnings..</a>
+    </li>
+</ul>
+
+

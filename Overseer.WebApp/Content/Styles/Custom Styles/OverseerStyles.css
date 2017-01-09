@@ -403,6 +403,10 @@ h5
   	position: relative;
   	font-size: 18px;
 }
+.header-content-right
+{
+    width: auto;
+}
 .header-content #Nav-Toggle {
    position: absolute;
    display: none;
@@ -426,17 +430,34 @@ h5
 	line-height:50px;
 	text-align: center;
 }
+#Notif-Area
+{
+    position: relative;
+}
+.icon-hover:hover
+{
+    cursor: pointer;
+    background-color: #222222;
+}
+#Notif-Icons
+{
+    width: 80px;
+}
+#Notif-Icons > div 
+{
+    width: 40px;
+}
 #User-Area
 {
-	width: auto;
-	height:auto;
+	width: 120px;
+	height: auto;
 	background-color: #34373c;
 }
 #User-Area:hover
 {
 	cursor:pointer;
 }
-#User-Area>label
+#User-Area-Icon>label
 {
     display:block;
 	width:100%;
@@ -445,7 +466,7 @@ h5
 	font-size:14px;
     line-height:50px;
 }
-#User-Area>label:hover
+#User-Area-Icon>label:hover
 {
 	cursor:pointer;
 }
@@ -457,16 +478,7 @@ h5
 {
 	height:54px;
 }
-#User-Area>ul
-{
-	height:0px;
-	overflow: hidden;
-	-webkit-transition: all 400ms ease;
-    -moz-transition: all 400ms ease;
-    -o-transition: all 400ms ease;
-    transition: all 400ms ease;
-}
-#User-Area>ul>li
+#User-Drop-Down>ul>li
 {
 	height:27px;
 	font-size: 12px;
@@ -474,11 +486,85 @@ h5
 	text-align:left;
 	padding-left:15px;
 }
-#User-Area>ul>li:hover
+
+#Header-Drop-Down > div 
 {
-	background-color: #222222;
-    color: #fff;
+    position: absolute;
+    top: 0px;
+    right: 0px;
 }
+#Warning-Drop-Down
+{
+    position: absolute;
+    top: 50px;
+    right: 0px;
+}
+#Alert-Drop-Down
+{
+    position: absolute;
+    top: 50px;
+    right: 0px;
+}
+#User-Drop-Down
+{
+    position: relative;
+    font-size: 12px;
+    width: 200px;
+}
+.drop-down
+{
+    background-color: #34373c;
+    padding: 0px 5px 5px 5px;
+    font-size: 11px;
+	overflow: hidden;
+}
+.drop-down-hidden
+{
+    height: 0;
+    padding: 0;
+}
+.drop-down > ul
+{
+    background-color: #ffffff;
+} 
+.alert-drop-down > ul
+{
+    width: 300px;
+}
+.drop-down> ul > li
+{
+    height: 40px;
+    line-height: 40px;
+}
+.drop-down > ul > li:hover 
+{
+    cursor: pointer;
+    background-color: #f9f9f9;
+}
+.drop-down > ul > li a
+{
+    width: 100%;
+    height: 100%;
+}
+.drop-down > ul > li .severity
+{
+    float: left;
+    width: 40px;
+    height: 40px;
+    font-size: 13px;
+}
+.drop-down > ul > li .category
+{
+    float: left;
+    height: 40px;
+}
+.drop-down > ul > li .machine
+{
+    float: right;
+    height: 40px;
+    padding-right: 8px;
+}
+
 /* ---------- Sidebar Navigation Styles ---------- */
 #Dashboard-Nav
 {

@@ -72,6 +72,13 @@ namespace Overseer.WebApp
                         "~/Content/Scripts/Custom Scripts/DynamicAlertsConfig.js"
                 ));
 
+            // bundle for scripts used in alertviewer page
+            bundles.Add(new ScriptBundle("~/Alert/AlertViewer/Scripts").Include(
+                    "~/Content/Scripts/jquery.validate.js",
+                    "~/Content/Scripts/jquery.validate.unobtrusive.js",
+                    "~/Content/Scripts/Custom Scripts/AlertViewerAjax.js"
+                ));
+
             // bundle for custom site styles
             bundles.Add(new StyleBundle("~/Custom/Styles").Include(
                         "~/Content/Styles/Custom Styles/OverseerStyles.css"));

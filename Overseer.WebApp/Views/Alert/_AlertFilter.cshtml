@@ -1,0 +1,41 @@
+﻿@model Overseer.WebApp.ViewModels.Alert._AlertFilterViewModel
+
+<h3>Alerts: @Model.MatchedAlerts.Count()</h3>
+<div id="AlertFilterResults">
+    <ul>
+        @foreach (var alert in Model.MatchedAlerts)
+        {
+            <li class="matched-alert">
+                <div class="alert-header">
+                    <div class="alert-id">
+                        @if (alert.Severity == 1)
+                        {
+                            <i class="fa fa-times-circle"></i>
+                        }
+                        else
+                        {
+                            <i class="fa fa-exclamation-circle"></i>
+                        }
+                        <text>@alert.AlertId</text>
+                        <text>@alert.CategoryName</text>
+                        <text>@alert.Source</text>
+                        <span @{if (alert.Historical) { <text>class="alert-historial"</text> } }>@alert.TimeRecorded @{if (alert.Historical) { <span>(old)</span> } }</span>
+                    </div>
+                    <div class="alert-machine">
+                        <text>@alert.MachineName</text>
+                        <text>(@alert.EnvironmentName)</text>
+                        @if (!alert.Archived)
+                        {
+                            <div class="alert-archive" data-alrtid="@alert.AlertId">
+                                <i class="fa fa-close"></i>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="alert-desc">
+                    <text>@alert.AlertDescription</text>
+                </div>
+            </li>
+        }
+    </ul>
+</div>

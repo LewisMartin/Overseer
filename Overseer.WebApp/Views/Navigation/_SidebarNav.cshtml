@@ -8,6 +8,7 @@
             @Html.Action("_EnvironmentNavigation", "Navigation")
         </ul>
     </li>
+    <li @if (Model.activeController == "Alert") { <text> class="nav-selected" </text>  }><div><span><i class="fa fa-bell fa-fw" aria-hidden="true"></i></span>&nbsp @Html.ActionLink("Alerts", "AlertViewer", "Alert", new { initAlertType = "all" }, null)</div></li>
     <li @if (Model.activeController == "Search") { <text>class="nav-selected"</text> }><div><span><i class="fa fa-search fa-fw" aria-hidden="true"></i></span>&nbsp @Html.ActionLink("Discover", "Index", "Search")</div></li>
     @{
         var ClaimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
