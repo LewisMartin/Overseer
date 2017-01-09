@@ -127,7 +127,8 @@ namespace Overseer.WebApp.Controllers
             }
         }
 
-        [HttpGet]
+        // need to accept both GET and POST to allow for post requests to cascade
+        [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
         public PartialViewResult _AlertNotifications()
         {
             int alertCount = _unitOfWork.MonitoringAlerts.GetAlertCount(GetLoggedInUserId());
@@ -144,7 +145,7 @@ namespace Overseer.WebApp.Controllers
             return PartialView(viewModel);
         }
 
-        [HttpGet]
+        [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
         public PartialViewResult _WarningDropDown(int totalAlerts)
         {
             var warnings = _unitOfWork.MonitoringAlerts.GetMostRecentAlerts(GetLoggedInUserId(), 5, 0);
@@ -184,7 +185,7 @@ namespace Overseer.WebApp.Controllers
             return PartialView(viewModel);
         }
 
-        [HttpGet]
+        [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
         public PartialViewResult _AlertDropDown(int totalAlerts)
         {
             var alerts = _unitOfWork.MonitoringAlerts.GetMostRecentAlerts(GetLoggedInUserId(), 5, 1);
@@ -224,12 +225,12 @@ namespace Overseer.WebApp.Controllers
             return PartialView(viewModel);
         }
 
-        private object[] GetAlertFilterQueryParams(string alert, string env, string machine)
+        private object[] GetAlertFilterQueryParams(string type, string env, string machine)
         {
             return new object[]
             {
-                alert == null ? false : alert == "archived" ? true : false,                                                    // 'archived'
-                alert == null ? null : (alert == "archived" || alert == "all") ? (int?)null : alert == "alert" ? 1 : 0,        // 'severity'
+                type == null ? false : type == "archived" ? true : false,                                                      // 'archived'
+                type == null ? null : (type == "archived" || type == "all") ? (int?)null : type == "alerts" ? 1 : 0,            // 'severity'
                 env == null ? null : env == "empty" ? (int?)null : Int32.Parse(env),                                           // 'environmentId'
                 machine == null ? null : machine == "empty" ? (Guid?)null : new Guid(machine)                                  // 'machineId'
             };

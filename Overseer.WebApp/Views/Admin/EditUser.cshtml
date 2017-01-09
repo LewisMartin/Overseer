@@ -73,15 +73,14 @@
                             @Html.DropDownListFor(m => m.ChosenRoleID, Model.RoleChoices)
                         </div>
 
-                        // checkbox to show/hide change password field
-                        <div class="left-input">
-                            @Html.CheckBoxFor(m => m.PasswordChanged, new { @id = "tf-checkbox" })
-                            <label for="tf-checkbox">change password?</label>
-                        </div>
-
-                        // password field
-                        <div class="center-input">
-                            @Html.PasswordFor(m => m.Password, new { placeholder = "Password", @class="tf-target" })
+                        <div class="tf-container">
+                            <div class="left-input">
+                                @Html.CheckBoxFor(m => m.PasswordChanged, new { @class = "tf-checkbox" })
+                                <label for="tf-checkbox">change password?</label>
+                            </div>
+                            <div class="center-input">
+                                @Html.PasswordFor(m => m.Password, new { placeholder = "Password", @class = "tf-target" })
+                            </div>
                         </div>
                     }
                     <div class="center-input form-val">

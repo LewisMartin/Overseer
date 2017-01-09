@@ -21,16 +21,16 @@
         <div id="FilterBasic" class="flex-container">
             <div id="FilterAlertType" class="fl-right content-area horiz-select-container">
                 <div class="horiz-select flex-container">
-                    <div class="horiz-select-option horiz-select-selected" data-alrtval="all">
+                    <div class="horiz-select-option @if (Model.AlertType == "all") { <text>horiz-select-selected</text> }" data-alrtval="all">
                         All
                     </div>
-                    <div class="horiz-select-option" data-alrtval="warning">
-                        Warning
-                    </div>
-                    <div class="horiz-select-option" data-alrtval="alert">
+                    <div class="horiz-select-option  @if (Model.AlertType == "alerts") { <text>horiz-select-selected</text> }" data-alrtval="alerts">
                         Alert
                     </div>
-                    <div class="horiz-select-option" data-alrtval="archived">
+                    <div class="horiz-select-option @if (Model.AlertType == "warnings") { <text>horiz-select-selected</text> }" data-alrtval="warnings">
+                        Warning
+                    </div>
+                    <div class="horiz-select-option  @if (Model.AlertType == "archived") { <text>horiz-select-selected</text> }" data-alrtval="archived">
                         Archived
                     </div>
                 </div>
@@ -51,7 +51,7 @@
         </div>
     }
     <div id="FilteredAlerts" class="content-area">
-        @Html.Action("_AlertFilter", "Alert", new { alertType = "recent" })
+        @Html.Action("_AlertFilter", "Alert", new { alertType = Model.AlertType })
     </div>
 
     <div id="ArchiveNotif">

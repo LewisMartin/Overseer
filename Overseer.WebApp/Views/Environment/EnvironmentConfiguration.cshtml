@@ -29,7 +29,7 @@
                     <label for="isOnline">Private Environment?</label>
                     @Html.CheckBoxFor(m => m.PrivateEnvironment, new { @id = "privEnvironment" })
 
-                    <div class="tf-pair">
+                    <div class="tf-container">
                         <label for="envStatus">Environment Status:</label>
                         @Html.CheckBoxFor(m => m.EnvironmentStatus, new { @id = "envStatus", @class = "tf-checkbox" })
 
@@ -37,7 +37,7 @@
                         @Html.DropDownListFor(m => m.DownTimeCategory, Model.DownTimeCategoryOptions, new { @id = "downTimeCat", @class = "tf-inverse-target" })
                     </div>
 
-                    <div class="tf-pair">
+                    <div class="tf-container">
                         <label for="monEnabled">Monitoring Enabled?</label>
                         @Html.CheckBoxFor(m => m.MonitoringEnabled, new { @id = "monEnabled", @class = "tf-checkbox" })
 

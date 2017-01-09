@@ -43,12 +43,12 @@ namespace Overseer.WebApp.DAL.Repositories
 
         public int GetAlertCount(int userId)
         {
-            return dbContext.MonitoringAlerts.Where(a => a.Archived == false && a.Severity == 0).Count();
+            return dbContext.MonitoringAlerts.Where(a => a.Archived == false && a.Severity == 1).Count();
         }
 
         public int GetWarningCount(int userId)
         {
-            return dbContext.MonitoringAlerts.Where(a => a.Archived == false && a.Severity == 1).Count();
+            return dbContext.MonitoringAlerts.Where(a => a.Archived == false && a.Severity == 0).Count();
         }
 
         public IEnumerable<MonitoringAlert> AlertFilterQuery(int userId, bool archived, int? sev, int? envId, Guid? machineId)

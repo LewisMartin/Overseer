@@ -28,10 +28,11 @@
                     @Html.CheckBoxFor(m => m.PrivateEnvironment, new { @id = "privEnvironment" })
 
 
-                    <div class="tf-pair">
-                        <label for="envStatus">Environment Status:</label>
-                        @Html.CheckBoxFor(m => m.EnvironmentStatus, new { @id = "envStatus", @class = "tf-checkbox" })
-
+                    <div class="tf-container">
+                        <div class="left-input">
+                            <label for="envStatus">Environment Status:</label>
+                            @Html.CheckBoxFor(m => m.EnvironmentStatus, new { @id = "envStatus", @class = "tf-checkbox" })
+                        </div>
                         <label for="downTimeCat">Reason for Downtime:</label>
                         @Html.DropDownListFor(m => m.DownTimeCategory, Model.DownTimeCategoryOptions, new { @id = "downTimeCat", @class = "tf-inverse-target" })
                     </div>
