@@ -12,6 +12,10 @@ namespace Overseer.WebApp.ViewModels.Alert
             Alerts = new List<DropDownAlert>();
         }
 
+        public int TotalAlerts { get; set; }
+
+        public int DisplayedAlerts { get; set; }
+
         public List<DropDownAlert> Alerts { get; set; } 
     }
 

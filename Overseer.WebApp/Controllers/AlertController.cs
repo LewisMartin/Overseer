@@ -130,21 +130,30 @@ namespace Overseer.WebApp.Controllers
         [HttpGet]
         public PartialViewResult _AlertNotifications()
         {
+            int alertCount = _unitOfWork.MonitoringAlerts.GetAlertCount(GetLoggedInUserId());
+            int warningCount = _unitOfWork.MonitoringAlerts.GetWarningCount(GetLoggedInUserId());
+
             _AlertNotificationsViewModel viewModel = new _AlertNotificationsViewModel()
             {
-                AlertCount = _unitOfWork.MonitoringAlerts.GetAlertCount(GetLoggedInUserId()),
-                WarningCount = _unitOfWork.MonitoringAlerts.GetWarningCount(GetLoggedInUserId())
+                DisplayAlertCount = alertCount > 999 ? "999+" : alertCount.ToString(),
+                DisplayWarningCount = warningCount > 999 ? "999+" : warningCount.ToString(),
+                AlertCount = alertCount,
+                WarningCount = warningCount
             };
 
             return PartialView(viewModel);
         }
 
         [HttpGet]
-        public PartialViewResult _WarningDropDown()
+        public PartialViewResult _WarningDropDown(int totalAlerts)
         {
-            _DropDownAlertViewModel viewModel = new _DropDownAlertViewModel();
-
             var warnings = _unitOfWork.MonitoringAlerts.GetMostRecentAlerts(GetLoggedInUserId(), 5, 0);
+
+            _DropDownAlertViewModel viewModel = new _DropDownAlertViewModel()
+            {
+                TotalAlerts = totalAlerts,
+                DisplayedAlerts = warnings != null ? warnings.Count() : 0
+            };
 
             foreach (var warning in warnings)
             {
@@ -176,11 +185,15 @@ namespace Overseer.WebApp.Controllers
         }
 
         [HttpGet]
-        public PartialViewResult _AlertDropDown()
+        public PartialViewResult _AlertDropDown(int totalAlerts)
         {
-            _DropDownAlertViewModel viewModel = new _DropDownAlertViewModel();
-
             var alerts = _unitOfWork.MonitoringAlerts.GetMostRecentAlerts(GetLoggedInUserId(), 5, 1);
+
+            _DropDownAlertViewModel viewModel = new _DropDownAlertViewModel()
+            {
+                TotalAlerts = totalAlerts,
+                DisplayedAlerts = alerts != null ? alerts.Count() : 0
+            };
 
             foreach (var alert in alerts)
             {

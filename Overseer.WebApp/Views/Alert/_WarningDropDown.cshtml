@@ -1,13 +1,24 @@
 ﻿@model Overseer.WebApp.ViewModels.Alert._DropDownAlertViewModel
 
+<div class="drop-down-header">
+    Warnings: <span><text>@Model.DisplayedAlerts</text> / <text>@Model.TotalAlerts</text></span>
+</div>
 <ul>
     @foreach (var warning in Model.Alerts)
     {
         <li>
-            <i class="fa fa-exclamation-circle"></i>
-            <text>@warning.CategoryName</text>
-            <text>@warning.Source</text>
-            <text>@warning.MachineName (@warning.EnvironmentName)</text>
+            <a href="@Url.Action("Machineseer", "Machine", new { MachineId = @warning.MachineId }, null)">
+                <div class="severity">
+                    <i class="fa fa-exclamation-circle"></i>
+                </div>
+                <div class="category">
+                    <text>@warning.CategoryName</text>
+                    <text>@warning.Source</text>
+                </div>
+                <div class="machine">
+                    <text>@warning.MachineName (@warning.EnvironmentName)</text>
+                </div>
+            </a>
         </li>
     }
     <li>

@@ -1,8 +1,18 @@
 ﻿@model Overseer.WebApp.ViewModels.Alert._AlertNotificationsViewModel
 
-<div id="Alert-Icon" class="icon-hover">
-    <i class="fa fa-exclamation-circle"></i> @Model.WarningCount
+<div id="Notif-Icons" class="flex-container">
+    <div id="Alert-Icon" class="icon-hover">
+        <i class="fa fa-exclamation-circle"></i> <span class="alert-counter">@Model.DisplayWarningCount</span>
+    </div>
+    <div id="Warning-Icon" class="icon-hover">
+        <i class="fa fa-times-circle"></i> <span class="alert-counter">@Model.DisplayAlertCount</span>
+    </div>
 </div>
-<div id="Warning-Icon" class="icon-hover">
-    <i class="fa fa-times-circle"></i> @Model.AlertCount
+<div id="Notif-Drop-Down">
+    <div id="Warning-Drop-Down" class="drop-down alert-drop-down drop-down-hidden">
+        @Html.Action("_WarningDropDown", "Alert", new { totalAlerts = Model.WarningCount })
+    </div>
+    <div id="Alert-Drop-Down" class="drop-down alert-drop-down drop-down-hidden">
+        @Html.Action("_AlertDropDown", "Alert", new { totalAlerts = Model.AlertCount })
+    </div>
 </div>

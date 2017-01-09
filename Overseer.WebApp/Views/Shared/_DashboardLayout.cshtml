@@ -37,17 +37,7 @@
                     </div>
                 </div>
                 <div id="Notif-Area" class="fl-right">
-                    <div id="Notif-Icons" class="flex-container">
-                        @Html.Action("_AlertNotifications", "Alert")
-                    </div>
-                    <div id="Notif-Drop-Down">
-                        <div id="Warning-Drop-Down" class="drop-down alert-drop-down drop-down-hidden">
-                            @Html.Action("_WarningDropDown", "Alert")
-                        </div>
-                        <div id="Alert-Drop-Down" class="drop-down alert-drop-down drop-down-hidden">
-                            @Html.Action("_AlertDropDown", "Alert")
-                        </div>
-                    </div>
+                    @Html.Action("_AlertNotifications", "Alert")
                 </div>
             </div>
         </div>
