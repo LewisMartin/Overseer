@@ -1,0 +1,46 @@
+﻿@model Overseer.WebApp.ViewModels.Calendar.CalendarViewerViewModel
+
+@section AdditionalScripts
+{
+    @Scripts.Render("~/Calendar/CalendarViewer/Scripts")
+}
+
+@{
+    ViewBag.Title = "CalendarViewer";
+}
+
+<div id="Page-Title">
+    <div class="fl-left">
+        <i class="fa fa-calendar a-fw" aria-hidden="true"></i>&nbsp Calendar<i class="fa fa-angle-right a-fw breadcrumb-spacer" aria-hidden="true"></i>@Model.EnvironmentName
+    </div>
+</div>
+
+<div id="CalendarViewer" class="page-content" data-baseurl="@Model.BaseAppUrl" data-environmentid="@Model.EnvironmentId">
+    <div class="content-area content-accord">
+        <h3>
+            @Model.EnvironmentName
+            <a href="@Url.Action("Environmentseer", "Environment", new { environmentId = @Model.EnvironmentId }, null)"><span class="icon config-i"><i class="fa fa-area-chart" aria-hidden="true"></i></span> </a>
+        </h3>
+    </div>
+
+    <!-- Calendar controls here -->
+    <div id="CalendarFilters">
+        @using (Html.BeginForm("CalendarViewer", "Calendar", FormMethod.Post, new { id = "UpdateCalendarForm" }))
+        {
+            <input type="hidden" name="EnvironmentId" value="@Model.EnvironmentId" />
+
+            @Html.DropDownListFor(m => m.ChosenMonth, Model.MonthOptions, new { @id = "MonthSelector" })
+
+            @Html.DropDownListFor(m => m.ChosenYear, Model.YearOptions, new { @id = "YearSelector" })
+
+            <button name="button" value="Navigate" type="submit" class="filter-btn">
+                Update
+            </button>
+        }
+    </div>
+
+    <!-- Followed by calendar -->
+    <div id="RetrievedCalendar">
+        @Html.Action("_RetrieveCalendar", "Calendar", new { environmentId = Model.EnvironmentId, month = 0, year = 0 })
+    </div>
+</div>

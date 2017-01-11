@@ -27,8 +27,8 @@ namespace Overseer.WebApp.DAL
         public DbSet<MonitoringSettings> MonitoringSettings { get; set; }
         // EnvPerm
         // PermLevel
-        // EnvironmentCalendarTask
-        // EnvironmentCalendarDeadline
+        // CalendarEvent
+        public DbSet<CalendarEvent> CalendarEvents { get; set; }
         // Machine
         public DbSet<Machine> Machine { get; set; }
         // MonitoringAgentAuth

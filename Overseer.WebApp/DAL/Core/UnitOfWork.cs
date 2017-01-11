@@ -41,6 +41,7 @@ namespace Overseer.WebApp.DAL.Core
 
         // other
         public IMonitoringAlertRepository MonitoringAlerts { get; set; }
+        public ICalendarEventRepository CalendarEvents { get; set; }
 
         // constructor 
         public UnitOfWork(OverseerDBContext context)
@@ -71,6 +72,7 @@ namespace Overseer.WebApp.DAL.Core
             ServiceMonitoring = new ServiceMonitoringRepository(_dbContext);
 
             MonitoringAlerts = new MonitoringAlertRepository(_dbContext);
+            CalendarEvents = new CalendarEventRepository(_dbContext);
         }
 
         // saving changes via out dbcontext

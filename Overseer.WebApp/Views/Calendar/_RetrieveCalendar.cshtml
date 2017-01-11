@@ -1,0 +1,104 @@
+﻿@model Overseer.WebApp.ViewModels.Calendar._RetrieveCalendarViewModel
+
+<div class="content-area">
+    <h3>
+        @Model.DisplayMonth <span>(@Model.Year)</span>
+    </h3>
+
+    <table id="CalendarTable" align="center">
+        <tr align="center">
+            <th>Mon</th>
+            <th>Tue</th>
+            <th>Wed</th>
+            <th>Thu</th>
+            <th>Fri</th>
+            <th>Sat</th>
+            <th>Sun</th>
+        </tr>
+            @{  int dayCount = 1;
+                for (int before = 1; before < Model.BeginningDay; before++)
+                {
+                    if (dayCount == 1)
+                    {
+                        @:<tr>
+                    }
+                    if (dayCount > 7)
+                    {
+                        @:</tr>
+                        dayCount = 1;
+                    }
+
+                    dayCount++;
+                    <td class="blank-date">-</td>
+                }
+
+                for (int i = 1; i <= Model.DaysInMonth; i++)
+                {
+                    if (dayCount == 1)
+                    {
+                        @:<tr>
+                    }
+                    if (dayCount > 7)
+                    {
+                        @:</tr>
+                        dayCount = 1;
+                    }
+
+                    dayCount++;
+                    if(Model.Events[i-1] != null)
+                    {
+                        <td class="event-true" data-day="@(i-1)">
+                            <div class="cal-date">
+                                @i
+                            </div>
+
+                            <div class="cal-event">
+                                <text>@Model.Events[i - 1].Title</text>
+                                <text>@Model.Events[i - 1].DaysEffort</text>
+                            </div>
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="event-false">
+                            <div class="cal-date">
+                                @i
+                            </div>
+                            <div class="cal-event"></div>
+                        </td>
+                    }
+                }
+
+                for (int after = 1; after <= 7 - Model.EndDay; after++)
+                {
+                    if (dayCount == 1)
+                    {
+                        @:<tr>
+                    }
+                    if (dayCount > 7)
+                    {
+                        @:</tr>
+                        dayCount = 1;
+                    }
+
+                    dayCount++;
+                    <td class="blank-date">-</td>
+                }
+            }
+    </table>
+</div>
+
+<div id="CalendarEventDetails" class="content-area">
+    @foreach (var evnt in Model.EventDetails)
+    {
+        <div id="event-no-@(evnt.Day)" class="event-detail">
+            <h3>
+                @evnt.Title <span>@evnt.Date</span>
+            </h3>
+            <div>
+                <text>@evnt.Description</text>
+                <text>Days effort: @evnt.DaysEffort</text>
+            </div>
+        </div>
+    }
+</div>

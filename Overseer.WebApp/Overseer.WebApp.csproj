@@ -191,15 +191,18 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AlertController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CalendarController.cs" />
     <Compile Include="Controllers\EnvironmentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MachineController.cs" />
+    <Compile Include="Controllers\ManagementController.cs" />
     <Compile Include="Controllers\NavigationController.cs" />
     <Compile Include="Controllers\OverviewController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\UserAccountController.cs" />
     <Compile Include="Controllers\UserAuthController.cs" />
     <Compile Include="Controllers\UserProfileController.cs" />
+    <Compile Include="DAL\Core\ICalendarEventRepository.cs" />
     <Compile Include="DAL\Core\IDiskMonitoringRepository.cs" />
     <Compile Include="DAL\Core\IDiskSettingsRepository.cs" />
     <Compile Include="DAL\Core\IDownTimeCategoryRepository.cs" />
@@ -221,6 +224,7 @@
     <Compile Include="DAL\Core\ITestEnvironmentRepository.cs" />
     <Compile Include="DAL\Core\IUnitOfWork.cs" />
     <Compile Include="DAL\Core\IUserRoleRepository.cs" />
+    <Compile Include="DAL\DomainModels\CalendarEvent.cs" />
     <Compile Include="DAL\DomainModels\DiskInfo.cs" />
     <Compile Include="DAL\DomainModels\DiskSettings.cs" />
     <Compile Include="DAL\DomainModels\DownTimeCategory.cs" />
@@ -237,6 +241,7 @@
     <Compile Include="DAL\DomainModels\ServiceInfo.cs" />
     <Compile Include="DAL\DomainModels\ServiceSettings.cs" />
     <Compile Include="DAL\DomainModels\SystemInfo.cs" />
+    <Compile Include="DAL\Repositories\CalendarEventRepository.cs" />
     <Compile Include="DAL\Repositories\DiskMonitoringRepository.cs" />
     <Compile Include="DAL\Repositories\DiskSettingsRepository.cs" />
     <Compile Include="DAL\Repositories\DownTimeCategoryRepository.cs" />
@@ -282,6 +287,9 @@
     <Compile Include="ViewModels\Alert\_AlertNotificationsViewModel.cs" />
     <Compile Include="ViewModels\Alert\_AlertFilterViewModel.cs" />
     <Compile Include="ViewModels\Alert\_DropDownAlertViewModel.cs" />
+    <Compile Include="ViewModels\Management\CalendarManagementViewModel.cs" />
+    <Compile Include="ViewModels\Calendar\CalendarViewerViewModel.cs" />
+    <Compile Include="ViewModels\Calendar\_RetrieveCalendarViewModel.cs" />
     <Compile Include="ViewModels\Environment\EnvironmentConfigurationViewModel.cs" />
     <Compile Include="ViewModels\Environment\EnvironmentCreationViewModel.cs" />
     <Compile Include="ViewModels\Environment\EnvironmentDetailsViewModel.cs" />
@@ -312,11 +320,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Scripts\Custom Scripts\AlertViewerAjax.js" />
+    <Content Include="Content\Scripts\Custom Scripts\CalendarAjax.js" />
     <Content Include="Content\Scripts\Custom Scripts\ContentAccordion.js" />
     <Content Include="Content\Scripts\Custom Scripts\DiscoveryAjax.js" />
     <Content Include="Content\Scripts\Custom Scripts\DynamicAlertsConfig.js" />
     <Content Include="Content\Scripts\Custom Scripts\EditableListBox.js" />
     <Content Include="Content\Scripts\Custom Scripts\EnvironmentAjax.js" />
+    <Content Include="Content\Scripts\Custom Scripts\ManagementAjax.js" />
     <Content Include="Content\Scripts\Custom Scripts\RefreshMonitoringData.js" />
     <Content Include="Content\Scripts\Custom Scripts\ToggleField.js" />
     <Content Include="Content\Scripts\Custom Scripts\UserProfileAjax.js" />
@@ -400,6 +410,9 @@
     <Content Include="Views\Alert\_AlertNotifications.cshtml" />
     <Content Include="Views\Alert\_WarningDropDown.cshtml" />
     <Content Include="Views\Alert\_AlertDropDown.cshtml" />
+    <Content Include="Views\Calendar\_RetrieveCalendar.cshtml" />
+    <Content Include="Views\Calendar\CalendarViewer.cshtml" />
+    <Content Include="Views\Management\CalendarManagement.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1406,3 +1406,89 @@ select[multiple]
 }
 
 /* ---------- Discover Page Styles ---------- */
+
+/* ---------- CalendarViewer Page Styles ---------- */
+
+#CalendarFilters
+{
+    margin-bottom: 10px;
+}
+#CalendarTable
+{
+    width: 100%;
+    height: auto;
+    border-collapse:collapse;
+}
+#CalendarTable > tr
+{
+    width: 100%;
+    margin: 0px;
+}
+#CalendarTable th
+{
+    height: 20px;
+    font-weight: normal;
+    font-size:14px;
+    text-align: center;
+    height: 30px;
+    background-color: #f0f0f0;
+    border-left: 1px solid #e0e0de;
+    width:14%;
+}
+#CalendarTable td
+{
+    height: 80px;
+    border-left: 1px solid #ededed;
+    border-top: 1px solid #ededed;
+    overflow: hidden;
+}
+#CalendarTable th:first-child
+{
+    border-left: none;
+}
+#CalendarTable tr td:first-child
+{
+    border-left: none !important;
+}
+#CalendarTable .cal-date
+{
+    height: 20%;
+    width: 100%;
+    font-size: 13px;
+    padding-left:4px;
+    top: 0px;
+}
+#CalendarTable .cal-event
+{
+    width: 100%;
+    height: 80%;
+    font-size: 11px;
+    padding: 6px 6px 20px 6px;
+}
+#CalendarTable .blank-date
+{
+    text-align: center;
+    color: #9aa1a9;
+}
+#CalendarTable .event-false:hover
+{
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
+#CalendarTable .event-true:hover
+{
+    background-color: #c0392b;
+    color: #ffffff;
+    cursor: pointer;
+}
+.event-detail
+{
+    display: none;
+}
+.event-detail > div
+{
+    padding: 10px 15px;
+    font-size: 13px;
+}
+
+/* ---------- CalendarViewer Page Styles ---------- */

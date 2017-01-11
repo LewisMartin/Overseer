@@ -79,6 +79,20 @@ namespace Overseer.WebApp
                     "~/Content/Scripts/Custom Scripts/AlertViewerAjax.js"
                 ));
 
+            // bundle for scripts used in CalendarViewer page
+            bundles.Add(new ScriptBundle("~/Calendar/CalendarViewer/Scripts").Include(
+                    "~/Content/Scripts/jquery.validate.js",
+                    "~/Content/Scripts/jquery.validate.unobtrusive.js",
+                    "~/Content/Scripts/Custom Scripts/CalendarAjax.js"
+                ));
+
+            // bundle for scripts used in management pages
+            bundles.Add(new ScriptBundle("~/Management/CalendarManagement/Scripts").Include(
+                    "~/Content/Scripts/jquery.validate.js",
+                    "~/Content/Scripts/jquery.validate.unobtrusive.js",
+                    "~/Content/Scripts/Custom Scripts/ManagementAjax.js"
+                ));
+
             // bundle for custom site styles
             bundles.Add(new StyleBundle("~/Custom/Styles").Include(
                         "~/Content/Styles/Custom Styles/OverseerStyles.css"));

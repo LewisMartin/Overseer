@@ -38,6 +38,7 @@ namespace Overseer.WebApp.DAL.Core
 
         // other
         IMonitoringAlertRepository MonitoringAlerts { get; set; }
+        ICalendarEventRepository CalendarEvents { get; set; }
 
         // persist all entity changes across all the above repositories
         int Save();

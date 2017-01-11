@@ -53,7 +53,7 @@ namespace Overseer.WebApp.DAL
             UserAccount testUser;
 
             // add 60 test users
-            for (int i = 0; i < 60; i++)
+            for (int i = 0; i < 25; i++)
             {
                 testUser = new UserAccount();
 

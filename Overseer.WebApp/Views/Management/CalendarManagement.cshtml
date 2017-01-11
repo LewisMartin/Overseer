@@ -1,0 +1,74 @@
+﻿@model Overseer.WebApp.ViewModels.Management.CalendarManagementViewModel
+
+@section AdditionalScripts
+{
+    @Scripts.Render("~/Management/CalendarManagement/Scripts")
+}
+
+@{
+    ViewBag.Title = "CalendarManagement";
+}
+
+<div id="Page-Title">
+    <div class="fl-left">
+        <i class="fa fa-calendar a-fw" aria-hidden="true"></i>&nbsp Management<i class="fa fa-angle-right a-fw breadcrumb-spacer" aria-hidden="true"></i>Calendars
+    </div>
+</div>
+
+<div id="CalendarViewer" class="page-content" data-baseurl="@Model.BaseAppUrl">
+    <div class="content-area content-accord">
+        <h3>
+            Create Calendar Event
+        </h3>
+        <div>
+            @using (Html.BeginForm("CreateCalendarEvent", "Management", FormMethod.Post, new { id = "CreateCalendarEventForm" }))
+            {
+                <div>
+                    <label for="parentEnv">Choose environment:</label>
+                    @Html.DropDownListFor(m => m.SelectedEnvironment, Model.EnvironmentOptions, new { @id = "parentEnv" })
+                </div>
+                <div>
+                    <label for="eventDate">Pick Event Date:</label>
+                    @Html.EditorFor(m => m.EventDate, new { @id = "eventDate" })
+                </div>
+                <div>
+                    <label for="eventTitle">Event Title:</label>
+                    @Html.TextBoxFor(m => m.Title, new { @id = "eventTitle" })
+                </div>
+                <div>
+                    <label for="eventDesc">Event Title:</label>
+                    @Html.TextBoxFor(m => m.Description, new { @id = "eventDesc" })
+                </div>
+                <div>
+                    <label for="daysEffort">Effort (days):</label>
+                    @Html.TextBoxFor(m => m.DaysEffort, new { @id = "daysEffort" })
+                </div>
+
+                <div class="center-input form-val">
+                    <div class="form-val-msg">
+                        @Html.ValidationMessageFor(m => m.SelectedEnvironment)
+                    </div>
+                    <div class="form-val-msg">
+                        @Html.ValidationMessageFor(m => m.EventDate)
+                    </div>
+                    <div class="form-val-msg">
+                        @Html.ValidationMessageFor(m => m.Title)
+                    </div>
+                    <div class="form-val-msg">
+                        @Html.ValidationMessageFor(m => m.Description)
+                    </div>
+                    <div id="dupe-event-msg" class="form-val-msg">
+
+                    </div>
+                </div>
+                <div class="form-footer">
+                    <input type="submit" value="Create" class="pag-btn"/>
+                </div>
+            }
+        </div>
+    </div>
+    <div id="form-success">
+
+    </div>
+</div>
+
