@@ -38,11 +38,11 @@
             </div>
 
             <div>
-                @Html.DropDownListFor(m => m.EnvironmentFilter, Model.EnvironmentOptions, new { @id = "EnvironmentFilter" })
+                @Html.DropDownListFor(m => m.EnvironmentFilter, Model.EnvironmentOptions, new { @id = "EnvironmentFilter", @class = "filter-select" })
             </div>
 
             <div>
-                @Html.DropDownListFor(m => m.MachineFilter, Model.MachineOptions, new { @id = "MachineFilter" })
+                @Html.DropDownListFor(m => m.MachineFilter, Model.MachineOptions, new { @id = "MachineFilter", @class = "filter-select" })
             </div>
 
             <button name="button" value="search" type="submit" class="filter-btn">

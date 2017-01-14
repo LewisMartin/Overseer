@@ -1,4 +1,6 @@
-﻿@{
+﻿@model Overseer.WebApp.ViewModels.Home.HomeViewModel
+
+@{
     ViewBag.Title = "Home Page";
 }
 
@@ -7,15 +9,74 @@
         <i class="fa fa-home a-fw" aria-hidden="true"></i>&nbsp Home
     </div>
 </div>
-<div id="HomePage" class="page-content">
-    <section>
-        <div class="content-area default-area">
-            Your Role:
-            @{
-                var ClaimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
 
-                @ClaimsIdentity.FindFirst(System.Security.Claims.ClaimTypes.Role).Value.ToString();
-            }
+<div id="HomePage" class="page-content">
+        <div class="content-area">
+            <h3>
+                Hello @(Model.Name) <span>(@Model.UserName)</span> <span class="fl-right">Role: @Model.UserRole</span>
+            </h3>
         </div>
-    </section>
+
+        <div id="QuickActions" class="content-area">
+            <h3>Quick Actions</h3>
+            <div class="options-box flex-container">
+                <div>
+                    <a href="@Url.Action("ProfileEditor", "UserProfile", new { userId = Model.UserId }, null)">
+                        <div class="option-link">
+                            <div class="option-icon"><i class="fa fa-user a-fw" aria-hidden="true"></i></div>
+                            <div class="option-text">Edit Profile</div>
+                        </div>
+                    </a>
+                </div>
+                <div>
+                    <a href="@Url.Action("Index", "Search")">
+                        <div class="option-link">
+                            <div class="option-icon"><i class="fa fa-search a-fw" aria-hidden="true"></i></div>
+                            <div class="option-text">User, environment & machine discovery</div>
+                        </div>
+                    </a>
+                </div>
+                @if (Model.UserRole == "Administrator")
+                {
+                    <div>
+                        <a href="@Url.Action("Users", "Admin")">
+                            <div class="option-link">
+                                <div class="option-icon"><i class="fa fa-users a-fw" aria-hidden="true"></i></div>
+                                <div class="option-text">Manage System Users</div>
+                            </div>
+                        </a>
+                    </div>
+                }
+                @if (Model.UserRole == "QA" || Model.UserRole == "Administrator")
+                {
+                    <div>
+                        <a href="@Url.Action("EnvironmentCreation", "Environment")">
+                            <div class="option-link">
+                                <div class="option-icon"><i class="fa fa-upload a-fw" aria-hidden="true"></i></div>
+                                <div class="option-text">Create Test Environment</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="@Url.Action("AlertViewer", "Alert")">
+                            <div class="option-link">
+                                <div class="option-icon"><i class="fa fa-bell a-fw" aria-hidden="true"></i></div>
+                                <div class="option-text">View Monitoring Alerts</div>
+                            </div>
+                        </a>
+                    </div>
+                }
+                @if (Model.UserRole == "Manager" || Model.UserRole == "Administrator")
+                {
+                    <div>
+                        <a href="@Url.Action("CalendarManagement", "Management")">
+                            <div class="option-link">
+                                <div class="option-icon"><i class="fa fa-calendar-plus-o a-fw" aria-hidden="true"></i></div>
+                                <div class="option-text">Edit Environment Calendar</div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
 </div>

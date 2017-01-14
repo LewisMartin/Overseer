@@ -29,11 +29,11 @@
         {
             <input type="hidden" name="EnvironmentId" value="@Model.EnvironmentId" />
 
-            @Html.DropDownListFor(m => m.ChosenMonth, Model.MonthOptions, new { @id = "MonthSelector" })
+            @Html.DropDownListFor(m => m.ChosenMonth, Model.MonthOptions, new { @id = "MonthSelector", @class = "filter-select" })
 
-            @Html.DropDownListFor(m => m.ChosenYear, Model.YearOptions, new { @id = "YearSelector" })
+            @Html.DropDownListFor(m => m.ChosenYear, Model.YearOptions, new { @id = "YearSelector", @class = "filter-select" })
 
-            <button name="button" value="Navigate" type="submit" class="filter-btn">
+            <button name="button" value="Navigate" type="submit" class="pag-btn">
                 Update
             </button>
         }

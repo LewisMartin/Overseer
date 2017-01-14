@@ -5,16 +5,17 @@
         @Model.DisplayMonth <span>(@Model.Year)</span>
     </h3>
 
-    <table id="CalendarTable" align="center">
-        <tr align="center">
-            <th>Mon</th>
-            <th>Tue</th>
-            <th>Wed</th>
-            <th>Thu</th>
-            <th>Fri</th>
-            <th>Sat</th>
-            <th>Sun</th>
-        </tr>
+    <div class="cal-container">
+        <table id="CalendarTable" align="center">
+            <tr align="center">
+                <th>Mon</th>
+                <th>Tue</th>
+                <th>Wed</th>
+                <th>Thu</th>
+                <th>Fri</th>
+                <th>Sat</th>
+                <th>Sun</th>
+            </tr>
             @{  int dayCount = 1;
                 for (int before = 1; before < Model.BeginningDay; before++)
                 {
@@ -45,7 +46,7 @@
                     }
 
                     dayCount++;
-                    if(Model.Events[i-1] != null)
+                    if (Model.Events[i - 1] != null)
                     {
                         <td class="event-true" data-day="@(i-1)">
                             <div class="cal-date">
@@ -85,7 +86,8 @@
                     <td class="blank-date">-</td>
                 }
             }
-    </table>
+        </table>
+    </div>
 </div>
 
 <div id="CalendarEventDetails" class="content-area">
@@ -96,8 +98,12 @@
                 @evnt.Title <span>@evnt.Date</span>
             </h3>
             <div>
-                <text>@evnt.Description</text>
-                <text>Days effort: @evnt.DaysEffort</text>
+                <div class="event-desc">
+                    <text>@evnt.Description</text>
+                </div>
+                <div class="event-effort">
+                    <text>Effort (days): @evnt.DaysEffort</text>
+                </div>
             </div>
         </div>
     }

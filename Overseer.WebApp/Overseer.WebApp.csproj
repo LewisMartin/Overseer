@@ -287,6 +287,7 @@
     <Compile Include="ViewModels\Alert\_AlertNotificationsViewModel.cs" />
     <Compile Include="ViewModels\Alert\_AlertFilterViewModel.cs" />
     <Compile Include="ViewModels\Alert\_DropDownAlertViewModel.cs" />
+    <Compile Include="ViewModels\Home\HomeViewModel.cs" />
     <Compile Include="ViewModels\Management\CalendarManagementViewModel.cs" />
     <Compile Include="ViewModels\Calendar\CalendarViewerViewModel.cs" />
     <Compile Include="ViewModels\Calendar\_RetrieveCalendarViewModel.cs" />
@@ -418,7 +419,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="Content\Images\" />
     <Folder Include="Models\" />
-    <Folder Include="ViewModels\Home\" />
     <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>

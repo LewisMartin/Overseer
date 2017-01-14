@@ -1,5 +1,6 @@
 ﻿using Overseer.WebApp.DAL.DomainModels;
 using Overseer.WebApp.Helpers.AuthHelpers;
+using Overseer.WebApp.ViewModels.Home;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,17 @@ namespace Overseer.WebApp.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            var user = _unitOfWork.Users.GetWithUserRole(GetLoggedInUserId());
+
+            HomeViewModel viewModel = new HomeViewModel()
+            {
+                UserId = user.UserID,
+                UserName = user.UserName,
+                Name = user.FirstName + " " + user.LastName,
+                UserRole = user.UserRole.RoleName
+            };
+
+            return View(viewModel);
         }
     }
 }

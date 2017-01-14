@@ -75,66 +75,78 @@
                             </div>
                         </div>
                     </div>
-                    <div>
+                    <div class="mon-settings stat-mon-settings">
                         <h4>Static Monioring Settings</h4>
-                        <h5>Cpu utilisation alerts:</h5>
-                        <div class="alerts-config flex-container">
-                            <div class="alert-config flex-container">
-                                <div class="alert-fields">
-                                    <label>Avg CPU util alerts:</label>
-                                    @Html.EditorFor(m => m.AvgCpuUtilWarnValue, true)
-                                    @Html.EditorFor(m => m.AvgCpuUtilAlertValue, true)
+                        <div>
+                            <h5>Cpu utilisation alerts:</h5>
+                            <div class="alerts-config flex-container">
+                                <div class="alert-config flex-container">
+                                    <div class="alert-fields">
+                                        <label>Avg CPU util alerts:</label>
+                                        <label class="sub-label">Warning threshold (%):</label>
+                                        @Html.EditorFor(m => m.AvgCpuUtilWarnValue, true)
+                                        <label class="sub-label">Alert threshold (%):</label>
+                                        @Html.EditorFor(m => m.AvgCpuUtilAlertValue, true)
+                                    </div>
+                                    <div class="alert-checkbox">
+                                        @Html.CheckBoxFor(m => m.AvgCpuUtilAlertsOn, true)
+                                    </div>
                                 </div>
-                                <div class="alert-checkbox">
-                                    @Html.CheckBoxFor(m => m.AvgCpuUtilAlertsOn, true)
+                                <div class="alert-config flex-container">
+                                    <div class="alert-fields">
+                                        <label>High CPU readings alerts:</label>
+                                        <label class="sub-label">Warning threshold (count):</label>
+                                        @Html.EditorFor(m => m.HighCpuUtilWarnValue, true)
+                                        <label class="sub-label">Alert threshold (count):</label>
+                                        @Html.EditorFor(m => m.HighCpuUtilAlertValue, true)
+                                    </div>
+                                    <div class="alert-checkbox">
+                                        @Html.CheckBoxFor(m => m.HighCpuUtilAlertsOn, true)
+                                    </div>
+                                </div>
+                                <div class="alert-config flex-container">
+                                    <div class="alert-fields">
+                                        <label>Avg MEM util alerts:</label>
+                                        <label class="sub-label">Warning threshold (%):</label>
+                                        @Html.EditorFor(m => m.AvgMemUtilWarnValue, true)
+                                        <label class="sub-label">Alert threshold (%):</label>
+                                        @Html.EditorFor(m => m.AvgMemUtilAlertValue, true)
+                                    </div>
+                                    <div class="alert-checkbox">
+                                        @Html.CheckBoxFor(m => m.AvgMemUtilAlertsOn, true)
+                                    </div>
+                                </div>
+                                <div class="alert-config flex-container">
+                                    <div class="alert-fields">
+                                        <label>High MEM readings alerts:</label>
+                                        <label class="sub-label">Warning threshold (count):</label>
+                                        @Html.EditorFor(m => m.HighMemUtilWarnValue, true)
+                                        <label class="sub-label">Alert threshold (count):</label>
+                                        @Html.EditorFor(m => m.HighMemUtilAlertValue, true)
+                                    </div>
+                                    <div class="alert-checkbox">
+                                        @Html.CheckBoxFor(m => m.HighMemUtilAlertsOn, true)
+                                    </div>
                                 </div>
                             </div>
-                            <div class="alert-config flex-container">
-                                <div class="alert-fields">
-                                    <label>High CPU util alerts:</label>
-                                    @Html.EditorFor(m => m.HighCpuUtilWarnValue, true)
-                                    @Html.EditorFor(m => m.HighCpuUtilAlertValue, true)
-                                </div>
-                                <div class="alert-checkbox">
-                                    @Html.CheckBoxFor(m => m.HighCpuUtilAlertsOn, true)
-                                </div>
-                            </div>
-                            <div class="alert-config flex-container">
-                                <div class="alert-fields">
-                                    <label>Avg MEM util alerts:</label>
-                                    @Html.EditorFor(m => m.AvgMemUtilWarnValue, true)
-                                    @Html.EditorFor(m => m.AvgMemUtilAlertValue, true)
-                                </div>
-                                <div class="alert-checkbox">
-                                    @Html.CheckBoxFor(m => m.AvgMemUtilAlertsOn, true)
-                                </div>
-                            </div>
-                            <div class="alert-config flex-container">
-                                <div class="alert-fields">
-                                    <label>High MEM util alerts:</label>
-                                    @Html.EditorFor(m => m.HighMemUtilWarnValue, true)
-                                    @Html.EditorFor(m => m.HighMemUtilAlertValue, true)
-                                </div>
-                                <div class="alert-checkbox">
-                                    @Html.CheckBoxFor(m => m.HighMemUtilAlertsOn, true)
-                                </div>
-                            </div>
-                        </div>
-                        <h5>Disk usage alerts:</h5>
-                        <div class="alerts-config flex-container">
-                            <div class="alert-config flex-container">
-                                <div class="alert-fields">
-                                    <label>Used disk space alerts:</label>
-                                    @Html.EditorFor(m => m.UsedSpaceWarnValue, true)
-                                    @Html.EditorFor(m => m.UsedSpaceAlertValue, true)
-                                </div>
-                                <div class="alert-checkbox">
-                                    @Html.CheckBoxFor(m => m.UsedSpaceAlertsOn, true)
+                            <h5>Disk usage alerts:</h5>
+                            <div class="alerts-config flex-container">
+                                <div class="alert-config flex-container">
+                                    <div class="alert-fields">
+                                        <label>Used disk space alerts:</label>
+                                        <label class="sub-label">Warning threshold (% used space):</label>
+                                        @Html.EditorFor(m => m.UsedSpaceWarnValue, true)
+                                        <label class="sub-label">Alert threshold (% used space):</label>
+                                        @Html.EditorFor(m => m.UsedSpaceAlertValue, true)
+                                    </div>
+                                    <div class="alert-checkbox">
+                                        @Html.CheckBoxFor(m => m.UsedSpaceAlertsOn, true)
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div>
+                    <div class="mon-settings dyn-mon-settings">
                         <h4>Dynamic Monitoring Settings:</h4>
                         <div class="system-info-flex">
                             <div id="monitoredProcesses" class="dynamic-mon-list flex-container">

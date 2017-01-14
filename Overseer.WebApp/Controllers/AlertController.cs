@@ -95,7 +95,7 @@ namespace Overseer.WebApp.Controllers
                 {
                     AlertId = alert.AlertID,
                     Severity = alert.Severity,
-                    CategoryName = alert.Category.ToString(),
+                    CategoryName = GetAlertCategory(alert.Category),
                     Source = alert.Source,
                     Archived = alert.Archived,
                     TimeRecorded = alert.AlertCreationTime.ToString(),
@@ -160,17 +160,7 @@ namespace Overseer.WebApp.Controllers
             {
                 string catName = "";
 
-                // 0: Perf, 1: Disk, 2: Process, 3: EventLog, 4: Service
-                if (warning.Category == 0)
-                    catName = "Performance";
-                else if (warning.Category == 1)
-                    catName = "Disk";
-                else if (warning.Category == 2)
-                    catName = "Process";
-                else if (warning.Category == 3)
-                    catName = "Event Log";
-                else if (warning.Category == 4)
-                    catName = "Service";
+                catName = GetAlertCategory(warning.Category);
 
                 viewModel.Alerts.Add(new DropDownAlert()
                 {
@@ -201,16 +191,7 @@ namespace Overseer.WebApp.Controllers
                 string catName = "";
 
                 // 0: Perf, 1: Disk, 2: Process, 3: EventLog, 4: Service
-                if (alert.Category == 0)
-                    catName = "Performance";
-                else if (alert.Category == 1)
-                    catName = "Disk";
-                else if (alert.Category == 2)
-                    catName = "Process";
-                else if (alert.Category == 3)
-                    catName = "Event Log";
-                else if (alert.Category == 4)
-                    catName = "Service";
+                catName = GetAlertCategory(alert.Category);
 
                 viewModel.Alerts.Add(new DropDownAlert()
                 {
@@ -234,6 +215,25 @@ namespace Overseer.WebApp.Controllers
                 env == null ? null : env == "empty" ? (int?)null : Int32.Parse(env),                                           // 'environmentId'
                 machine == null ? null : machine == "empty" ? (Guid?)null : new Guid(machine)                                  // 'machineId'
             };
+        }
+
+        private string GetAlertCategory(int catId)
+        {
+            switch (catId)
+            {
+                case 0:
+                    return "Performance";
+                case 1:
+                    return "Disk";
+                case 2:
+                    return "Process";
+                case 3:
+                    return "Event Log";
+                case 4:
+                    return "Service";
+                default:
+                    return "Unknown";
+            }
         }
     }
 }
