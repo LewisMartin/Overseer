@@ -16,7 +16,9 @@ namespace Overseer.WebApp.ViewModels.Environment
         public string EnvironmentName { get; set; }
 
         [Required]
-        public bool PrivateEnvironment { get; set; }
+        public string Discoverability { get; set; }
+
+        public List<SelectListItem> DiscoverabilityOptions { get; set; }
 
         [Required]
         public bool EnvironmentStatus { get; set; }

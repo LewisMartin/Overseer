@@ -69,7 +69,7 @@ namespace Overseer.WebApp.DAL.Repositories
 
         public IEnumerable<TestEnvironment> DiscoverySearchQuery(string searchTerm, int? machineCount, bool? monSettings, bool? status)
         {
-            var initialMatches = dbContext.TestEnvironment.Include(e => e.MonitoringSettings).Include(e => e.DownTimeCategory).Include(e => e.Machines).Where(e => e.EnvironmentName.Contains(searchTerm)).AsQueryable();
+            var initialMatches = dbContext.TestEnvironment.Include(e => e.MonitoringSettings).Include(e => e.DownTimeCategory).Include(e => e.Machines).Where(e => e.IsPrivate == false && e.EnvironmentName.Contains(searchTerm)).AsQueryable();
 
             if (machineCount != null || monSettings != null || status != null)
             {

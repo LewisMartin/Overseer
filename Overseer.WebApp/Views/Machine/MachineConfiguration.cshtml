@@ -16,11 +16,11 @@
 
 <div id="MachineConfig" class="page-content" data-baseurl="@Model.BaseAppUrl" data-machineid="@Model.MachineId">
     <section>
+        @using (Html.BeginForm("MachineConfiguration", "Machine", FormMethod.Post, new { data_ajax = "MachineConfig", id = "EnvironmentAjaxForm" }))
+        {
         <div class="content-area">
             <h3>Configure:</h3>
             <div class="system-info">
-                @using (Html.BeginForm("MachineConfiguration", "Machine", FormMethod.Post, new { data_ajax = "MachineConfig", id = "EnvironmentAjaxForm" }))
-                {
                     <input type="hidden" name="MachineId" value="@Model.MachineId" />
 
                     <div class="info-basic">
@@ -214,20 +214,21 @@
 
                         </div>
                     </div>
-                    <div class="form-footer">
-                        <input type="submit" value="Save Changes" class="pag-btn" data-baseurl="@Model.BaseAppUrl"/>
-                    </div>
-                }
-            </div>
-            <div id="DynamicAlertsConfig">
-                <h5>Alert Configuration:</h5>
-                <div>
-
-                </div>
             </div>
         </div>
-        <div id="form-success">
+        <div class="form-footer">
+            <div id="form-response" class="form-response">
+                <div id="form-failure" class="form-failure"></div>
+                <div id="form-success" class="form-success"></div>
+            </div>
+            <input type="submit" value="Save Changes" class="pag-btn" data-baseurl="@Model.BaseAppUrl" />
+        </div>
+        }
+        <div id="DynamicAlertsConfig" class="content-area">
+            <h5>Alert Configuration:</h5>
+            <div>
 
+            </div>
         </div>
     </section>
 </div>

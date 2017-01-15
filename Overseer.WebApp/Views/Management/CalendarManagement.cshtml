@@ -16,35 +16,45 @@
 </div>
 
 <div id="CalendarViewer" class="page-content" data-baseurl="@Model.BaseAppUrl">
-    <div class="content-area content-accord">
+    <section>
         <h3>
             Create Calendar Event
         </h3>
-        <div>
-            @using (Html.BeginForm("CreateCalendarEvent", "Management", FormMethod.Post, new { id = "CreateCalendarEventForm" }))
-            {
-                <div>
-                    <label for="parentEnv">Choose environment:</label>
-                    @Html.DropDownListFor(m => m.SelectedEnvironment, Model.EnvironmentOptions, new { @id = "parentEnv" })
-                </div>
-                <div>
-                    <label for="eventDate">Pick Event Date:</label>
-                    @Html.EditorFor(m => m.EventDate, new { @id = "eventDate" })
-                </div>
-                <div>
-                    <label for="eventTitle">Event Title:</label>
-                    @Html.TextBoxFor(m => m.Title, new { @id = "eventTitle" })
-                </div>
-                <div>
-                    <label for="eventDesc">Event Title:</label>
-                    @Html.TextBoxFor(m => m.Description, new { @id = "eventDesc" })
-                </div>
-                <div>
-                    <label for="daysEffort">Effort (days):</label>
-                    @Html.TextBoxFor(m => m.DaysEffort, new { @id = "daysEffort" })
-                </div>
 
-                <div class="center-input form-val">
+        @using (Html.BeginForm("CreateCalendarEvent", "Management", FormMethod.Post, new { id = "CreateCalendarEventForm" }))
+        {
+            <div class="content-area event-info">
+                <div class="event-sched">
+                    <h4>Event Schedule</h4>
+                    <div class="event-info-flex">
+                        <div>
+                            <label for="parentEnv">Choose environment:</label>
+                            @Html.DropDownListFor(m => m.SelectedEnvironment, Model.EnvironmentOptions, new { @id = "parentEnv" })
+                        </div>
+                        <div>
+                            <label for="eventDate">Pick Event Date:</label>
+                            @Html.EditorFor(m => m.EventDate, new { @id = "eventDate" })
+                        </div>
+                    </div>
+                </div>
+                <div class="event-details">
+                    <h4>Event Details</h4>
+                    <div class="event-info-flex">
+                        <div>
+                            <label for="eventTitle">Event Title:</label>
+                            @Html.TextBoxFor(m => m.Title, new { @id = "eventTitle" })
+                        </div>
+                        <div>
+                            <label for="daysEffort">Effort (days):</label>
+                            @Html.EditorFor(m => m.DaysEffort, new { @id = "daysEffort" })
+                        </div>
+                        <div>
+                            <label for="eventDesc">Event Title:</label>
+                            @Html.TextAreaFor(m => m.Description, new { @id = "eventDesc" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-val">
                     <div class="form-val-msg">
                         @Html.ValidationMessageFor(m => m.SelectedEnvironment)
                     </div>
@@ -61,14 +71,15 @@
 
                     </div>
                 </div>
-                <div class="form-footer">
-                    <input type="submit" value="Create" class="pag-btn"/>
+            </div>
+            <div class="form-footer">
+                <div id="form-response" class="form-response">
+                    <div id="form-failure" class="form-failure"></div>
+                    <div id="form-success" class="form-success"></div>
                 </div>
-            }
-        </div>
-    </div>
-    <div id="form-success">
-
-    </div>
+                <input type="submit" value="Create Event" class="pag-btn" />
+            </div>
+        }
+    </section>
 </div>
 

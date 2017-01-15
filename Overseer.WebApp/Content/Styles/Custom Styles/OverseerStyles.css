@@ -222,6 +222,10 @@ h5
     font-size: 15px;
     font-weight: normal;
 }
+h5 > span 
+{
+    font-size: 11px !important;
+}
 .seer-tbl
 {
     border: 0px;
@@ -437,6 +441,7 @@ h5
     margin-right: 10px;
     height: 36px !important;
     border: 0px !important;
+    padding: 0px 20px 0px 10px;
 }
 
 .sub-label
@@ -465,6 +470,40 @@ h5
 .filter-btn:active
 {
     background-color: #9b2f24;
+}
+
+.form-response
+{
+    float: left;
+    height: 36px;
+    line-height: 36px;
+    position: relative;
+    background-color: #ffffff;
+    width: auto;
+    display: none;
+    padding: 0px 10px;
+    text-align: left;
+}
+.form-success
+{
+    color: #4cae4c;
+}
+.form-failure
+{
+    color: #c0392b;
+}
+
+.chkbox-pair > input
+{
+    display: inline-block;
+    width: auto !important;
+    margin-left: 10px !important;
+    vertical-align: top !important;
+}
+.chkbox-pair > input[type="checkbox"]
+{
+    height: auto !important;
+    margin: 4px;
 }
 
 /* ---------- Header Styles ---------- */
@@ -901,12 +940,12 @@ footer
     padding-top:20px;
     background-color:#ffffff;
 }
-.form-container input[type=text], input[type=password], select:not([multiple])
+.form-container input[type=text], .form-container input[type=password], .form-container select:not([multiple])
 {
-    width:240px;
+    width:100%;
     height:30px;
     border: 1px solid #e6e7e9;
-    padding-left:8px;
+    padding:0px 8px;
     color:#9aa1a9;
     font-family: 'Roboto Slab', serif;
 }
@@ -966,6 +1005,7 @@ select[multiple]
     text-align:center;
     margin-bottom:15px;
     position:relative;
+    padding: 0px 20px;
 }
 .left-input
 {
@@ -985,8 +1025,9 @@ select[multiple]
 .form-val
 {
     width:100%;
-    height:20px;
+    height: 20px;
     overflow:hidden;
+    position: relative;
 }
 .form-val-msg
 {
@@ -998,7 +1039,7 @@ select[multiple]
     left: 0;
     max-height:20px;
     width:100%;
-    text-align:center;
+    text-align:left;
     overflow:hidden;
 }
 
@@ -1685,5 +1726,114 @@ select[multiple]
     margin-top: 10px;
     width: 100%;
 }
-
 /* ---------- CalendarViewer Page Styles ---------- */
+
+/* ---------- CalandarManagement Page Styles ---------- */
+.event-info
+{
+    font-size: 13px;
+}
+.event-info-flex
+{
+   display: flex;
+   -webkit-flex-direction: row;
+   flex-direction: row;
+   padding: 20px 5px;
+}
+.event-info-flex > div
+{
+    width: 33.3%;
+    padding: 0px 25px;
+    color: #4b5057;
+}
+.event-info-flex > div > span
+{
+    margin-right: 10px;
+    font-size: 14px;
+    color: #34373c;
+}
+.event-info-flex input, .event-info-flex select
+{
+    width: 100%;
+    height: 30px;
+    border: 1px solid #9da4ac;
+    padding-left: 8px;
+    color: #9aa1a9;
+    margin-top: 10px;
+}
+.event-info-flex textarea
+{
+    width: 100%;
+    max-width: 100%;
+    height: 100px;
+    border: 1px solid #9da4ac;
+    padding-left: 8px;
+    color: #9aa1a9;
+    margin-top: 10px;
+}
+/* ---------- CalandarManagement Page Styles ---------- */
+
+
+/* ---------- User Profile Styles ---------- */
+.user-info
+{
+    font-size: 13px;
+}
+.user-info-flex
+{
+   display: flex;
+   -webkit-flex-direction: row;
+   flex-direction: row;
+   padding: 20px 5px;
+}
+.user-info-flex > div
+{
+    width: 33.3%;
+    padding: 0px 25px;
+    color: #4b5057;
+}
+.user-info-flex > div > span
+{
+    margin-right: 10px;
+    font-size: 14px;
+    color: #34373c;
+}
+.user-info-flex input, .user-info-flex select
+{
+    width: 100%;
+    height: 30px;
+    border: 1px solid #9da4ac;
+    padding-left: 8px;
+    color: #9aa1a9;
+    margin-top: 10px;
+}
+.user-env-info
+{
+    text-align: center;
+}
+.machine-label
+{
+    margin: 6px 0;
+    font-size: 12px;
+}
+.machine-count
+{
+    margin: 10px auto 4px;
+    border: 2px solid #c0392b;
+    color: #c0392b;
+    height: 40px;
+    width: 40px;
+    border-radius: 25px;
+    text-align: center;
+    line-height: 37px;
+}
+.machine-count-online
+{
+    border: 2px solid #4cae4c;
+    color: #4cae4c;
+}
+.edit-icon, .profile-view-icon
+{
+    float: right;
+}
+/* ---------- User Profile Styles ---------- */

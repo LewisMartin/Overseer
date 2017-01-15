@@ -17,36 +17,57 @@
     <div class="content-area">
         <h3>
             @(Model.FirstName + " " + Model.LastName)
+
             @if (Model.AllowEdit)
             {
-                <a href="@Url.Action("ProfileEditor", "UserProfile", new { userId = ViewBag.SessionUserId }, null)"><span class="icon edit-i"><i class="fa fa-pencil" aria-hidden="true"></i></span> </a>
+                <a href="@Url.Action("ProfileEditor", "UserProfile", new { userId = ViewBag.SessionUserId }, null)" class="edit-icon"><span class="icon edit-i"><i class="fa fa-pencil" aria-hidden="true"></i></span> </a>
             }
         </h3>
-        <div>
-            <ul>
-                <li>First Name: @Model.FirstName</li>
-                <li>Last Name: @Model.LastName</li>
-                <li>User Name: @Model.UserName</li>
-                <li>Email: @Model.EmailAddress</li>
-                <li>Role: @Model.Role</li>
-            </ul>
-        </div>
-    </div>
-    <div class="content-area">
-        <h3>
-            @(Model.FirstName + " " + Model.LastName + "'s Environments:")
-        </h3>
-        <div>
-            @foreach (var environment in Model.CreatedEnvironments)
-            {
-                <div>
-                    <h5><a href="@Url.Action("Environmentseer", "Environment", new { environmentId = @environment.EnvironmentId }, null)">@environment.EnvironmentName</a></h5>
-                    <span>@environment.MachineCount machines</span>
-                    <span>@environment.Status</span>
+
+        <section class="user-info">
+            <div class="user-basic">
+                <h4>Basic Info</h4>
+                <div class="user-info-flex">
+                    <div><span>First Name:</span> @Model.FirstName</div>
+                    <div><span>Last Name:</span> @Model.LastName</div>
+                    <div><span>Email Address:</span> @Model.EmailAddress</div>
                 </div>
-            }
-        </div>
+            </div>
+            <div class="user-account">
+                <h4>Account Info</h4>
+                <div class="user-info-flex">
+                    <div><span>Username:</span> @Model.UserName</div>
+                    <div><span>Account Role:</span> @Model.Role</div>
+                </div>
+            </div>
+        </section>
     </div>
+    @if ((Model.Role == "Administrator" || Model.Role == "QA") && Model.CreatedEnvironments.Count > 0)
+    {
+        <div class="content-area">
+            <h3>
+                @(Model.FirstName + " " + Model.LastName + "'s Environments:")
+            </h3>
+            <div class="options-box flex-container">
+                @foreach (var environment in Model.CreatedEnvironments)
+                {
+                    <div class="option-link user-env-info">
+                        <a href="@Url.Action("Environmentseer", "Environment", new { environmentId = @environment.EnvironmentId }, null)">
+                            <div>
+                                <h5>@environment.EnvironmentName <span>(@environment.Status)</span></h5>
+                                <div>
+                                    <div class="machine-count @if (environment.Status == "Online") { <text>machine-count-online</text> } ">
+                                        @environment.MachineCount
+                                    </div>
+                                    <span class="machine-label">machines</span>
+                                </div> 
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    }
 </div>
 
 

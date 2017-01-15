@@ -60,6 +60,7 @@ namespace Overseer.WebApp.Controllers
                 LastName = user.LastName,
                 UserName = user.UserName,
                 EmailAddress = user.Email,
+                PasswordChanged = false,
                 RoleChoices = CreateUserRoleSelectList(_unitOfWork.UserRoles.GetAll(), user.UserRole.RoleName)
             };
 
@@ -80,7 +81,7 @@ namespace Overseer.WebApp.Controllers
                 {
                     if (!UserNameAvailable(viewModel.UserName))
                     {
-                        return Json(new { success = true, responsemsg = ("<i>UserName is not available!</i>") }, JsonRequestBehavior.AllowGet);
+                        return Json(new { success = false, responsemsg = ("UserName is not available!") }, JsonRequestBehavior.AllowGet);
                     }
                 }
 
@@ -93,18 +94,22 @@ namespace Overseer.WebApp.Controllers
                 // perform back end validation on password field
                 if (viewModel.PasswordChanged)
                 {
+                    if (viewModel.Password != viewModel.ConfirmPassword)
+                    {
+                        return Json(new { success = false, responsemsg = ("Password & confirmation must match!") }, JsonRequestBehavior.AllowGet);
+                    }
+
                     var crypto = new SimpleCrypto.PBKDF2();     // instantiate our hashing provider
-                    crypto.GenerateSalt();                      // generate a new salt to use for this user
 
                     if (string.IsNullOrEmpty(viewModel.Password))
                     {
-                        return Json(new { success = true, responsemsg = ("<i>You must set a new password!</i>") }, JsonRequestBehavior.AllowGet);
+                        return Json(new { success = false, responsemsg = ("You must set a new password!") }, JsonRequestBehavior.AllowGet);
                     }
                     else
                     {
                         if (crypto.Compute(viewModel.Password, user.PasswordSalt) == user.Password)
                         {
-                            return Json(new { success = true, responsemsg = ("<i>Password cannot match existing password!</i>") }, JsonRequestBehavior.AllowGet);
+                            return Json(new { success = false, responsemsg = ("Password cannot match existing password!") }, JsonRequestBehavior.AllowGet);
                         }
                         else
                         {
@@ -117,10 +122,10 @@ namespace Overseer.WebApp.Controllers
 
                 _unitOfWork.Save();
 
-                return Json(new { success = true, responsemsg = ("<i>Changes made successfully!</i>") }, JsonRequestBehavior.AllowGet);
+                return Json(new { success = true, responsemsg = ("Changes made successfully!") }, JsonRequestBehavior.AllowGet);
             }
 
-            return Json(new { success = false, responsemsg = ("<i>Validation failed!</i>") }, JsonRequestBehavior.AllowGet);
+            return Json(new { success = false, responsemsg = ("Validation failed!") }, JsonRequestBehavior.AllowGet);
         }
     }
 }

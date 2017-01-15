@@ -37,7 +37,7 @@ namespace Overseer.WebApp.Controllers
 
             _unitOfWork.Save();
 
-            return Json(new { success = true, successmsg = ("<i>Calendar event added!</i>") }, JsonRequestBehavior.AllowGet);
+            return Json(new { success = true, successmsg = ("Calendar event added!") }, JsonRequestBehavior.AllowGet);
         }
 
         private List<SelectListItem> GetEnvironmentOptions()

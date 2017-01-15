@@ -17,11 +17,11 @@
 
 <div id="MachineCreation" class="page-content">
     <section>
+        @using (Html.BeginForm("MachineCreation", "Machine", FormMethod.Post, new { data_ajax = "MachineCreate", id = "EnvironmentAjaxForm" }))
+        {
         <div class="content-area">
-            <h3>Configure:</h3>
+            <h3>Create a new machine:</h3>
             <div class="system-info">
-                @using (Html.BeginForm("MachineCreation", "Machine", FormMethod.Post, new { data_ajax = "MachineCreate", id = "EnvironmentAjaxForm" }))
-                {
                     <div class="info-basic">
                         <h4>Basic</h4>
                         <div class="system-info-flex">
@@ -100,15 +100,16 @@
 
                         </div>
                     </div>
-                    <div class="form-footer">
-                        <input type="submit" value="Create" class="pag-btn" data-baseurl="@Model.SidebarRefreshUrl" />
-                    </div>
-                }
             </div>
         </div>
-        <div id="form-success">
-
+        <div class="form-footer">
+            <div id="form-response" class="form-response">
+                <div id="form-failure" class="form-failure"></div>
+                <div id="form-success" class="form-success"></div>
+            </div>
+            <input type="submit" value="Save Changes" class="pag-btn" data-baseurl="@Model.SidebarRefreshUrl" />
         </div>
+        }
     </section>
 </div>
 

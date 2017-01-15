@@ -10,80 +10,104 @@
 
 <div id="Page-Title">
     <div class="fl-left">
-        <i class="fa fa-tachometer a-fw" aria-hidden="true"></i>&nbsp Environments<i class="fa fa-angle-right a-fw breadcrumb-spacer" aria-hidden="true"></i>Environment Configuration : @Model.EnvironmentName
+        <i class="fa fa-tachometer a-fw" aria-hidden="true"></i>&nbsp Environments<i class="fa fa-angle-right a-fw breadcrumb-spacer" aria-hidden="true"></i>Configure : @Model.EnvironmentName
     </div>
 </div>
 
 <div id="EnvironmentConfig" class="page-content">
+    <div class="content-area">
+        <h3>
+            @Model.EnvironmentName
+            <a href="@Url.Action("Environmentseer", "Environment", new { environmentId = @Model.EnvironmentId }, null)"><span class="icon config-i"><i class="fa fa-area-chart" aria-hidden="true"></i></span> </a>
+            <a href="@Url.Action("CalendarViewer", "Calendar", new { environmentId = @Model.EnvironmentId }, null)"><span class="icon calendar-i"><i class="fa fa-calendar" aria-hidden="true"></i></span> </a>
+        </h3>
+    </div>
+
     <section>
+        @using (Html.BeginForm("EnvironmentConfiguration", "Environment", FormMethod.Post, new { data_ajax = "EnvConfig", id = "EnvironmentAjaxForm" }))
+        {
         <div class="content-area">
-            <h3>Make changes:</h3>
-            <div class="form-container">
-                @using (Html.BeginForm("EnvironmentConfiguration", "Environment", FormMethod.Post, new { data_ajax = "EnvConfig", id = "EnvironmentAjaxForm" }))
-                {
+            <h3>Reconfigure environment:</h3>
+            <div class="system-info">
                     <input type="hidden" name="EnvironmentId" value="@Model.EnvironmentId" />
 
-                    <label for="envName">Display Name:</label>
-                    @Html.TextBoxFor(m => m.EnvironmentName, new { @id = "envName" })
-
-                    <label for="isOnline">Private Environment?</label>
-                    @Html.CheckBoxFor(m => m.PrivateEnvironment, new { @id = "privEnvironment" })
-
-                    <div class="tf-container">
-                        <label for="envStatus">Environment Status:</label>
-                        @Html.CheckBoxFor(m => m.EnvironmentStatus, new { @id = "envStatus", @class = "tf-checkbox" })
-
-                        <label for="downTimeCat">Reason for Downtime:</label>
-                        @Html.DropDownListFor(m => m.DownTimeCategory, Model.DownTimeCategoryOptions, new { @id = "downTimeCat", @class = "tf-inverse-target" })
-                    </div>
-
-                    <div class="tf-container">
-                        <label for="monEnabled">Monitoring Enabled?</label>
-                        @Html.CheckBoxFor(m => m.MonitoringEnabled, new { @id = "monEnabled", @class = "tf-checkbox" })
-
-                        <label for="monInterval">Monitoring Interval:</label>
-                        @Html.DropDownListFor(m => m.MonitoringUpdateInterval, Model.MonitoringIntervalOptions, new { @id = "monInterval", @class = "tf-target" })
-                    </div>
-
-                    <div class="center-input form-val">
-                        <div class="form-val-msg">
-                            @Html.ValidationMessageFor(m => m.EnvironmentName)
-                        </div>
-                        <div class="form-val-msg">
-                            @Html.ValidationMessageFor(m => m.PrivateEnvironment)
-                        </div>
-                        <div class="form-val-msg">
-                            @Html.ValidationMessageFor(m => m.EnvironmentStatus)
-                        </div>
-                        <div class="form-val-msg">
-                            @Html.ValidationMessageFor(m => m.DownTimeCategory)
-                        </div>
-                        <div class="form-val-msg">
-                            @Html.ValidationMessageFor(m => m.MonitoringEnabled)
-                        </div>
-                        <div class="form-val-msg">
-                            @Html.ValidationMessageFor(m => m.MonitoringUpdateInterval)
-                        </div>
-                        <div id="dupe-env-msg" class="form-val-msg">
-
-                        </div>
-                        <div id="downtimecat-req-msg" class="form-val-msg">
-
-                        </div>
-                        <div id="interval-req-msg" class="form-val-msg">
-
+                    <div class="info-basic">
+                        <h4>Basic</h4>
+                        <div class="system-info-flex">
+                            <div>
+                                <label for="envName">Display Name:</label>
+                                @Html.TextBoxFor(m => m.EnvironmentName, new { @id = "envName" })
+                            </div>
+                            <div>
+                                <label for="downTimeCat">Discoverability:</label>
+                                @Html.DropDownListFor(m => m.Discoverability, Model.DiscoverabilityOptions)
+                            </div>
                         </div>
                     </div>
-                    <div class="form-footer">
-                        <input type="submit" value="Save Changes" class="pag-btn" data-baseurl="@Model.SidebarRefreshUrl"/>
+
+                    <div class="info-status">
+                        <h4>Status</h4>
+                        <div class="tf-container">
+                            <div class="system-info-flex">
+                                <div class="chkbox-pair">
+                                    <label for="envStatus">Environment Status:</label>
+                                    @Html.CheckBoxFor(m => m.EnvironmentStatus, new { @id = "envStatus", @class = "tf-checkbox" })
+                                </div>
+
+                                <div>
+                                    <label for="downTimeCat">Reason for Downtime:</label>
+                                    @Html.DropDownListFor(m => m.DownTimeCategory, Model.DownTimeCategoryOptions, new { @id = "downTimeCat", @class = "tf-inverse-target" })
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                }
+
+                    <div class="info-monitoring">
+                        <h4>Monitoring Settings</h4>
+                        <div class="tf-container">
+                            <div class="system-info-flex">
+                                <div class="chkbox-pair">
+                                    <label for="monEnabled">Monitoring Enabled?</label>
+                                    @Html.CheckBoxFor(m => m.MonitoringEnabled, new { @id = "monEnabled", @class = "tf-checkbox" })
+                                </div>
+
+                                <div>
+                                    <label for="monInterval">Monitoring Interval:</label>
+                                    @Html.DropDownListFor(m => m.MonitoringUpdateInterval, Model.MonitoringIntervalOptions, new { @id = "monInterval", @class = "tf-target" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="form-val">
+                <div class="form-val-msg">
+                    @Html.ValidationMessageFor(m => m.EnvironmentName)
+                </div>
+                <div class="form-val-msg">
+                    @Html.ValidationMessageFor(m => m.Discoverability)
+                </div>
+                <div class="form-val-msg">
+                    @Html.ValidationMessageFor(m => m.EnvironmentStatus)
+                </div>
+                <div class="form-val-msg">
+                    @Html.ValidationMessageFor(m => m.DownTimeCategory)
+                </div>
+                <div class="form-val-msg">
+                    @Html.ValidationMessageFor(m => m.MonitoringEnabled)
+                </div>
+                <div class="form-val-msg">
+                    @Html.ValidationMessageFor(m => m.MonitoringUpdateInterval)
+                </div>
             </div>
         </div>
-
-        <div id="form-success">
-
+        <div class="form-footer">
+            <div id="form-response" class="form-response">
+                <div id="form-failure" class="form-failure"></div>
+                <div id="form-success" class="form-success"></div>
+            </div>
+            <input type="submit" value="Save Changes" class="pag-btn" data-baseurl="@Model.SidebarRefreshUrl" />
         </div>
+        }
     </section>
 </div>
 

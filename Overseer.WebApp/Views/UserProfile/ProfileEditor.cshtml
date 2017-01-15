@@ -21,79 +21,98 @@
 </div>
 
 <div id="ProfileEditor" class="page-content">
-    <div class="content-area">
+    <section>
         <h3>
             @(Model.FirstName + " " + Model.LastName)
+
+            <a href="@Url.Action("ProfileViewer", "UserProfile", new { userId = ViewBag.SessionUserId }, null)" class="profile-view-icon"><span class="icon"><i class="fa fa-user" aria-hidden="true"></i></span> </a>
         </h3>
-        <div>
+
+        <div class="user-info">
             @using (Html.BeginForm("ProfileEditor", "UserProfile", FormMethod.Post, new { id = "ProfileEditorForm" }))
             {
-                <input type="hidden" name="UserId" value="@Model.UserId" />
-                <div class="center-input">
-                    @Html.TextBoxFor(m => m.FirstName, new { placeholder = "First Name" })
-                </div>
-                <div class="center-input">
-                    @Html.TextBoxFor(m => m.LastName, new { placeholder = "Last Name" })
-                </div>
-                <div class="center-input">
-                    @Html.TextBoxFor(m => m.UserName, new { placeholder = "Username" })
-                </div>
-                <div class="center-input">
-                    @Html.TextBoxFor(m => m.EmailAddress, new { placeholder = "Corporate Email" })
-                </div>
-                <div class="center-input">
-                    @Html.DropDownListFor(m => m.ChosenRoleID, Model.RoleChoices, "Choose a role..")
-                </div>
-                <div class="tf-container">
-                    <div class="left-input">
-                        @Html.CheckBoxFor(m => m.PasswordChanged, new { @class = "tf-checkbox" })
-                        <label for="tf-checkbox">change password?</label>
-                    </div>
-                    <div class="center-input">
-                        @Html.PasswordFor(m => m.Password, new { placeholder = "Password", @class = "tf-target" })
-                    </div>
-                    <div class="center-input">
-                        @Html.PasswordFor(m => m.ConfirmPassword, new { placeholder = "Confirm New Password", @class = "tf-target" })
+            <input type="hidden" name="UserId" value="@Model.UserId" />
+            <div class="content-area">
+                <div class="user-basic">
+                    <h4>Basic Info</h4>
+                    <div class="user-info-flex">
+                        <div>
+                            <label for="envName">First Name:</label>
+                            @Html.TextBoxFor(m => m.FirstName, new { placeholder = "First Name" })
+                        </div>
+                        <div>
+                            <label for="envName">Last Name:</label>
+                            @Html.TextBoxFor(m => m.LastName, new { placeholder = "Last Name" })
+                        </div>
+                        <div>
+                            <label for="envName">Email Address:</label>
+                            @Html.TextBoxFor(m => m.EmailAddress, new { placeholder = "Corporate Email" })
+                        </div>
                     </div>
                 </div>
-
-                <div class="center-input form-val">
-                    <div class="form-val-msg">
-                        @Html.ValidationMessageFor(m => m.FirstName, "")
-                    </div>
-                    <div class="form-val-msg">
-                        @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-val-msg">
-                        @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-val-msg">
-                        @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-val-msg">
-                        @Html.ValidationMessageFor(m => m.EmailAddress, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-val-msg">
-                        @Html.ValidationMessageFor(m => m.ChosenRoleID, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-val-msg">
-                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-val-msg">
-                        @Html.ValidationMessage("DuplicateUserError", "")
-                    </div>
-                    <div class="form-val-msg">
-                        @Html.ValidationMessage("UnchangedPassError", "")
+                <div class="user-account">
+                    <h4>Account Info</h4>
+                    <div class="user-info-flex">
+                        <div>
+                            <label for="envName">Username:</label>
+                            @Html.TextBoxFor(m => m.UserName, new { placeholder = "Username" })
+                        </div>
+                        <div>
+                            <label for="envName">Account Role:</label>
+                            @Html.DropDownListFor(m => m.ChosenRoleID, Model.RoleChoices, "Choose a role..")
+                        </div>
                     </div>
                 </div>
-
-                <div class="form-footer">
-                    <input type="submit" value="Save" class="submit-button" />
+                <div class="user-security">
+                    <h4>Security</h4>
+                    <div class="user-info-flex">
+                        <div>
+                            <div class="tf-container">
+                                <div class="chkbox-pair">
+                                    <label for="tf-checkbox">change password?</label>
+                                    @Html.CheckBoxFor(m => m.PasswordChanged, new { @class = "tf-checkbox" })
+                                </div>
+                                <div>
+                                    <label for="envName">Password:</label>
+                                    @Html.PasswordFor(m => m.Password, new { placeholder = "Password", @class = "tf-target" })
+                                </div>
+                                <div>
+                                    <label for="envName">Confirm Password:</label>
+                                    @Html.PasswordFor(m => m.ConfirmPassword, new { placeholder = "Confirm New Password", @class = "tf-target" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <div class="form-val">
+                    <div class="form-val-msg">
+                        @Html.ValidationMessageFor(m => m.FirstName)
+                    </div>
+                    <div class="form-val-msg">
+                        @Html.ValidationMessageFor(m => m.LastName)
+                    </div>
+                    <div class="form-val-msg">
+                        @Html.ValidationMessageFor(m => m.UserName)
+                    </div>
+                    <div class="form-val-msg">
+                        @Html.ValidationMessageFor(m => m.ChosenRoleID)
+                    </div>
+                    <div class="form-val-msg">
+                        @Html.ValidationMessageFor(m => m.Password)
+                    </div>
+                    <div class="form-val-msg">
+                        @Html.ValidationMessageFor(m => m.ConfirmPassword)
+                    </div>
+                </div>
+            </div>
+            <div class="form-footer">
+                <div id="form-response" class="form-response">
+                    <div id="form-failure" class="form-failure"></div>
+                    <div id="form-success" class="form-success"></div>
+                </div>
+                <input type="submit" value="Update Profile" class="pag-btn"/>
+            </div>
             }
         </div>
-    </div>
-    <div id="responsemsg">
-
-    </div>
+    </section>
 </div>

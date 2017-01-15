@@ -244,6 +244,7 @@ namespace Overseer.WebApp.Controllers
 
         // EnvironmentConfiguration - page to change environment details & configure environment level monitoring settings
         // GET:
+        [HttpGet]
         public ActionResult EnvironmentConfiguration(int environmentId)
         {
             // a lot of this should be extracted into a service layer..
@@ -262,20 +263,17 @@ namespace Overseer.WebApp.Controllers
                 });
             }
 
-            List<SelectListItem> monitoringIntervalOptions = new List<SelectListItem>()
-            {
-                new SelectListItem() { Value = "5", Text = "5", Selected = (testEnv.MonitoringSettings.MonitoringUpdateInterval == 5 ? true : false) },
-                new SelectListItem() { Value = "10", Text = "10", Selected = (testEnv.MonitoringSettings.MonitoringUpdateInterval == 10 ? true : false) },
-                new SelectListItem() { Value = "15", Text = "15", Selected = (testEnv.MonitoringSettings.MonitoringUpdateInterval == 15 ? true : false) },
-                new SelectListItem() { Value = "30", Text = "30", Selected = (testEnv.MonitoringSettings.MonitoringUpdateInterval == 30 ? true : false) },
-                new SelectListItem() { Value = "60", Text = "60", Selected = (testEnv.MonitoringSettings.MonitoringUpdateInterval == 60 ? true : false) }
-            };
+            List<SelectListItem> monitoringIntervalOptions = GetMonitoringIntervalOptions(testEnv.MonitoringSettings.MonitoringUpdateInterval);
 
             EnvironmentConfigurationViewModel viewModel = new EnvironmentConfigurationViewModel()
             {
                 EnvironmentId = testEnv.EnvironmentID,
                 EnvironmentName = testEnv.EnvironmentName,
-                PrivateEnvironment = testEnv.IsPrivate,
+                DiscoverabilityOptions = new List<SelectListItem>()
+                {
+                    new SelectListItem() { Value = "Public", Text = "Public", Selected = (testEnv.IsPrivate == false ? true : false) },
+                    new SelectListItem() { Value = "Private", Text = "Private", Selected = (testEnv.IsPrivate == true ? true : false) }
+                },
                 EnvironmentStatus = testEnv.Status,
                 DownTimeCategoryOptions = downTimeCategoryOptions,
                 MonitoringEnabled = testEnv.MonitoringSettings.MonitoringEnabled,
@@ -293,38 +291,32 @@ namespace Overseer.WebApp.Controllers
             TestEnvironment envToUpdate = _unitOfWork.TestEnvironments.GetWithMonitoringSettings(viewModel.EnvironmentId);
 
             // duplicate environment checking - should be extracted to service layer
-            var userClaims = User.Identity as ClaimsIdentity;
-            int loggedInUserId = Int32.Parse(userClaims.FindFirst(ClaimTypes.NameIdentifier).Value);
-
+            int loggedInUserId = GetLoggedInUserId();
             if (envToUpdate.EnvironmentName != viewModel.EnvironmentName)
             {
                 if (_unitOfWork.TestEnvironments.CheckEnvironmentExistsByCreatorAndName(loggedInUserId, viewModel.EnvironmentName))
                 {
-                    return Json(new { success = false, error = "You already have an environment with that name.." }, JsonRequestBehavior.AllowGet);
+                    return Json(new { success = false, error = "You already have an environment with that name!" }, JsonRequestBehavior.AllowGet);
                 }
             }
 
             // update the TestEnvironment table
             envToUpdate.EnvironmentName = viewModel.EnvironmentName;
-            envToUpdate.IsPrivate = viewModel.PrivateEnvironment;
+            envToUpdate.IsPrivate = viewModel.Discoverability == "Public" ? false : true;
             envToUpdate.Status = viewModel.EnvironmentStatus;
             envToUpdate.MonitoringSettings.MonitoringEnabled = viewModel.MonitoringEnabled;
 
             // if the environment status is set to 'down', we update the cown time category
             if (viewModel.EnvironmentStatus == false && viewModel.DownTimeCategory != null)
-            {
                 envToUpdate.DownTimeCatID = Int32.Parse(viewModel.DownTimeCategory);
-            }
 
             // if monitoring is enabled, we update the monitoring interval
             if (viewModel.MonitoringEnabled && viewModel.MonitoringUpdateInterval != null)
-            {
                 envToUpdate.MonitoringSettings.MonitoringUpdateInterval = Int32.Parse(viewModel.MonitoringUpdateInterval);
-            }
 
             _unitOfWork.Save();
 
-            return Json(new { success = true, successmsg = ("<i>Changes made successfully!</i>") }, JsonRequestBehavior.AllowGet);
+            return Json(new { success = true, successmsg = ("Changes made successfully!") }, JsonRequestBehavior.AllowGet);
         }
 
         // EnvironmentCreation - page for creating new environments
@@ -336,16 +328,21 @@ namespace Overseer.WebApp.Controllers
 
             List<SelectListItem> downTimeCategoryOptions = new List<SelectListItem>();
 
-            foreach (DownTimeCategory downTimeCat in downTimeCategories)
-            {
-                downTimeCategoryOptions.Add(new SelectListItem() { Value = downTimeCat.DownTimeCatID.ToString(), Text = downTimeCat.Name });
-            }
-
             EnvironmentCreationViewModel viewModel = new EnvironmentCreationViewModel()
             {
                 DownTimeCategoryOptions = downTimeCategoryOptions,
-                SidebarRefreshUrl = GetBaseApplicationUrl()
+                SidebarRefreshUrl = GetBaseApplicationUrl(),
+                DiscoverabilityOptions = new List<SelectListItem>()
+                {
+                    new SelectListItem() { Value = "Public", Text = "Public" },
+                    new SelectListItem() { Value = "Private", Text = "Private" }
+                }
             };
+
+            foreach (DownTimeCategory downTimeCat in downTimeCategories)
+            {
+                viewModel.DownTimeCategoryOptions.Add(new SelectListItem() { Value = downTimeCat.DownTimeCatID.ToString(), Text = downTimeCat.Name });
+            }
 
             return View(viewModel);
         }
@@ -374,7 +371,7 @@ namespace Overseer.WebApp.Controllers
                 {
                     EnvironmentName = viewModel.EnvironmentName,
                     Creator = loggedInUserId,
-                    IsPrivate = viewModel.PrivateEnvironment,
+                    IsPrivate = viewModel.Discoverability == "Public" ? false : true,
                     Status = viewModel.EnvironmentStatus,
                     // Note below: adding entry to monitoringsetting table via navigation property
                     MonitoringSettings = defaultMonSettings
@@ -406,6 +403,18 @@ namespace Overseer.WebApp.Controllers
             int nextUpdateDue = (int)timeDifference.TotalMilliseconds;
 
             return (nextUpdateDue + 60000);
+        }
+
+        private List<SelectListItem> GetMonitoringIntervalOptions(int? currentInterval)
+        {
+            return new List<SelectListItem>()
+            {
+                new SelectListItem() { Value = "5", Text = "5", Selected = (currentInterval == 5 ? true : false) },
+                new SelectListItem() { Value = "10", Text = "10", Selected = (currentInterval == 10 ? true : false) },
+                new SelectListItem() { Value = "15", Text = "15", Selected = (currentInterval == 15 ? true : false) },
+                new SelectListItem() { Value = "30", Text = "30", Selected = (currentInterval == 30 ? true : false) },
+                new SelectListItem() { Value = "60", Text = "60", Selected = (currentInterval == 60 ? true : false) }
+            };
         }
     }
 }

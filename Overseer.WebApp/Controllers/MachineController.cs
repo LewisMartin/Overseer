@@ -478,7 +478,7 @@ namespace Overseer.WebApp.Controllers
 
             _unitOfWork.Save();
 
-            return Json(new { success = true, successmsg = ("<i>Changes made successfully!</i>") }, JsonRequestBehavior.AllowGet);
+            return Json(new { success = true, successmsg = ("Changes made successfully!") }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
@@ -600,7 +600,7 @@ namespace Overseer.WebApp.Controllers
 
             _unitOfWork.Save();
 
-            return Json(new { success = true, successmsg = ("<i>Dynamic monitoring alerts configured!</i>") }, JsonRequestBehavior.AllowGet);
+            return Json(new { success = true, successmsg = ("Dynamic monitoring alerts configured!") }, JsonRequestBehavior.AllowGet);
         }
 
         // MachineCreation - page for creating new machines
@@ -669,7 +669,7 @@ namespace Overseer.WebApp.Controllers
                 _unitOfWork.Machines.Add(newMachine);
                 _unitOfWork.Save();
 
-                return Json(new { success = true, successmsg = ("<i>'" + viewModel.DisplayName + "' has been successfully added to '" + parentEnvironment.EnvironmentName + "'</i>") }, JsonRequestBehavior.AllowGet);
+                return Json(new { success = true, successmsg = (viewModel.DisplayName + "' has been successfully added to '" + parentEnvironment.EnvironmentName) }, JsonRequestBehavior.AllowGet);
             }
         }
 

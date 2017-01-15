@@ -9,18 +9,26 @@ namespace Overseer.WebApp.ViewModels.Environment
 {
     public class EnvironmentCreationViewModel
     {
-        [Required]
-        public string EnvironmentName { get; set; }
+        public EnvironmentCreationViewModel()
+        {
+            DownTimeCategoryOptions = new List<SelectListItem>();
+            DiscoverabilityOptions = new List<SelectListItem>();
+        }
 
         [Required]
-        public bool PrivateEnvironment { get; set; }
+        public string EnvironmentName { get; set; }
 
         [Required]
         public bool EnvironmentStatus { get; set; }
 
         public string DownTimeCategory { get; set; }
 
-        public IEnumerable<SelectListItem> DownTimeCategoryOptions { get; set; }
+        public List<SelectListItem> DownTimeCategoryOptions { get; set; }
+
+        [Required]
+        public string Discoverability { get; set; }
+
+        public List<SelectListItem> DiscoverabilityOptions { get; set; }
 
         public string SidebarRefreshUrl { get; set; }
     }
