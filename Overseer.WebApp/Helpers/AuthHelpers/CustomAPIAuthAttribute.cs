@@ -18,29 +18,55 @@ namespace Overseer.WebApp.Helpers.AuthHelpers
 
         public override void OnAuthorization(HttpActionContext actionContext)
         {
-            Guid TargetMachine = new Guid(actionContext.Request.Headers.GetValues("TargetMachine").FirstOrDefault());
-
+            Guid TargetMachineGuid = new Guid(actionContext.Request.Headers.GetValues("TargetMachine").FirstOrDefault());
             string TargetSecret = actionContext.Request.Headers.GetValues("TargetSecret").FirstOrDefault();
 
-            if (AuthorizeMonitoringAgentRequest(TargetMachine, TargetSecret))
+            // check existence of machine
+            if (CheckMachineExistence(TargetMachineGuid))
             {
-                return;
+                if (AuthorizeMonitoringAgentRequest(TargetMachineGuid, TargetSecret))
+                {
+                    return;
+                }
+                else
+                {
+                    actionContext.Response = new System.Net.Http.HttpResponseMessage(System.Net.HttpStatusCode.Unauthorized);
+                }
             }
             else
             {
-                actionContext.Response = new System.Net.Http.HttpResponseMessage(System.Net.HttpStatusCode.Unauthorized);
+                actionContext.Response = new System.Net.Http.HttpResponseMessage(System.Net.HttpStatusCode.NotFound);
+                actionContext.Response.Content = new System.Net.Http.StringContent("No machine found that matches Guid: " + TargetMachineGuid);
             }
-           
         }
 
-        public bool AuthorizeMonitoringAgentRequest(Guid machineGuid, string machineSecret)
+        // check existence of machine
+        private bool CheckMachineExistence(Guid machineGuid)
+        {
+            // instantiate it here instead
+            _unitOfWork = new UnitOfWork(new OverseerDBContext());
+
+            var machine = _unitOfWork.Machines.Get(machineGuid);
+
+            if (machine != null)
+                return true;
+            else
+                return false;
+        }
+
+        // perform authorization on machine credential passed with request
+        private bool AuthorizeMonitoringAgentRequest(Guid machineGuid, string machineSecret)
         {
             // instantiate it here instead
             _unitOfWork = new UnitOfWork(new OverseerDBContext());
 
             var creds = _unitOfWork.MonitoringAgentCredentials.Get(machineGuid);
 
-            if (creds.MonitoringAgentSecret == machineSecret)
+            if (creds == null)
+            {
+                return false;
+            }
+            else if (creds.MonitoringAgentSecret == machineSecret)
             {
                 return true;
             }

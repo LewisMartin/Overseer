@@ -1,19 +1,37 @@
 ﻿@model Overseer.WebApp.ViewModels.Machine._DynamicMonitoringAlertsConfigViewModel
 
-@using (Html.BeginForm("DynamicMonitoringAlertsConfig", "Machine", FormMethod.Post, new { id = "AlertsConfigForm" } ))
+@using (Html.BeginForm("DynamicMonitoringAlertsConfig", "Machine", FormMethod.Post, new { id = "AlertsConfigForm" }))
 {
-    <div id="AlertsConfigBtns">
-        <input type="submit" class="fa" value="&#xf00c; Save" />
-        <span id="CloseDynamicAlertsConfig">Close</span>
+    <div class="content-area">
+        <h3>Alert Configuration:</h3>
+        <div class="system-info">
+            <div class="system-info-flex">
+                <div>
+                    <label for="DynamicConfigChooser">Choose process/event/service:</label>
+                    @Html.DropDownList("choose..", Model.DynamicAlertSettings, new { @id = "DynamicConfigChooser" })
+                </div>
+            </div>
+            <div>
+                <input type="hidden" name="MachineId" value="@Model.MachineId" />
+                <div>
+                    @Html.EditorFor(m => m.ProcessAlertSettings)
+                </div>
+                <div>
+                    @Html.EditorFor(m => m.EventLogAlertSettings)
+                </div>
+                <div>
+                    @Html.EditorFor(m => m.ServiceAlertSettings)
+                </div>
+            </div>
+        </div>
     </div>
-    <input type="hidden" name="MachineId" value="@Model.MachineId" />
-    <div>
-        @Html.EditorFor(m => m.ProcessAlertSettings)
-    </div>
-    <div>
-        @Html.EditorFor(m => m.EventLogAlertSettings)
-    </div>
-    <div>
-        @Html.EditorFor(m => m.ServiceAlertSettings)
+    <div class="form-footer">
+        <div class="form-response">
+            <div class="form-failure"></div>
+            <div class="form-success"></div>
+        </div>
+        <input type="submit" class="pag-btn icon-btn" value="&#xf00c;" />
+        <input type="button" id="CloseDynamicAlertsConfig" class="pag-btn icon-btn" value="&#xf00d;" />
     </div>
 }
+

@@ -278,7 +278,7 @@ namespace Overseer.WebApp.Controllers
                 DownTimeCategoryOptions = downTimeCategoryOptions,
                 MonitoringEnabled = testEnv.MonitoringSettings.MonitoringEnabled,
                 MonitoringIntervalOptions = monitoringIntervalOptions,
-                SidebarRefreshUrl = GetBaseApplicationUrl()
+                BaseAppUrl = GetBaseApplicationUrl()
             };    
 
             return View(viewModel);
@@ -388,6 +388,19 @@ namespace Overseer.WebApp.Controllers
 
                 return Json(new { success = true, successmsg = ("<i>'" + viewModel.EnvironmentName + "' created successfully!</i>") }, JsonRequestBehavior.AllowGet);
             }
+        }
+
+        [HttpGet]
+        public ActionResult EnvironmentDeletion(int environmentId)
+        {
+            var monSetts = _unitOfWork.MonitoringSettings.Get(environmentId);
+            var environment = _unitOfWork.TestEnvironments.Get(environmentId);
+
+            _unitOfWork.MonitoringSettings.Delete(monSetts);
+            _unitOfWork.TestEnvironments.Delete(environment);
+            _unitOfWork.Save();
+
+            return Json(new { success = true, successmsg = ("Environment '" + environment.EnvironmentName + "' deleted!") }, JsonRequestBehavior.AllowGet);
         }
 
         private int GetMillisecondsToNextUpdate(int environmentId)

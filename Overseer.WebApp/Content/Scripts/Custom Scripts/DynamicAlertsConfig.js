@@ -1,7 +1,8 @@
 ﻿$(document).ready(function () {
+    var hideTimeout;    // variable to hold timeout hide() of form response
 
     $('#OpenDynamicAlertsConfig').click(function () {
-        console.log("here");
+        detectDynamicMonitoringSelection();
 
         var appRoot = $('#MachineConfig').data('baseurl');
         var machineId = $('#MachineConfig').data('machineid');
@@ -15,41 +16,52 @@
                 toggleEnvConfigForm(false);
 
                 // populate parent with partial view contents
-                $('#DynamicAlertsConfig>div').html(data);
+                $('#DynamicAlertsConfig').html(data);
+
+                $('#DynamicAlertsConfig').show();
+
+                $("html, body").animate({ scrollTop: $(document).height() }, 1000);
 
                 // add event handler to 'close' button
                 $('#CloseDynamicAlertsConfig').click(function () {
                     console.log("close");
-                    $('#DynamicAlertsConfig>div').html("");
+
+                    $('#DynamicAlertsConfig').hide(200);
 
                     toggleEnvConfigForm(true);
                 });
 
                 $('#AlertsConfigForm').submit(function () {
+                    // clear any existing timeout & immediately hide
+                    resetFormResponse();
+
+                    var formResponse = $('#AlertsConfigForm .form-response');
+                    var successMsg = $('#AlertsConfigForm .form-success');
+                    var errorMsg = $('#AlertsConfigForm .form-failure');
+
+                    console.log(errorMsg);
+                    console.log(successMsg);
+
                     if ($(this).valid()) {
-                        $('#AlertsConfigForm').find(':submit').attr("disabled", true)
+                        $('#AlertsConfigForm').find(':submit').attr("disabled", true);
 
                         $.ajax({
                             url: this.action,
                             type: this.method,
                             data: $(this).serialize(),
                             complete: function () {
-                                $('form').find(':submit').attr("disabled", false);
+                                $('#AlertsConfigForm').find(':submit').attr("disabled", false);
                             },
                             success: function (result) {
-
-                                var isSuccessful = (result['success'])
-
-                                if (isSuccessful) {
-                                    $('#form-success').html(result['successmsg']);
-
-                                    $('#DynamicAlertsConfig>div').html("");
-
-                                    toggleEnvConfigForm(true);
+                                if (result['success']) {
+                                    $(successMsg).html(result['successmsg']);
                                 }
                                 else {
-                                    $('#dupe-env-msg').html(result['error']);
+                                    $(errorMsg).html(result['error']);
                                 }
+
+                                $(formResponse).show(200);
+                                hideTimeout = setTimeout(function () { $(formResponse).hide(200); }, 10000)
                             }
                         });
                     }
@@ -59,15 +71,34 @@
         });
     });
 
-    function toggleEnvConfigForm(state)
-    {
-        if(state)
-        {
+    function detectDynamicMonitoringSelection() {
+        $('#DynamicAlertsConfig').on('change', '#DynamicConfigChooser', function () {
+            console.log("got em");
+
+            console.log($(this).val());
+            console.log($(this).children("option").filter(":selected").text());
+
+            // ensure all dynamic alert config sections are hidden
+            $('.dyn-config').hide();
+
+            $('.dyn-config[data-type="' + $(this).val() + '"][data-config="' + $(this).children("option").filter(":selected").text() + '"]').show();
+        });
+    }
+
+    function toggleEnvConfigForm(state) {
+        if (state) {
             // enable form
             $('#EnvironmentAjaxForm').find(':submit').attr("disabled", false);
         } else {
             // disable form
             $('#EnvironmentAjaxForm').find(':submit').attr("disabled", true);
         }
+    }
+
+    function resetFormResponse() {
+        clearTimeout(hideTimeout);
+        $('#AlertsConfigForm .form-failure').html("");
+        $('#AlertsConfigForm .form-success').html("");
+        $('#AlertsConfigForm .form-response').hide();
     }
 });

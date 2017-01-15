@@ -14,7 +14,7 @@
     </div>
 </div>
 
-<div id="EnvironmentConfig" class="page-content">
+<div id="EnvironmentConfig" class="page-content" data-baseurl="@Model.BaseAppUrl" data-environmentid="@Model.EnvironmentId">
     <div class="content-area">
         <h3>
             @Model.EnvironmentName
@@ -27,7 +27,14 @@
         @using (Html.BeginForm("EnvironmentConfiguration", "Environment", FormMethod.Post, new { data_ajax = "EnvConfig", id = "EnvironmentAjaxForm" }))
         {
         <div class="content-area">
-            <h3>Reconfigure environment:</h3>
+            <h3>Reconfigure environment:
+                <span class="fl-right initial-del"><i class="fa fa-trash" aria-hidden="true"></i></span>
+                <span class="fl-right confirm-del" data-deltype="Environment">Are you sure you wish to delete this environment (and it's child machines)? <i class="fa fa-check del-confirmed" aria-hidden="true"></i> <i class="fa fa-close del-cancel" aria-hidden="true"></i></span>
+                <span id="DeleteResponse" class="fl-right">
+                    <span class="del-success"></span>
+                    <span class="del-failure"></span>
+                </span>
+            </h3>
             <div class="system-info">
                     <input type="hidden" name="EnvironmentId" value="@Model.EnvironmentId" />
 
@@ -105,7 +112,7 @@
                 <div id="form-failure" class="form-failure"></div>
                 <div id="form-success" class="form-success"></div>
             </div>
-            <input type="submit" value="Save Changes" class="pag-btn" data-baseurl="@Model.SidebarRefreshUrl" />
+            <input type="submit" value="Save Changes" class="pag-btn" data-baseurl="@Model.BaseAppUrl" />
         </div>
         }
     </section>

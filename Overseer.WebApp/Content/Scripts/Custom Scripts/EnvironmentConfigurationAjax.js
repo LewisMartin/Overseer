@@ -8,8 +8,8 @@
         resetFormResponse();
 
         var formReset;
-        var successMsg = $('#form-success');
-        var errorMsg = $('#form-failure')
+        var successMsg = $('#EnvironmentAjaxForm #form-success');
+        var errorMsg = $('#EnvironmentAjaxForm #form-failure')
 
         switch (form) {
             case "EnvCreate":

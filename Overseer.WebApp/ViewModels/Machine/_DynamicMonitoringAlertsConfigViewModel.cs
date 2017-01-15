@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Overseer.WebApp.ViewModels.Machine
 {
@@ -10,12 +11,15 @@ namespace Overseer.WebApp.ViewModels.Machine
     {
         public _DynamicMonitoringAlertsConfigViewModel()
         {
+            DynamicAlertSettings = new List<SelectListItem>();
             ProcessAlertSettings = new List<MonitoredProcessAlertSettings>();
             EventLogAlertSettings = new List<MonitoredEventLogAlertSettings>();
             ServiceAlertSettings = new List<MonitoredServiceAlertSettings>();
         }
 
         public Guid MachineId { get; set; }
+
+        public List<SelectListItem> DynamicAlertSettings { get; set; }
 
         public List<MonitoredProcessAlertSettings> ProcessAlertSettings { get; set; }
 
@@ -72,6 +76,8 @@ namespace Overseer.WebApp.ViewModels.Machine
         public bool NotFoundAlertsOn { get; set; }
 
         public int NotFoundSeverity { get; set; }
+
+        public List<SelectListItem> NotFoundSevOptions { get; set; }
     }
 
     public class MonitoredServiceAlertSettings
@@ -83,9 +89,13 @@ namespace Overseer.WebApp.ViewModels.Machine
 
         public int NotFoundSeverity { get; set; }
 
+        public List<SelectListItem> NotFoundSevOptions { get; set; }
+
         [Required]
         public bool NotRunningAlertsOn { get; set; }
 
         public int NotRunningSeverity { get; set; }
+
+        public List<SelectListItem> NotRunningSevOptions { get; set; }
     }
 }

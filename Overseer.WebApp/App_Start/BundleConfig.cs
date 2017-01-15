@@ -46,11 +46,12 @@ namespace Overseer.WebApp
                     "~/Content/Scripts/Custom Scripts/DiscoveryAjax.js"
             ));
 
-            // bundle for scripts used in environment pages
+            // bundle for scripts used in all environment pages
             bundles.Add(new ScriptBundle("~/Environment/Scripts").Include(
                         "~/Content/Scripts/jquery.validate.js",
                         "~/Content/Scripts/jquery.validate.unobtrusive.js",
-                        "~/Content/Scripts/Custom Scripts/EnvironmentAjax.js"
+                        "~/Content/Scripts/Custom Scripts/EnvironmentConfigurationAjax.js",
+                        "~/Content/Scripts/Custom Scripts/EnvironmentDeletionAjax.js"
                 ));
 
             // bundle for 'Machineseer' page
@@ -69,6 +70,7 @@ namespace Overseer.WebApp
             // bundles for scripts used in specific pages
             bundles.Add(new ScriptBundle("~/Environment/MachineConfiguration/Scripts").Include(
                         "~/Content/Scripts/Custom Scripts/EditableListBox.js",
+                        "~/Content/Scripts/Custom Scripts/ContentAccordion.js",
                         "~/Content/Scripts/Custom Scripts/DynamicAlertsConfig.js"
                 ));
 

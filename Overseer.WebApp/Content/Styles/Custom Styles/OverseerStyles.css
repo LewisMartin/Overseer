@@ -94,6 +94,11 @@ button:hover
 {
 	float: right;
 }
+.icon-btn
+{
+    font-family: FontAwesome;
+}
+
 .notif 
 {
     background-color: #ffffff;
@@ -381,6 +386,7 @@ h5 > span
 .accord-content-hidden
 {
     height: 0px;
+    overflow: hidden;
 }
 
 .flex-container /* Generic flex container */ 
@@ -504,6 +510,38 @@ h5 > span
 {
     height: auto !important;
     margin: 4px;
+}
+
+
+.confirm-del
+{
+    margin-right: 15px;
+    display: none;
+}
+.confirm-del i
+{
+    margin: 0 4px;
+}
+.del-confirmed:hover
+{
+    color: #4cae4c;
+}
+.del-cancel:hover
+{
+    color: #c0392b;
+}
+.del-success
+{
+    color: #4cae4c;
+}
+.del-failure
+{
+    color: #c0392b;
+}
+#DeleteResponse
+{
+    margin-right: 15px;
+    display: none;
 }
 
 /* ---------- Header Styles ---------- */
@@ -1164,6 +1202,10 @@ select[multiple]
     color: #9aa1a9;
     margin-top: 10px;
 }
+.system-info .form-val-msg
+{
+    padding: 0px 30px !important;
+}
 .perf-flex
 {
     display: flex;
@@ -1306,14 +1348,24 @@ select[multiple]
 .mon-list-box 
 {
     height: 200px !important;
+    padding: 0px !important;
+}
+.mon-list-box:focus
+{
+    outline: 0;
+}
+.mon-list-box > option 
+{
+    padding: 6px 8px;
+}
+.mon-list-box > option:focus
+{
+    background-color: #c0392b;
+    color: #ffffff;
 }
 #MachineConfig h5
 {
     margin-top: 15px;
-}
-.mon-settings
-{
-    padding-bottom: 15px;
 }
 .dynamic-mon-list > .list-edit-btns
 {
@@ -1336,14 +1388,30 @@ select[multiple]
 #DynamicAlertsConfig
 {
     margin-top: 25px;
+    display: none;
+}
+#OpenDynamicAlertsConfig
+{
+    margin-left: 30px;
+    padding-bottom:10px;
+}
+#OpenDynamicAlertsConfig:hover
+{
+    color: #c0392b;
+    cursor: pointer;
+}
+.dyn-config
+{
+    display: none;
 }
 .alerts-config
 {
     padding: 0px 20px 15px;
+    color: #4b5057;
 }
 .alerts-config > div
 {
-    width: 25%;
+    width: 33.3%;
     padding: 0px 10px;
 }
 .alerts-config input

@@ -1,14 +1,30 @@
 ﻿@model Overseer.WebApp.ViewModels.Machine.MonitoredServiceAlertSettings
 
-<span>Service '@Html.DisplayFor(m => m.ServiceName)' alert configuration:</span>
-@Html.HiddenFor(m => m.ServiceName);
-<div class="flex-container">
-    <div>
-        @Html.TextBoxFor(m => m.NotFoundSeverity)
-        @Html.CheckBoxFor(m => m.NotFoundAlertsOn)
-    </div>
-    <div>
-        @Html.TextBoxFor(m => m.NotRunningSeverity)
-        @Html.CheckBoxFor(m => m.NotRunningAlertsOn)
+<div class="dyn-config" data-type="serv" data-config="@Model.ServiceName">
+    <h4>Service '@Html.DisplayFor(m => m.ServiceName)' alert configuration:</h4>
+
+    @Html.HiddenFor(m => m.ServiceName)
+
+    <div class="system-info-flex">
+        <div class="alert-config flex-container">
+            <div class="alert-fields">
+                <label>Service Not Found Alert:</label>
+                <label class="sub-label">Severity</label>
+                @Html.DropDownListFor(m => m.NotFoundSeverity, Model.NotFoundSevOptions)
+            </div>
+            <div class="alert-checkbox">
+                @Html.CheckBoxFor(m => m.NotFoundAlertsOn)
+            </div>
+        </div>
+        <div class="alert-config flex-container">
+            <div class="alert-fields">
+                <label>Service Not Running Alert:</label>
+                <label class="sub-label">Severity</label>
+                @Html.DropDownListFor(m => m.NotRunningSeverity, Model.NotRunningSevOptions)
+            </div>
+            <div class="alert-checkbox">
+                @Html.CheckBoxFor(m => m.NotRunningAlertsOn)
+            </div>
+        </div>
     </div>
 </div>

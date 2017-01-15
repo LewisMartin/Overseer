@@ -1,9 +1,16 @@
 ﻿$(document).ready(function () {
 
     // whenever an accord-toggle button/div is clicked
-    $('.accord-toggle').click(function ()
+    $('.accord-toggle').on('click', function ()
     {
+        var toggle = $(this);
         var accord = whichAccord(this, 'content-accord');
+
+        // remove toggle if accordion is single user
+        if($(accord).hasClass('accord-single-use')){
+            $(toggle).removeClass('accord-toggle').off('click');
+        }
+
         var accordContent = $(accord).find('.accord-content');
 
         if ($(accordContent).hasClass('accord-content-hidden')) {

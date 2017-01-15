@@ -1,20 +1,52 @@
 ﻿@model Overseer.WebApp.ViewModels.Machine.MonitoredEventLogAlertSettings
 
-<span>Event log '@Html.DisplayFor(m => m.EventLogName)' alert configuration:</span>
-@Html.HiddenFor(m => m.EventLogName);
-<div class="flex-container">
-    <div>
-        @Html.TextBoxFor(m => m.WarningCountWarnValue)
-        @Html.TextBoxFor(m => m.WarningCountAlertValue)
-        @Html.CheckBoxFor(m => m.WarningCountAlertsOn)
+<div class="dyn-config" data-type="log" data-config="@Model.EventLogName">
+    <h4>Event log '@Html.DisplayFor(m => m.EventLogName)' alert configuration:</h4>
+
+    @Html.HiddenFor(m => m.EventLogName)
+    
+    <div class="system-info-flex">
+        <div class="alert-config flex-container">
+            <div class="alert-fields">
+                <label>Error Event Count Alerts:</label>
+                <label class="sub-label">Warning threshold (count):</label>
+                @Html.TextBoxFor(m => m.ErrorCountWarnValue)
+                <label class="sub-label">Alert threshold (count):</label>
+                @Html.TextBoxFor(m => m.ErrorCountAlertValue)
+            </div>
+            <div class="alert-checkbox">
+                @Html.CheckBoxFor(m => m.ErrorCountAlertsOn)
+            </div>
+        </div>
+        <div class="alert-config flex-container">
+            <div class="alert-fields">
+                <label>Warning Event Count Alerts:</label>
+                <label class="sub-label">Warning threshold (count):</label>
+                @Html.TextBoxFor(m => m.WarningCountWarnValue)
+                <label class="sub-label">Alert threshold (count):</label>
+                @Html.TextBoxFor(m => m.WarningCountAlertValue)
+            </div>
+            <div class="alert-checkbox">
+                @Html.CheckBoxFor(m => m.WarningCountAlertsOn)
+            </div>
+        </div>
+        <div class="alert-config flex-container">
+            <div class="alert-fields">
+                <label>Log Not Found Alert:</label>
+                <label class="sub-label">Severity</label>
+                @Html.DropDownListFor(m => m.NotFoundSeverity, Model.NotFoundSevOptions)
+            </div>
+            <div class="alert-checkbox">
+                @Html.CheckBoxFor(m => m.NotFoundAlertsOn)
+            </div>
+        </div>
     </div>
-    <div>
-        @Html.TextBoxFor(m => m.ErrorCountWarnValue)
-        @Html.TextBoxFor(m => m.ErrorCountAlertValue)
-        @Html.CheckBoxFor(m => m.ErrorCountAlertsOn)
-    </div>
-    <div>
-        @Html.TextBoxFor(m => m.NotFoundSeverity)
-        @Html.CheckBoxFor(m => m.NotFoundAlertsOn)
+    <div class="form-val">
+        <div class="form-val-msg">
+            @Html.ValidationMessageFor(m => m.WarningCountWarnValue)
+        </div>
+        <div class="form-val-msg">
+            @Html.ValidationMessageFor(m => m.WarningCountAlertValue)
+        </div>
     </div>
 </div>

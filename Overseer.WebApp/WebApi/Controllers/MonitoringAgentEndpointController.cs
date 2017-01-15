@@ -29,14 +29,12 @@ namespace Overseer.WebApp.WebApi
         public MonitoringScheduleResponse GetMonitoringSchedule(Guid machineId)
         {
             Machine targetMachine = _unitOfWork.Machines.Get(machineId);
-
             TestEnvironment testEnv = _unitOfWork.TestEnvironments.GetWithMonitoringSettings(targetMachine.ParentEnv);
 
-            int interval = (int)testEnv.MonitoringSettings.MonitoringUpdateInterval;
+            int interval = (int)testEnv.MonitoringSettings.MonitoringUpdateInterval;    // get user defined monitoring interval
 
             DateTime currentTime = DateTime.UtcNow;
             DateTime scheduledTime = new DateTime(currentTime.Year, currentTime.Month, currentTime.Day, currentTime.Hour, 0, 0);
-
             scheduledTime = scheduledTime.AddMinutes((currentTime.Minute % interval == 0) ? currentTime.Minute + interval : ((currentTime.Minute + interval - 1) / interval) * interval);
 
             return new MonitoringScheduleResponse()
@@ -225,6 +223,7 @@ namespace Overseer.WebApp.WebApi
             };
         }
 
+        // methods for updating monitoring alerts based on submitted data
         private void UpdateHistoricalAlerts(Guid machineId)
         {
             var currentAlerts = _unitOfWork.MonitoringAlerts.GetAllAlertsByMachine(machineId);

@@ -1,21 +1,66 @@
 ﻿@model Overseer.WebApp.ViewModels.Machine.MonitoredProcessAlertSettings
 
-<span>Process '@Html.DisplayFor(m => m.ProcessName)' alert configuration:</span>
-@Html.HiddenFor(m => m.ProcessName);
-<div class="flex-container">
-    <div>
-        @Html.TextBoxFor(m => m.WSWarnValue)
-        @Html.TextBoxFor(m => m.WSAlertValue)
-        @Html.CheckBoxFor(m => m.WorkingSetAlertsOn)
+<div class="dyn-config" data-type="proc" data-config="@Model.ProcessName">
+    <h4>Process '@Html.DisplayFor(m => m.ProcessName)' alert configuration:</h4>
+
+    @Html.HiddenFor(m => m.ProcessName)
+    
+    <div class="system-info-flex">
+        <div class="alert-config flex-container">
+            <div class="alert-fields">
+                <label>Working Set Alerts:</label>
+                <label class="sub-label">Warning threshold (kbs):</label>
+                @Html.EditorFor(m => m.WSWarnValue)
+                <label class="sub-label">Alert threshold (kbs):</label>
+                @Html.EditorFor(m => m.WSAlertValue)
+            </div>
+            <div class="alert-checkbox">
+                @Html.CheckBoxFor(m => m.WorkingSetAlertsOn)
+            </div>
+        </div>
+        <div class="alert-config flex-container">
+            <div class="alert-fields">
+                <label>Private Bytes Alerts:</label>
+                <label class="sub-label">Warning threshold (kbs):</label>
+                @Html.EditorFor(m => m.PBWarnValue)
+                <label class="sub-label">Alert threshold (kbs):</label>
+                @Html.EditorFor(m => m.PBAlertValue)
+            </div>
+            <div class="alert-checkbox">
+                @Html.CheckBoxFor(m => m.PrivateBytesAlertsOn)
+            </div>
+        </div>
+        <div class="alert-config flex-container">
+            <div class="alert-fields">
+                <label>Virtual Bytes Alerts:</label>
+                <label class="sub-label">Warning threshold (kb):</label>
+                @Html.TextBoxFor(m => m.VBWarnValue)
+                <label class="sub-label">Alert threshold (kb):</label>
+                @Html.TextBoxFor(m => m.VBAlertValue)
+            </div>
+            <div class="alert-checkbox">
+                @Html.CheckBoxFor(m => m.VirtualBytesAlertsOn)
+            </div>
+        </div>
     </div>
-    <div>
-        @Html.TextBoxFor(m => m.PBWarnValue)
-        @Html.TextBoxFor(m => m.PBAlertValue)
-        @Html.CheckBoxFor(m => m.PrivateBytesAlertsOn)
-    </div>
-    <div>
-        @Html.TextBoxFor(m => m.VBWarnValue)
-        @Html.TextBoxFor(m => m.VBAlertValue)
-        @Html.CheckBoxFor(m => m.VirtualBytesAlertsOn)
+    <div class="form-val">
+        <div class="form-val-msg">
+            @Html.ValidationMessageFor(m => m.WSWarnValue)
+        </div>
+        <div class="form-val-msg">
+            @Html.ValidationMessageFor(m => m.WSAlertValue)
+        </div>
+        <div class="form-val-msg">
+            @Html.ValidationMessageFor(m => m.PBWarnValue)
+        </div>
+        <div class="form-val-msg">
+            @Html.ValidationMessageFor(m => m.PBAlertValue)
+        </div>
+        <div class="form-val-msg">
+            @Html.ValidationMessageFor(m => m.VBWarnValue)
+        </div>
+        <div class="form-val-msg">
+            @Html.ValidationMessageFor(m => m.VBAlertValue)
+        </div>
     </div>
 </div>

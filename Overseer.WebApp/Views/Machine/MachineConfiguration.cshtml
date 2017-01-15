@@ -15,11 +15,25 @@
 </div>
 
 <div id="MachineConfig" class="page-content" data-baseurl="@Model.BaseAppUrl" data-machineid="@Model.MachineId">
+    <div class="content-area">
+        <h3>
+            @Model.DisplayName
+            <a href="@Url.Action("Machineseer", "Machine", new { machineId = @Model.MachineId }, null)"><span class="icon config-i"><i class="fa fa-area-chart" aria-hidden="true"></i></span> </a>
+        </h3>
+    </div>
+    
     <section>
         @using (Html.BeginForm("MachineConfiguration", "Machine", FormMethod.Post, new { data_ajax = "MachineConfig", id = "EnvironmentAjaxForm" }))
         {
         <div class="content-area">
-            <h3>Configure:</h3>
+            <h3>Reconfigure Machine:
+                <span class="fl-right initial-del"><i class="fa fa-trash" aria-hidden="true"></i></span>
+                <span class="fl-right confirm-del" data-deltype="Machine">Are you sure you wish to delete this machine? <i class="fa fa-check del-confirmed" aria-hidden="true"></i> <i class="fa fa-close del-cancel" aria-hidden="true"></i></span>
+                <span id="DeleteResponse" class="fl-right">
+                    <span class="del-success"></span>
+                    <span class="del-failure"></span>
+                </span>
+             </h3>
             <div class="system-info">
                     <input type="hidden" name="MachineId" value="@Model.MachineId" />
 
@@ -39,7 +53,19 @@
                                 @Html.TextBoxFor(m => m.MachineName, new { @id = "machineName" })
                             </div>
                         </div>
+                        <div class="form-val">
+                            <div class="form-val-msg">
+                                @Html.ValidationMessageFor(m => m.ParentEnvironmentId)
+                            </div>
+                            <div class="form-val-msg">
+                                @Html.ValidationMessageFor(m => m.DisplayName)
+                            </div>
+                            <div class="form-val-msg">
+                                @Html.ValidationMessageFor(m => m.MachineName)
+                            </div>
+                        </div>
                     </div>
+
                     <div class="info-network">
                         <h4>Network <span>(manual)</span>:</h4>
                         <div class="system-info-flex">
@@ -52,7 +78,16 @@
                                 @Html.TextBoxFor(m => m.FQDN, new { @id = "FQDN" })
                             </div>
                         </div>
+                        <div class="form-val">
+                            <div class="form-val-msg">
+                                @Html.ValidationMessageFor(m => m.IpAddress)
+                            </div>
+                            <div class="form-val-msg">
+                                @Html.ValidationMessageFor(m => m.FQDN)
+                            </div>
+                        </div>
                     </div>
+
                     <div class="info-OS">
                         <h4>OS <span>(manual)</span>:</h4>
                         <div class="system-info-flex">
@@ -61,7 +96,13 @@
                                 @Html.DropDownListFor(m => m.OperatingSystemId, Model.OperatingSystemOptions, new { @id = "operatingSys" })
                             </div>
                         </div>
+                        <div class="form-val">
+                            <div class="form-val-msg">
+                                @Html.ValidationMessageFor(m => m.OperatingSystemId)
+                            </div>
+                        </div>
                     </div>
+
                     <div class="info-hardware">
                         <h4>Hardware <span>(manual)</span>:</h4>
                         <div class="system-info-flex">
@@ -74,144 +115,137 @@
                                 @Html.EditorFor(m => m.TotalMemGbs, new { @id = "totalMem" })
                             </div>
                         </div>
-                    </div>
-                    <div class="mon-settings stat-mon-settings">
-                        <h4>Static Monioring Settings</h4>
-                        <div>
-                            <h5>Cpu utilisation alerts:</h5>
-                            <div class="alerts-config flex-container">
-                                <div class="alert-config flex-container">
-                                    <div class="alert-fields">
-                                        <label>Avg CPU util alerts:</label>
-                                        <label class="sub-label">Warning threshold (%):</label>
-                                        @Html.EditorFor(m => m.AvgCpuUtilWarnValue, true)
-                                        <label class="sub-label">Alert threshold (%):</label>
-                                        @Html.EditorFor(m => m.AvgCpuUtilAlertValue, true)
-                                    </div>
-                                    <div class="alert-checkbox">
-                                        @Html.CheckBoxFor(m => m.AvgCpuUtilAlertsOn, true)
-                                    </div>
-                                </div>
-                                <div class="alert-config flex-container">
-                                    <div class="alert-fields">
-                                        <label>High CPU readings alerts:</label>
-                                        <label class="sub-label">Warning threshold (count):</label>
-                                        @Html.EditorFor(m => m.HighCpuUtilWarnValue, true)
-                                        <label class="sub-label">Alert threshold (count):</label>
-                                        @Html.EditorFor(m => m.HighCpuUtilAlertValue, true)
-                                    </div>
-                                    <div class="alert-checkbox">
-                                        @Html.CheckBoxFor(m => m.HighCpuUtilAlertsOn, true)
-                                    </div>
-                                </div>
-                                <div class="alert-config flex-container">
-                                    <div class="alert-fields">
-                                        <label>Avg MEM util alerts:</label>
-                                        <label class="sub-label">Warning threshold (%):</label>
-                                        @Html.EditorFor(m => m.AvgMemUtilWarnValue, true)
-                                        <label class="sub-label">Alert threshold (%):</label>
-                                        @Html.EditorFor(m => m.AvgMemUtilAlertValue, true)
-                                    </div>
-                                    <div class="alert-checkbox">
-                                        @Html.CheckBoxFor(m => m.AvgMemUtilAlertsOn, true)
-                                    </div>
-                                </div>
-                                <div class="alert-config flex-container">
-                                    <div class="alert-fields">
-                                        <label>High MEM readings alerts:</label>
-                                        <label class="sub-label">Warning threshold (count):</label>
-                                        @Html.EditorFor(m => m.HighMemUtilWarnValue, true)
-                                        <label class="sub-label">Alert threshold (count):</label>
-                                        @Html.EditorFor(m => m.HighMemUtilAlertValue, true)
-                                    </div>
-                                    <div class="alert-checkbox">
-                                        @Html.CheckBoxFor(m => m.HighMemUtilAlertsOn, true)
-                                    </div>
-                                </div>
+                        <div class="form-val">
+                            <div class="form-val-msg">
+                                @Html.ValidationMessageFor(m => m.NumProcessors)
                             </div>
-                            <h5>Disk usage alerts:</h5>
-                            <div class="alerts-config flex-container">
-                                <div class="alert-config flex-container">
-                                    <div class="alert-fields">
-                                        <label>Used disk space alerts:</label>
-                                        <label class="sub-label">Warning threshold (% used space):</label>
-                                        @Html.EditorFor(m => m.UsedSpaceWarnValue, true)
-                                        <label class="sub-label">Alert threshold (% used space):</label>
-                                        @Html.EditorFor(m => m.UsedSpaceAlertValue, true)
-                                    </div>
-                                    <div class="alert-checkbox">
-                                        @Html.CheckBoxFor(m => m.UsedSpaceAlertsOn, true)
-                                    </div>
-                                </div>
+                            <div class="form-val-msg">
+                                @Html.ValidationMessageFor(m => m.TotalMemGbs)
                             </div>
                         </div>
                     </div>
-                    <div class="mon-settings dyn-mon-settings">
-                        <h4>Dynamic Monitoring Settings:</h4>
-                        <div class="system-info-flex">
-                            <div id="monitoredProcesses" class="dynamic-mon-list flex-container">
-                                <div class="list-edit-fields">
-                                    <label for="monitoredProcList">Processes:</label>
-                                    <input type="text" class="mon-list-input" />
-                                    @Html.ListBoxFor(m => m.UpdatedMonitoredProcesses, Model.CurrentMonitoredProcesses, new { @id = "monitoredProcList", @class = "mon-list-box" })
-                                </div>
-                                <div class="list-edit-btns">
-                                    <button type="button" class="mon-list-add"><i class="fa fa-plus a-fw" aria-hidden="true"></i></button>
-                                    <button type="button" class="mon-list-remove"><i class="fa fa-close a-fw" aria-hidden="true"></i></button>
+
+                    <div class="stat-mon-settings content-accord accord-single-use">
+                        <h4 class="accord-toggle">Static Monioring Settings</h4>
+                        <div class="accord-content accord-content-hidden">
+                            <div>
+                                <h5>Cpu utilisation alerts:</h5>
+                                <div class="alerts-config flex-container">
+                                    <div class="alert-config flex-container">
+                                        <div class="alert-fields">
+                                            <label>Avg CPU util alerts:</label>
+                                            <label class="sub-label">Warning threshold (%):</label>
+                                            @Html.EditorFor(m => m.AvgCpuUtilWarnValue, true)
+                                            <label class="sub-label">Alert threshold (%):</label>
+                                            @Html.EditorFor(m => m.AvgCpuUtilAlertValue, true)
+                                        </div>
+                                        <div class="alert-checkbox">
+                                            @Html.CheckBoxFor(m => m.AvgCpuUtilAlertsOn, true)
+                                        </div>
+                                    </div>
+                                    <div class="alert-config flex-container">
+                                        <div class="alert-fields">
+                                            <label>High CPU readings alerts:</label>
+                                            <label class="sub-label">Warning threshold (count):</label>
+                                            @Html.EditorFor(m => m.HighCpuUtilWarnValue, true)
+                                            <label class="sub-label">Alert threshold (count):</label>
+                                            @Html.EditorFor(m => m.HighCpuUtilAlertValue, true)
+                                        </div>
+                                        <div class="alert-checkbox">
+                                            @Html.CheckBoxFor(m => m.HighCpuUtilAlertsOn, true)
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
-                            <div id="monitoredEventLogs" class="dynamic-mon-list flex-container">
-                                <div class="list-edit-fields">
-                                    <label for="monitoredEventLogList">EventLogs:</label>
-                                    <input type="text" class="mon-list-input" />
-                                    @Html.ListBoxFor(m => m.UpdatedMonitoredEventLogs, Model.CurrentMonitoredEventLogs, new { @id = "monitoredEventLogList", @class = "mon-list-box" })
-                                </div>
-                                <div class="list-edit-btns">
-                                    <button type="button" class="mon-list-add"><i class="fa fa-plus a-fw" aria-hidden="true"></i></button>
-                                    <button type="button" class="mon-list-remove"><i class="fa fa-close a-fw" aria-hidden="true"></i></button>
+                            <div>
+                                <h5>Mem utilisation alerts:</h5>
+                                <div class="alerts-config flex-container">
+                                    <div class="alert-config flex-container">
+                                        <div class="alert-fields">
+                                            <label>Avg MEM util alerts:</label>
+                                            <label class="sub-label">Warning threshold (%):</label>
+                                            @Html.EditorFor(m => m.AvgMemUtilWarnValue, true)
+                                            <label class="sub-label">Alert threshold (%):</label>
+                                            @Html.EditorFor(m => m.AvgMemUtilAlertValue, true)
+                                        </div>
+                                        <div class="alert-checkbox">
+                                            @Html.CheckBoxFor(m => m.AvgMemUtilAlertsOn, true)
+                                        </div>
+                                    </div>
+                                    <div class="alert-config flex-container">
+                                        <div class="alert-fields">
+                                            <label>High MEM readings alerts:</label>
+                                            <label class="sub-label">Warning threshold (count):</label>
+                                            @Html.EditorFor(m => m.HighMemUtilWarnValue, true)
+                                            <label class="sub-label">Alert threshold (count):</label>
+                                            @Html.EditorFor(m => m.HighMemUtilAlertValue, true)
+                                        </div>
+                                        <div class="alert-checkbox">
+                                            @Html.CheckBoxFor(m => m.HighMemUtilAlertsOn, true)
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
-                            <div id="monitoredServices" class="dynamic-mon-list flex-container">
-                                <div class="list-edit-fields">
-                                    <label for="monitoredServiceList">Services:</label>
-                                    <input type="text" class="mon-list-input" />
-                                    @Html.ListBoxFor(m => m.UpdatedMonitoredServices, Model.CurrentMonitoredServices, new { @id = "monitoredServiceList", @class = "mon-list-box" })
-                                </div>
-                                <div class="list-edit-btns">
-                                    <button type="button" class="mon-list-add"><i class="fa fa-plus a-fw" aria-hidden="true"></i></button>
-                                    <button type="button" class="mon-list-remove"><i class="fa fa-close a-fw" aria-hidden="true"></i></button>
+                            <div>
+                                <h5>Disk usage alerts:</h5>
+                                <div class="alerts-config flex-container">
+                                    <div class="alert-config flex-container">
+                                        <div class="alert-fields">
+                                            <label>Used disk space alerts:</label>
+                                            <label class="sub-label">Warning threshold (% used space):</label>
+                                            @Html.EditorFor(m => m.UsedSpaceWarnValue, true)
+                                            <label class="sub-label">Alert threshold (% used space):</label>
+                                            @Html.EditorFor(m => m.UsedSpaceAlertValue, true)
+                                        </div>
+                                        <div class="alert-checkbox">
+                                            @Html.CheckBoxFor(m => m.UsedSpaceAlertsOn, true)
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <span id="OpenDynamicAlertsConfig">Edit alerts...</span>
                     </div>
+                    <div class="dyn-mon-settings content-accord accord-single-use">
+                        <h4 class="accord-toggle">Dynamic Monitoring Settings:</h4>
+                        <div class="accord-content accord-content-hidden">
+                            <div class="system-info-flex">
+                                <div id="monitoredProcesses" class="dynamic-mon-list flex-container">
+                                    <div class="list-edit-fields">
+                                        <label for="monitoredProcList">Processes:</label>
+                                        <input type="text" class="mon-list-input" />
+                                        @Html.ListBoxFor(m => m.UpdatedMonitoredProcesses, Model.CurrentMonitoredProcesses, new { @id = "monitoredProcList", @class = "mon-list-box" })
+                                    </div>
+                                    <div class="list-edit-btns">
+                                        <button type="button" class="mon-list-add"><i class="fa fa-plus a-fw" aria-hidden="true"></i></button>
+                                        <button type="button" class="mon-list-remove"><i class="fa fa-close a-fw" aria-hidden="true"></i></button>
+                                    </div>
+                                </div>
 
-                    <div class="center-input form-val">
-                        <div class="form-val-msg">
-                            @Html.ValidationMessageFor(m => m.ParentEnvironmentId)
-                        </div>
-                        <div class="form-val-msg">
-                            @Html.ValidationMessageFor(m => m.DisplayName)
-                        </div>
-                        <div class="form-val-msg">
-                            @Html.ValidationMessageFor(m => m.IpAddress)
-                        </div>
-                        <div class="form-val-msg">
-                            @Html.ValidationMessageFor(m => m.FQDN)
-                        </div>
-                        <div class="form-val-msg">
-                            @Html.ValidationMessageFor(m => m.OperatingSystemId)
-                        </div>
-                        <div class="form-val-msg">
-                            @Html.ValidationMessageFor(m => m.NumProcessors)
-                        </div>
-                        <div class="form-val-msg">
-                            @Html.ValidationMessageFor(m => m.TotalMemGbs)
-                        </div>
-                        <div id="dupe-machine-msg" class="form-val-msg">
+                                <div id="monitoredEventLogs" class="dynamic-mon-list flex-container">
+                                    <div class="list-edit-fields">
+                                        <label for="monitoredEventLogList">EventLogs:</label>
+                                        <input type="text" class="mon-list-input" />
+                                        @Html.ListBoxFor(m => m.UpdatedMonitoredEventLogs, Model.CurrentMonitoredEventLogs, new { @id = "monitoredEventLogList", @class = "mon-list-box" })
+                                    </div>
+                                    <div class="list-edit-btns">
+                                        <button type="button" class="mon-list-add"><i class="fa fa-plus a-fw" aria-hidden="true"></i></button>
+                                        <button type="button" class="mon-list-remove"><i class="fa fa-close a-fw" aria-hidden="true"></i></button>
+                                    </div>
+                                </div>
 
+                                <div id="monitoredServices" class="dynamic-mon-list flex-container">
+                                    <div class="list-edit-fields">
+                                        <label for="monitoredServiceList">Services:</label>
+                                        <input type="text" class="mon-list-input" />
+                                        @Html.ListBoxFor(m => m.UpdatedMonitoredServices, Model.CurrentMonitoredServices, new { @id = "monitoredServiceList", @class = "mon-list-box" })
+                                    </div>
+                                    <div class="list-edit-btns">
+                                        <button type="button" class="mon-list-add"><i class="fa fa-plus a-fw" aria-hidden="true"></i></button>
+                                        <button type="button" class="mon-list-remove"><i class="fa fa-close a-fw" aria-hidden="true"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="OpenDynamicAlertsConfig">Edit alerts...</div>
                         </div>
                     </div>
             </div>
@@ -224,11 +258,6 @@
             <input type="submit" value="Save Changes" class="pag-btn" data-baseurl="@Model.BaseAppUrl" />
         </div>
         }
-        <div id="DynamicAlertsConfig" class="content-area">
-            <h5>Alert Configuration:</h5>
-            <div>
-
-            </div>
-        </div>
+        <div id="DynamicAlertsConfig"></div>
     </section>
 </div>

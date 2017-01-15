@@ -494,6 +494,8 @@ namespace Overseer.WebApp.Controllers
 
             foreach (var procsetting in procSettings)
             {
+                viewModel.DynamicAlertSettings.Add(new SelectListItem() { Value = "proc", Text = procsetting.ProcessName });
+
                 viewModel.ProcessAlertSettings.Add(new MonitoredProcessAlertSettings()
                 {
                     ProcessName = procsetting.ProcessName,
@@ -511,6 +513,8 @@ namespace Overseer.WebApp.Controllers
 
             foreach (var logsetting in logSettings)
             {
+                viewModel.DynamicAlertSettings.Add(new SelectListItem() { Value = "log", Text = logsetting.EventLogName });
+
                 viewModel.EventLogAlertSettings.Add(new MonitoredEventLogAlertSettings()
                 {
                     EventLogName = logsetting.EventLogName,
@@ -521,19 +525,33 @@ namespace Overseer.WebApp.Controllers
                     ErrorCountWarnValue = logsetting.ErrorCountWarnValue != null ? (int)logsetting.ErrorCountWarnValue : 0,
                     ErrorCountAlertValue = logsetting.ErrorCountAlertValue != null ? (int)logsetting.ErrorCountAlertValue : 0,
                     NotFoundAlertsOn = logsetting.NotFoundAlertsOn,
-                    NotFoundSeverity = logsetting.NotFoundSeverity != null ? (int)logsetting.NotFoundSeverity : 0
+                    NotFoundSevOptions = new List<SelectListItem>()
+                    {
+                        new SelectListItem() { Text = "Warning", Value = "0", Selected = logsetting.NotFoundSeverity == null ? false : logsetting.NotFoundSeverity == 0 ? true : false },
+                        new SelectListItem() { Text = "Alert", Value = "1", Selected = logsetting.NotFoundSeverity == null ? false : logsetting.NotFoundSeverity == 1 ? true : false }
+                    }
                 });
             }
 
             foreach (var servicesetting in serviceSettings)
             {
+                viewModel.DynamicAlertSettings.Add(new SelectListItem() { Value = "serv", Text = servicesetting.ServiceName });
+
                 viewModel.ServiceAlertSettings.Add(new MonitoredServiceAlertSettings()
                 {
                     ServiceName = servicesetting.ServiceName,
                     NotFoundAlertsOn = servicesetting.NotFoundAlertsOn,
-                    NotFoundSeverity = servicesetting.NotFoundSeverity != null ? (int)servicesetting.NotFoundSeverity : 0,
+                    NotFoundSevOptions = new List<SelectListItem>()
+                    {
+                        new SelectListItem() { Text = "Warning", Value = "0", Selected = servicesetting.NotFoundSeverity == null ? false : servicesetting.NotFoundSeverity == 0 ? true : false },
+                        new SelectListItem() { Text = "Alert", Value = "1", Selected = servicesetting.NotFoundSeverity == null ? false : servicesetting.NotFoundSeverity == 1 ? true : false }
+                    },
                     NotRunningAlertsOn = servicesetting.NotRunningAlertsOn,
-                    NotRunningSeverity = servicesetting.NotRunningSeverity != null ? (int)servicesetting.NotRunningSeverity : 0
+                    NotRunningSevOptions = new List<SelectListItem>()
+                    {
+                        new SelectListItem() { Text = "Warning", Value = "0", Selected = servicesetting.NotRunningSeverity == null ? false : servicesetting.NotRunningSeverity == 0 ? true : false },
+                        new SelectListItem() { Text = "Alert", Value = "1", Selected = servicesetting.NotRunningSeverity == null ? false : servicesetting.NotRunningSeverity == 1 ? true : false }
+                    }
                 });
             }
 
@@ -671,6 +689,25 @@ namespace Overseer.WebApp.Controllers
 
                 return Json(new { success = true, successmsg = (viewModel.DisplayName + "' has been successfully added to '" + parentEnvironment.EnvironmentName) }, JsonRequestBehavior.AllowGet);
             }
+        }
+
+        [HttpGet]
+        public ActionResult MachineDeletion(Guid machineId)
+        {
+            var machine = _unitOfWork.Machines.Get(machineId);
+            var machineCred = _unitOfWork.MonitoringAgentCredentials.Get(machineId);
+            var sysInfoMon = _unitOfWork.SystemInfoMonitoring.Get(machineId);
+            var DiskMonSet = _unitOfWork.DiskMonitoringSettings.Get(machineId);
+            var PerfMonSet = _unitOfWork.PerformanceMonitoringSettings.Get(machineId);
+
+            _unitOfWork.MonitoringAgentCredentials.Delete(machineCred);
+            _unitOfWork.SystemInfoMonitoring.Delete(sysInfoMon);
+            _unitOfWork.DiskMonitoringSettings.Delete(DiskMonSet);
+            _unitOfWork.PerformanceMonitoringSettings.Delete(PerfMonSet);
+            _unitOfWork.Machines.Delete(machine);
+            _unitOfWork.Save();
+
+            return Json(new { success = true, successmsg = ("Machine '" + machine.DisplayName + "' deleted!") }, JsonRequestBehavior.AllowGet);
         }
 
         private int GetMillisecondsToNextUpdate(int environmentId)
