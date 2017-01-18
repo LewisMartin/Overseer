@@ -46,7 +46,7 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
             foreach (SingleLog log in _EventLogInfo.EventLogs)
             {
                 SnapshotData += String.Format(" {0}: [Exists: {1}, Display name: {2}, Total entries: {3}, Events trawled: {4}, Total infos: {5}, Total warnings: {6}, Total errors: {7}]",
-                    log.Name, log.Exists, log.DisplayName, log.EntryTotal, 100, log.InfoTotal, log.WarningTotal, log.ErrorTotal);
+                    log.Name, log.Exists, log.DisplayName, log.EntryTotal, 1000, log.InfoTotal, log.WarningTotal, log.ErrorTotal);
             }
             SnapshotData += " >";
 
@@ -83,7 +83,7 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
             {
                 int total = log.Entries.Count, infos = 0, warnings = 0, errors = 0;
 
-                for(int i = total-1; i > ((total-1)-((total < 100) ? total : 100)); i--)
+                for(int i = total-1; i > ((total-1)-((total < 1000) ? total : 1000)); i--)
                 {
                     switch (log.Entries[i].EntryType.ToString())
                     {

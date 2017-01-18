@@ -629,7 +629,6 @@ h5 > span
 }
 #User-Area
 {
-	width: 120px;
 	height: auto;
 	background-color: #34373c;
 }
@@ -689,7 +688,6 @@ h5 > span
 {
     position: relative;
     font-size: 12px;
-    width: 200px;
 }
 .drop-down
 {
@@ -890,6 +888,39 @@ nav i
 {
     background-color: #9b2f24;
 }
+
+
+
+/* ---------- Unauthorized page Styles ---------- */
+
+.unauth-content
+{
+    padding: 25px 0;
+}
+.unauth-content > div
+{
+    width: 100%;
+    text-align: center;
+}
+.unauth-icon 
+{
+    font-size: 60px;
+}
+.unauth-title
+{
+    font-size: 22px;
+}
+.unauth-msg
+{
+    margin: 20px 0px;
+    font-size: 14px;
+}
+
+/* ---------- Unauthorized page Styles ---------- */
+
+
+
+
 
 
 /* ---------- Dashboard Main Content Styles ---------- */

@@ -20,7 +20,7 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
 
             _ProcessInfo = new ProcessInformation();
 
-            if (MonitoredEntities.Count() > 0)
+            if (MonitoredEntities != null)
             {
                 foreach (string processName in MonitoredEntities)
                 {

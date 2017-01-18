@@ -20,7 +20,7 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
         {
             _ServiceInfo = new ServiceInformation();
 
-            if (MonitoredEntities.Count > 0)
+            if (MonitoredEntities != null)
             {
                 foreach (string serviceName in MonitoredEntities)
                 {

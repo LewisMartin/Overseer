@@ -1,4 +1,5 @@
 ﻿using Overseer.WebApp.DAL.DomainModels;
+using Overseer.WebApp.Helpers.AuthHelpers;
 using Overseer.WebApp.ViewModels.Alert;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace Overseer.WebApp.Controllers
 {
     public class AlertController : BaseController
     {
+        [CustomAuth(Roles = "Administrator, QA")]
         [HttpGet]
         public ActionResult AlertViewer(string initAlertType)
         {
@@ -68,6 +70,7 @@ namespace Overseer.WebApp.Controllers
             }
         }
 
+        [CustomAuth(Roles = "Administrator, QA")]
         [HttpPost]
         public ActionResult AlertViewer(AlertViewerViewModel submittedFilters)
         {

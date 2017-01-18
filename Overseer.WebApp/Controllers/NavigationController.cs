@@ -24,10 +24,9 @@ namespace Overseer.WebApp.Controllers
         //[ChildActionOnly]   // can only be called from within a view
         public PartialViewResult _SidebarNav(string activeCtrl)
         {
-            // cast user identity as 'ClaimIdentity' in order to access it's other claims
-            var userClaims = User.Identity as ClaimsIdentity;
+            var user = _unitOfWork.Users.GetWithUserRole(GetLoggedInUserId());
 
-            _SidebarNavViewModel _sidebarNavViewModel = new _SidebarNavViewModel { userId = userClaims.FindFirst(ClaimTypes.NameIdentifier).Value, activeController = activeCtrl };
+            _SidebarNavViewModel _sidebarNavViewModel = new _SidebarNavViewModel { UserId = user.UserID, UserRole = user.UserRole.RoleName, ActiveController = activeCtrl };
 
             return PartialView(_sidebarNavViewModel);
         }
@@ -35,17 +34,13 @@ namespace Overseer.WebApp.Controllers
         // GET: EnvironmentNavigation (partial view user within sidebar)
         public PartialViewResult _EnvironmentNavigation()
         {
-            // cast user identity as 'ClaimIdentity' in order to access it's other claims
-            var userClaims = User.Identity as ClaimsIdentity;
-            int loggedInUserId = Int32.Parse(userClaims.FindFirst(ClaimTypes.NameIdentifier).Value);
-
             _EnvironmentNavigationViewModel viewModel = new _EnvironmentNavigationViewModel()
             {
                 environmentNavDetails = new List<EnvironmentLinkViewModel>()
             };
 
             // 
-            foreach (var environment in _unitOfWork.TestEnvironments.GetEnvironmentsAndChildMachinesByCreator(loggedInUserId).ToList())
+            foreach (var environment in _unitOfWork.TestEnvironments.GetEnvironmentsAndChildMachinesByCreator(GetLoggedInUserId()).ToList())
             {
                 List<MachineLinkViewModel> childMachines = new List<MachineLinkViewModel>();
 

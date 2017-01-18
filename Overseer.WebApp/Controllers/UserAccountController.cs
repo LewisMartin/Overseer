@@ -1,4 +1,5 @@
 ﻿using Overseer.WebApp.DAL.DomainModels;
+using Overseer.WebApp.Helpers.AuthHelpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,13 +47,9 @@ namespace Overseer.WebApp.Controllers
             UserAccount user = _unitOfWork.Users.GetUserByUsername(username);
 
             if (user != null)
-            {
                 return false;
-            }
             else
-            {
                 return true;
-            }
         }
 
         // method to get the role of a user during login we will take the username to find the user record, find their roleId and then query the userrole table using role id to find the role name

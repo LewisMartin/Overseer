@@ -415,6 +415,7 @@
     <Content Include="Views\Calendar\_RetrieveCalendar.cshtml" />
     <Content Include="Views\Calendar\CalendarViewer.cshtml" />
     <Content Include="Views\Management\CalendarManagement.cshtml" />
+    <Content Include="Views\UserAuth\Unauthorized.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

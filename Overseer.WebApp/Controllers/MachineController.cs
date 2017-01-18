@@ -208,6 +208,7 @@ namespace Overseer.WebApp.Controllers
 
         // MachineConfiguration - page to change machine details & configure machine level monitoring settings
         // GET: 
+        [CustomAuth(Roles = "Administrator, QA")]
         [HttpGet]
         public ActionResult MachineConfiguration(Guid machineId)
         {
@@ -334,6 +335,7 @@ namespace Overseer.WebApp.Controllers
             return View(viewModel);
         }
         // POST:
+        [CustomAuth(Roles = "Administrator, QA")]
         [HttpPost]
         public ActionResult MachineConfiguration(MachineConfigurationViewModel viewModel)
         {
@@ -623,6 +625,7 @@ namespace Overseer.WebApp.Controllers
 
         // MachineCreation - page for creating new machines
         // GET:
+        [CustomAuth(Roles = "Administrator, QA")]
         public ActionResult MachineCreation(int environmentId)
         {
             var userClaims = User.Identity as ClaimsIdentity;
@@ -659,6 +662,7 @@ namespace Overseer.WebApp.Controllers
             return View(viewModel);
         }
         // POST:
+        [CustomAuth(Roles = "Administrator, QA")]
         [HttpPost]
         public ActionResult MachineCreation(MachineCreationViewModel viewModel)
         {
@@ -691,6 +695,7 @@ namespace Overseer.WebApp.Controllers
             }
         }
 
+        [CustomAuth(Roles = "Administrator, QA")]
         [HttpGet]
         public ActionResult MachineDeletion(Guid machineId)
         {

@@ -18,7 +18,7 @@ namespace Overseer.WebApp.Helpers.AuthHelpers
                 // assign the home page to the ViewResult (we'll redirect unauthorized users here for now, later change this to an error page)
                 authContext.Result = new ViewResult
                 {
-                    ViewName = "~/Views/Home/Index.cshtml"
+                    ViewName = "~/Views/UserAuth/Unauthorized.cshtml"
                 };
             }
             // else use the base method for handling simple authentication issues

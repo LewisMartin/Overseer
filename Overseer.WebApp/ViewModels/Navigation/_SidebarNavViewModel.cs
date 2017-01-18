@@ -8,8 +8,10 @@ namespace Overseer.WebApp.ViewModels.Navigation
     public class _SidebarNavViewModel
     {
         // the user's id to test that we can identify user from within controller
-        public string userId { get; set; }
+        public int UserId { get; set; }
 
-        public string activeController { get; set; }
+        public string UserRole { get; set; }
+
+        public string ActiveController { get; set; }
     }
 }

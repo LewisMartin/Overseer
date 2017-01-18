@@ -17,6 +17,10 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
 
         private PerformanceCounter _CpuUtilCounter;
         private PerformanceCounter _MemUtilCounter;
+
+        private bool MonitoringWorkersRunning;   // <--- Introduced for Unit Testing.
+        private Thread CpuMonitoringWorker;
+        private Thread MemMonitoringWorker;
         private List<float> _CpuReadings = new List<float>();
         private List<float> _MemReadings = new List<float>();
         private int _CpuHighUtilCounter;
@@ -64,33 +68,45 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
             _CpuHighUtilCounter = 0;
             _MemHighUtilCounter = 0;
 
-            Thread CpuMonitoringWorker = new Thread(CpuMonitoring); // run in separate thread from main thread
-            Thread MemMonitoringWorker = new Thread(MemMonitoring); // run in separate thread from main thread
+            MonitoringWorkersRunning = true;
+
+            CpuMonitoringWorker = new Thread(CpuMonitoring); // run in separate thread from main thread
+            MemMonitoringWorker = new Thread(MemMonitoring); // run in separate thread from main thread
 
             CpuMonitoringWorker.Start();
             MemMonitoringWorker.Start();
+        }
+
+        public void StopMonitoring()
+        {
+            MonitoringWorkersRunning = false;
         }
 
         private void CpuMonitoring()
         {
             _Logger.Log("Starting cpu monitoring..");
 
-            while (true)
+            while (MonitoringWorkersRunning)
             {
-                lock (_CpuReadings)
-                {
-                    _CpuReadings.Add(_CpuUtilCounter.NextValue());
+                AddCpuReading();
 
-                    if ((_CpuReadings[_CpuReadings.Count() - 1]) >= 75)
+                Thread.Sleep(1000);
+            }
+        }
+
+        public void AddCpuReading()     // <--- Introduced for unit testing
+        {
+            lock (_CpuReadings)
+            {
+                _CpuReadings.Add(_CpuUtilCounter.NextValue());
+
+                if ((_CpuReadings[_CpuReadings.Count() - 1]) >= 75)
+                {
+                    lock (_Lock_CpuHighUtilCounter)
                     {
-                        lock (_Lock_CpuHighUtilCounter)
-                        {
-                            _CpuHighUtilCounter++;
-                        }
+                        _CpuHighUtilCounter++;
                     }
                 }
-
-                Thread.Sleep(3000);
             }
         }
 
@@ -98,22 +114,27 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
         {
             _Logger.Log("Starting memory monitoring..");
 
-            while (true)
+            while (MonitoringWorkersRunning)
             {
-                lock (_MemReadings)
-                {
-                    _MemReadings.Add(_MemUtilCounter.NextValue());
+                AddMemReading();
 
-                    if ((_MemReadings[_MemReadings.Count() - 1]) >= 75)
+                Thread.Sleep(1000);
+            }
+        }
+
+        public void AddMemReading()     // <--- Introduced for unit testing
+        {
+            lock (_MemReadings)
+            {
+                _MemReadings.Add(_MemUtilCounter.NextValue());
+
+                if ((_MemReadings[_MemReadings.Count() - 1]) >= 75)
+                {
+                    lock (_Lock_MemHighUtilCounter)
                     {
-                        lock (_Lock_MemHighUtilCounter)
-                        {
-                            _MemHighUtilCounter++;
-                        }
+                        _MemHighUtilCounter++;
                     }
                 }
-
-                Thread.Sleep(3000);
             }
         }
 

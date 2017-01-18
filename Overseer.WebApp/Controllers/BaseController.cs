@@ -25,13 +25,20 @@ namespace Overseer.WebApp.Controllers
         {
             base.OnActionExecuting(filterContext);
 
-            ViewBag.SessionUserId = GetLoggedInUserId();
+            var SessionUser = _unitOfWork.Users.GetWithUserRole(GetLoggedInUserId());
+
+            if (SessionUser != null)
+            {
+                ViewBag.SessionUserId = SessionUser.UserID;
+                ViewBag.SessionUserRole = SessionUser.UserRole.RoleName;
+            }
         }
 
         // Note: these need to be moved to service layer
         // get the currently logged in user
         protected int GetLoggedInUserId()
         {
+            // cast user identity as 'ClaimIdentity' in order to access it's other claims
             var userClaims = User.Identity as ClaimsIdentity;
 
             int loggedInUserId = 0;

@@ -1,4 +1,5 @@
-﻿using Overseer.WebApp.ViewModels.Management;
+﻿using Overseer.WebApp.Helpers.AuthHelpers;
+using Overseer.WebApp.ViewModels.Management;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Web.Mvc;
 
 namespace Overseer.WebApp.Controllers
 {
+    [CustomAuth(Roles = "Administrator, Manager")]
     public class ManagementController : BaseController
     {
         // GET: Management

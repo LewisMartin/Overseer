@@ -27,7 +27,7 @@ namespace Overseer.WebApp.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            return View();
+            return View("Login");
         }
 
         // POST: login page
@@ -50,7 +50,7 @@ namespace Overseer.WebApp.Controllers
                             // claim : Username
                             new Claim(ClaimTypes.Name, userCreds.Username),
 
-                            // claim : User role (name, not role id)
+                            // claim : User role (Role name, not role id)
                             new Claim(ClaimTypes.Role, GetUserRole(userCreds.Username)), // note this is just for use with 'Authorize' attribute - if we need to get the user role in the view we need to pass it to the appropriate ViewModel
                         },
                     "UserAuthCookie");
@@ -77,7 +77,7 @@ namespace Overseer.WebApp.Controllers
         [HttpGet]
         public ActionResult LogOut()
         {
-            // log out using the new Microsoft Identity stuff
+            // log out using the new Microsoft Identity
             HttpContext.GetOwinContext().Authentication.SignOut();
 
             return RedirectToAction("Login", "UserAuth"); // redirect to login page
@@ -87,6 +87,12 @@ namespace Overseer.WebApp.Controllers
         [HttpGet]
         public ActionResult Register()
         {
+            // if the user is already authenticated we redirect them to the home page
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             // populate the 'RoleChoices' property with contents of UserRole db
             var RegisterGetModel = new RegisterViewModel() { RoleChoices = GetAllUserRoles() };
             

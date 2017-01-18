@@ -244,6 +244,7 @@ namespace Overseer.WebApp.Controllers
 
         // EnvironmentConfiguration - page to change environment details & configure environment level monitoring settings
         // GET:
+        [CustomAuth(Roles = "Administrator, QA")]
         [HttpGet]
         public ActionResult EnvironmentConfiguration(int environmentId)
         {
@@ -284,6 +285,7 @@ namespace Overseer.WebApp.Controllers
             return View(viewModel);
         }
         // POST:
+        [CustomAuth(Roles = "Administrator, QA")]
         [HttpPost]
         public ActionResult EnvironmentConfiguration(EnvironmentConfigurationViewModel viewModel)
         {
@@ -321,6 +323,7 @@ namespace Overseer.WebApp.Controllers
 
         // EnvironmentCreation - page for creating new environments
         // GET:
+        [CustomAuth(Roles = "Administrator, QA")]
         [HttpGet]
         public ActionResult EnvironmentCreation()
         {
@@ -347,6 +350,7 @@ namespace Overseer.WebApp.Controllers
             return View(viewModel);
         }
         // POST:
+        [CustomAuth(Roles = "Administrator, QA")]
         [HttpPost]
         public ActionResult EnvironmentCreation(EnvironmentCreationViewModel viewModel)
         {
@@ -390,6 +394,7 @@ namespace Overseer.WebApp.Controllers
             }
         }
 
+        [CustomAuth(Roles = "Administrator, QA")]
         [HttpGet]
         public ActionResult EnvironmentDeletion(int environmentId)
         {

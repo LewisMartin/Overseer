@@ -1,4 +1,5 @@
 ﻿using Overseer.WebApp.DAL.DomainModels;
+using Overseer.WebApp.Helpers.AuthHelpers;
 using Overseer.WebApp.ViewModels.Search;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Web.Mvc;
 
 namespace Overseer.WebApp.Controllers
 {
+    [CustomAuth]
     public class SearchController : UserAccountController
     {
         // GET: Search
