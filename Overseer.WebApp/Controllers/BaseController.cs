@@ -20,7 +20,7 @@ namespace Overseer.WebApp.Controllers
             _unitOfWork = new UnitOfWork(new OverseerDBContext());
         }
 
-        // override 'OnActionExecuting' to provide logged in user details to viewbag for use in layout file
+        // override 'OnActionExecuting' to provide logged in user details to viewbag for use in shared layout view
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             base.OnActionExecuting(filterContext);

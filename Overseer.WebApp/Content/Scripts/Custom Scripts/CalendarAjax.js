@@ -35,6 +35,6 @@ function detectEventSelections()
 
         $('.event-detail').hide();
 
-        $(selector).show();
+        $(selector).show(200);
     });
 }

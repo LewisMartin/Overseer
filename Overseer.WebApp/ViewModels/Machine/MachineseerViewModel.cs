@@ -11,6 +11,8 @@ namespace Overseer.WebApp.ViewModels.Machine
 
         public Guid MachineId { get; set; }
 
+        public bool EditPermission { get; set; }
+
         public string DisplayName { get; set; }
 
         public int ParentEnvironmentId { get; set; }

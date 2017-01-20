@@ -105,7 +105,7 @@ namespace Overseer.WebApp.Controllers
                     Historical = alert.Historical,
                     MachineName = alert.Machine.DisplayName,
                     EnvironmentName = alert.Machine.TestEnvironment.EnvironmentName,
-                    AlertDescription = ("Property: " + alert.TriggerName + " exceeded the " + (alert.AlertID == 1 ? "alert" : "warning") + " threshold with a value of " + alert.TriggerValue + ".")
+                    AlertDescription = ("Property: " + alert.TriggerName + " exceeded the " + (alert.Severity == 1 ? "alert" : "warning") + " threshold with a value of " + alert.TriggerValue + ".")
                 });
             }
 

@@ -703,7 +703,7 @@ h5 > span
 }
 .drop-down-header
 {
-    width:300px;
+    width:400px;
     background-color: #ffffff;
     height:40px;
     text-align: left;
@@ -724,13 +724,14 @@ h5 > span
 } 
 .alert-drop-down > ul
 {
-    width: 300px;
+    width: 400px;
     border-top: 1px solid #eaedf0;
 }
 .drop-down> ul > li
 {
     height: 40px;
     line-height: 40px;
+    overflow: hidden;
 }
 .drop-down > ul > li:hover 
 {

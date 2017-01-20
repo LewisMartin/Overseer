@@ -13,6 +13,8 @@ namespace Overseer.WebApp.ViewModels.Environment
 
         public int EnvironmentId { get; set; }
 
+        public bool EditPermission { get; set; }
+
         public EnvironmentDetailsViewModel EnvironmentDetails { get; set; }
 
         public List<BasicMachineDetailsViewModel> BasicMachineDetails { get; set; } 

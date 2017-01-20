@@ -20,6 +20,9 @@ namespace Overseer.WebApp.Controllers
 
             TestEnvironment testEnv = _unitOfWork.TestEnvironments.GetEnvironmentseerData(environmentId);
 
+            if (testEnv.Creator == GetLoggedInUserId())
+                viewModel.EditPermission = true;
+
             if (testEnv != null)
             {
                 viewModel.EnvironmentId = testEnv.EnvironmentID;

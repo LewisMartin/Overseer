@@ -51,6 +51,9 @@ namespace Overseer.WebApp.Controllers
                     TotalMemGbs = machine.TotalMemGbs
                 };
 
+                if (_unitOfWork.TestEnvironments.Get(machine.ParentEnv).Creator == GetLoggedInUserId())
+                    viewModel.EditPermission = true;
+
                 viewModel.BaseAppUrl = GetBaseApplicationUrl();
                 viewModel.RefreshInterval = GetMillisecondsToNextUpdate(machine.ParentEnv);
 
@@ -76,7 +79,7 @@ namespace Overseer.WebApp.Controllers
                 viewModel.OSName = machine.SystemInformationData.OSName;
                 viewModel.OSBitness = machine.SystemInformationData.OSBitness;
                 viewModel.ProcessorCount = (machine.SystemInformationData.ProcessorCount != null ? (int)machine.SystemInformationData.ProcessorCount : 0);
-                viewModel.TotalMem = (machine.SystemInformationData.TotalMem != null ? (int)machine.SystemInformationData.TotalMem : 0);
+                viewModel.TotalMem = (machine.SystemInformationData.TotalMem != null ? Convert.ToInt32(machine.SystemInformationData.TotalMem) : 0);
             }
 
             return PartialView(viewModel);

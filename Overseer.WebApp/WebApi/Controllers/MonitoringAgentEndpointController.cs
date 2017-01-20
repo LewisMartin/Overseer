@@ -18,12 +18,6 @@ namespace Overseer.WebApp.WebApi
     [CustomAPIAuth]
     public class MonitoringAgentEndpointController : BaseApiController
     {
-        // GET api/<controller>
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
         // GET: get the monitoring interval to use within monitoring agent for specified target machine
         [HttpGet]
         public MonitoringScheduleResponse GetMonitoringSchedule(Guid machineId)
@@ -86,14 +80,53 @@ namespace Overseer.WebApp.WebApi
         public HttpResponseMessage SubmitMonitoringData([FromBody] string monitoringData)   // REFACTOR
         {
             MonitoringData monData = JsonConvert.DeserializeObject<MonitoringData>(monitoringData, new IsoDateTimeConverter { DateTimeFormat = "dd/MM/yyyy HH:mm:ss" }); // specify format for deserialization of any dates within data
-
             Guid machineId = new Guid(Request.Headers.GetValues("TargetMachine").FirstOrDefault());
 
+            try
+            {
+                UpdateMonitoringData(machineId, monData);
+                UpdateMonitoringAlerts(machineId, monData);
+            }
+            catch (Exception ex)
+            {
+                return new HttpResponseMessage()
+                {
+                    Content = new StringContent("Submission of monitoring data failed - Exception:" + ex.Message)
+                };
+            }
+        
+            return new HttpResponseMessage()
+            {
+                Content = new StringContent("Monitoring data submitted for: " + monData.SystemInfo.MachineName)
+            };
+        }
+
+        private void UpdateMonitoringData(Guid machineId, MonitoringData monData)
+        {
             Machine machine = _unitOfWork.Machines.Get(machineId);
             machine.LastSnapshot = monData.SnapshotTime;
-            _unitOfWork.Save();
 
-            // getting/creating system information record in 'SystemMonitoring' table.
+            // updating monitored data within respective tables
+            UpdateSystemInformation(machineId, monData.SystemInfo);
+            UpdatePerformanceInformation(machineId, monData.PerformanceInfo, monData.SnapshotTime);
+            UpdateDiskInformation(machineId, monData.DiskInfo);
+            UpdateProcessInformation(machineId, monData.ProcessInfo);
+            UpdateEventLogInformation(machineId, monData.EventLogInfo);
+            UpdateServiceInformation(machineId, monData.ServiceInfo);
+
+            _unitOfWork.Save();
+        }
+
+        private void UpdateMonitoringAlerts(Guid machineId, MonitoringData monData)
+        {
+            UpdateHistoricalAlerts(machineId);
+            _unitOfWork.MonitoringAlerts.AddRange(PerformAlertChecking(machineId, monData));
+            _unitOfWork.Save();
+        }
+
+        // methods for updating monitoring data
+        private void UpdateSystemInformation(Guid machineId, SystemInformation updatedSysInfo)
+        {
             SystemInfo sysInfo = _unitOfWork.SystemInfoMonitoring.Get(machineId);
 
             if (sysInfo == null)
@@ -102,44 +135,42 @@ namespace Overseer.WebApp.WebApi
                 {
                     MachineID = machineId
                 });
-
                 _unitOfWork.Save();
 
                 sysInfo = _unitOfWork.SystemInfoMonitoring.Get(machineId);
             }
-            sysInfo.MachineName = monData.SystemInfo.MachineName;
-            sysInfo.IPAddress = monData.SystemInfo.IPAddress;
-            sysInfo.OSName = monData.SystemInfo.OSName;
-            sysInfo.OSNameFriendly = monData.SystemInfo.OSNameFriendly;
-            sysInfo.OSBitness = monData.SystemInfo.OSBitness;
-            sysInfo.ProcessorCount = monData.SystemInfo.ProcessorCount;
-            sysInfo.TotalMem = monData.SystemInfo.TotalMem;
+            sysInfo.MachineName = updatedSysInfo.MachineName;
+            sysInfo.IPAddress = updatedSysInfo.IPAddress;
+            sysInfo.OSName = updatedSysInfo.OSName;
+            sysInfo.OSNameFriendly = updatedSysInfo.OSNameFriendly;
+            sysInfo.OSBitness = updatedSysInfo.OSBitness;
+            sysInfo.ProcessorCount = updatedSysInfo.ProcessorCount;
+            sysInfo.TotalMem = updatedSysInfo.TotalMem;
+        }
 
-            // getting/creating system information record in 'PerformanceMonitoring' table.
+        private void UpdatePerformanceInformation(Guid machineId, PerformanceInformation updatedPerfInfo, DateTime snapshotTime)
+        {
             List<PerformanceInfo> perfReadings = _unitOfWork.PerformanceMonitoring.GetOrderedReadingsForMachine(machineId);
 
             if (perfReadings.Count >= 5)
-            {
                 _unitOfWork.PerformanceMonitoring.Delete(perfReadings[perfReadings.Count - 1]);     // delete earliest reading found
-            }
 
-            _unitOfWork.PerformanceMonitoring.Add(new PerformanceInfo()                        // add latest reading
+            _unitOfWork.PerformanceMonitoring.Add(new PerformanceInfo()     // add latest reading
             {
                 MachineID = machineId,
-                ReadingDateTime = monData.SnapshotTime,
-                CpuUtil = monData.PerformanceInfo.AvgCpuUtil,
-                MemUtil = monData.PerformanceInfo.AvgMemUtil,
-                HighCpuUtilIndicator = monData.PerformanceInfo.HighCpuUtilIndicator,
-                HighMemUtilIndicator = monData.PerformanceInfo.HighMemUtilIndicator,
-                TotalProcesses = monData.PerformanceInfo.TotalNumProcesses
+                ReadingDateTime = snapshotTime,
+                CpuUtil = updatedPerfInfo.AvgCpuUtil,
+                MemUtil = updatedPerfInfo.AvgMemUtil,
+                HighCpuUtilIndicator = updatedPerfInfo.HighCpuUtilIndicator,
+                HighMemUtilIndicator = updatedPerfInfo.HighMemUtilIndicator,
+                TotalProcesses = updatedPerfInfo.TotalNumProcesses
             });
-            _unitOfWork.Save();
+        }
 
-            // far less cumbersome just to delete all disk records for this machine & add new ones rather than attempting to maintain a list
+        private void UpdateDiskInformation(Guid machineId, DiskInformation updatedDiskInfo)
+        {
             _unitOfWork.DiskMonitoring.DeleteByMachine(machineId);
-            _unitOfWork.Save();
-
-            foreach (SingleDrive drive in monData.DiskInfo.Drives)
+            foreach (SingleDrive drive in updatedDiskInfo.Drives)
             {
                 _unitOfWork.DiskMonitoring.Add(new DiskInfo()
                 {
@@ -153,12 +184,12 @@ namespace Overseer.WebApp.WebApi
                     UsedSpace = drive.TotalSpace - drive.FreeSpace
                 });
             }
+        }
 
-            // likewise for all processes
+        private void UpdateProcessInformation(Guid machineId, ProcessInformation updatedProcInfo)
+        {
             _unitOfWork.ProcessMonitoring.DeleteByMachine(machineId);
-            _unitOfWork.Save();
-
-            foreach (SingleProc proc in monData.ProcessInfo.Processes)
+            foreach (SingleProc proc in updatedProcInfo.Processes)
             {
                 _unitOfWork.ProcessMonitoring.Add(new ProcessInfo()
                 {
@@ -174,12 +205,12 @@ namespace Overseer.WebApp.WebApi
                     VirtualBytes = proc.VirtualBytes
                 });
             }
+        }
 
-            // likewise for all event logs
+        private void UpdateEventLogInformation(Guid machineId, EventLogInformation updatedEventLogInfo)
+        {
             _unitOfWork.EventLogMonitoring.DeleteByMachine(machineId);
-            _unitOfWork.Save();
-
-            foreach (SingleLog log in monData.EventLogInfo.EventLogs)
+            foreach (SingleLog log in updatedEventLogInfo.EventLogs)
             {
                 _unitOfWork.EventLogMonitoring.Add(new EventLogInfo()
                 {
@@ -193,12 +224,12 @@ namespace Overseer.WebApp.WebApi
                     NumErrors = log.ErrorTotal,
                 });
             }
+        }
 
-            // likewise for all services
+        private void UpdateServiceInformation(Guid machineId, ServiceInformation updatedServiceInfo)
+        {
             _unitOfWork.ServiceMonitoring.DeleteByMachine(machineId);
-            _unitOfWork.Save();
-
-            foreach (SingleService service in monData.ServiceInfo.Services)
+            foreach (SingleService service in updatedServiceInfo.Services)
             {
                 _unitOfWork.ServiceMonitoring.Add(new ServiceInfo()
                 {
@@ -209,18 +240,6 @@ namespace Overseer.WebApp.WebApi
                     StartupType = service.StartUpType
                 });
             }
-
-            _unitOfWork.Save();
-
-            // ALERTS CHECKING & CONFIG
-            UpdateHistoricalAlerts(machineId);
-            _unitOfWork.MonitoringAlerts.AddRange(PerformAlertChecking(machineId, monData));
-            _unitOfWork.Save();
-
-            return new HttpResponseMessage()
-            {
-                Content = new StringContent("Monitoring data submitted for: " + monData.SystemInfo.MachineName)
-            };
         }
 
         // methods for updating monitoring alerts based on submitted data
@@ -328,25 +347,25 @@ namespace Overseer.WebApp.WebApi
                 if (procSet.WorkingSetAlertsOn)
                 {
                     if (proc.WorkingSet >= procSet.WSAlertValue)
-                        procAlerts.Add(CreateMonitoringAlert(machineId, 2, proc.Name, 1, "WorkingSet", (proc.WorkingSet).ToString() + "kb"));
+                        procAlerts.Add(CreateMonitoringAlert(machineId, 2, proc.Name, 1, "WorkingSet", (proc.WorkingSet/1024).ToString() + " kb"));
                     else if (proc.WorkingSet >= procSet.WSWarnValue)
-                        procAlerts.Add(CreateMonitoringAlert(machineId, 2, proc.Name, 0, "WorkingSet", (proc.WorkingSet).ToString() + "kb"));
+                        procAlerts.Add(CreateMonitoringAlert(machineId, 2, proc.Name, 0, "WorkingSet", (proc.WorkingSet/1024).ToString() + " kb"));
                 }
 
                 if (procSet.PrivateBytesAlertsOn)
                 {
                     if(proc.PrivateBytes >= procSet.PBAlertValue)
-                        procAlerts.Add(CreateMonitoringAlert(machineId, 2, proc.Name, 1, "PrivateBytes", (proc.PrivateBytes).ToString() + "kb"));
+                        procAlerts.Add(CreateMonitoringAlert(machineId, 2, proc.Name, 1, "PrivateBytes", (proc.PrivateBytes/1024).ToString() + " kb"));
                     else if(proc.PrivateBytes >= procSet.PBWarnValue)
-                        procAlerts.Add(CreateMonitoringAlert(machineId, 2, proc.Name, 0, "PrivateBytes", (proc.PrivateBytes).ToString() + "kb"));
+                        procAlerts.Add(CreateMonitoringAlert(machineId, 2, proc.Name, 0, "PrivateBytes", (proc.PrivateBytes/1024).ToString() + " kb"));
                 }
 
                 if (procSet.VirtualBytesAlertsOn)
                 {
                     if(proc.VirtualBytes >= procSet.VBAlertValue)
-                        procAlerts.Add(CreateMonitoringAlert(machineId, 2, proc.Name, 1, "VirtualBytes", (proc.VirtualBytes).ToString() + "kb"));
+                        procAlerts.Add(CreateMonitoringAlert(machineId, 2, proc.Name, 1, "VirtualBytes", (proc.VirtualBytes/1024).ToString() + " kb"));
                     else if(proc.VirtualBytes >= procSet.VBWarnValue)
-                        procAlerts.Add(CreateMonitoringAlert(machineId, 2, proc.Name, 0, "VirtualBytes", (proc.VirtualBytes).ToString() + "kb"));
+                        procAlerts.Add(CreateMonitoringAlert(machineId, 2, proc.Name, 0, "VirtualBytes", (proc.VirtualBytes/1024).ToString() + " kb"));
                 }
             }
 
@@ -400,12 +419,12 @@ namespace Overseer.WebApp.WebApi
                 if (service.Exists)
                 {
                     if (serviceSet.NotRunningAlertsOn)
-                        serviceAlerts.Add(CreateMonitoringAlert(machineId, 4, service.Name, (int)serviceSet.NotRunningSeverity, "ServiceNotRunning", ""));
+                        serviceAlerts.Add(CreateMonitoringAlert(machineId, 4, service.Name, (int)serviceSet.NotRunningSeverity, "ServiceNotRunning", "True"));
                 }
                 else
                 {
                     if (serviceSet.NotFoundAlertsOn)
-                        serviceAlerts.Add(CreateMonitoringAlert(machineId, 4, service.Name, (int)serviceSet.NotFoundSeverity, "ServiceNotFound", ""));
+                        serviceAlerts.Add(CreateMonitoringAlert(machineId, 4, service.Name, (int)serviceSet.NotFoundSeverity, "ServiceNotFound", "True"));
                 }
             }
 
