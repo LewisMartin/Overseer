@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Security.Cryptography;
 
 namespace Overseer.MonitoringAgent.Helpers
 {
@@ -38,7 +39,12 @@ namespace Overseer.MonitoringAgent.Helpers
                                 MachineGuid = xmlReader.ReadString();
                                 break;
                             case "MachineSecret":
-                                MachineSecret = xmlReader.ReadString();
+                                // use DPAPI to unencrypt this string (it was encrypted by config wizard)
+                                byte[] machineSecretDecrypted = ProtectedData.Unprotect(Convert.FromBase64String(xmlReader.ReadString()), null, DataProtectionScope.CurrentUser);
+
+                                MachineSecret = Encoding.Unicode.GetString(machineSecretDecrypted);
+
+                                //MachineSecret = xmlReader.ReadString();
                                 break;
                             case "ServerAddress":
                                 AppUri = xmlReader.ReadString();

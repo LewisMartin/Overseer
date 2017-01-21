@@ -1,24 +1,14 @@
 ﻿using Newtonsoft.Json;
 using Overseer.DTOs.MonitoringConfig;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Xml;
+using System.Security.Cryptography;
 
 namespace Overseer.MonitoringAgentWizard
 {
@@ -152,7 +142,12 @@ namespace Overseer.MonitoringAgentWizard
                 XmlNode sAddress = root.SelectSingleNode("descendant::ServerAddress");
 
                 mGUID.InnerText = machineGUID;
-                mSecret.InnerText = machineSecret;
+
+                // Encrypt machine secret using DPAPI (no entropy for the moment)
+                byte[] machineSecretEncrypted = ProtectedData.Protect(Encoding.Unicode.GetBytes(machineSecret), null, DataProtectionScope.CurrentUser);
+
+                mSecret.InnerText = Convert.ToBase64String(machineSecretEncrypted);
+
                 sAddress.InnerText = serverAddress;
 
                 configXml.Save(configFileLocation);
