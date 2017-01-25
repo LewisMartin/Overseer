@@ -47,6 +47,7 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
@@ -98,8 +99,13 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="HomeControllerTests.cs" />
-    <Compile Include="UserAuthControllerTests.cs" />
+    <Compile Include="ControllerTests\AlertControllerTests.cs" />
+    <Compile Include="ControllerTests\BaseControllerTests.cs" />
+    <Compile Include="ControllerTests\HomeControllerTests.cs" />
+    <Compile Include="ControllerTests\ManagementControllerTests.cs" />
+    <Compile Include="ControllerTests\SearchControllerTests.cs" />
+    <Compile Include="ControllerTests\UserAuthControllerTests.cs" />
+    <Compile Include="ControllerTests\UserProfileControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

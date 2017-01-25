@@ -15,7 +15,7 @@ namespace Overseer.WebApp.Helpers.AuthHelpers
             // if user is authenticated & does not have the role necessary to authorize them access to the requested content:
             if (authContext.HttpContext.User.Identity.IsAuthenticated && !this.Roles.Split(',').Any(authContext.HttpContext.User.IsInRole))
             {
-                // assign the home page to the ViewResult (we'll redirect unauthorized users here for now, later change this to an error page)
+                // return unauthorized view
                 authContext.Result = new ViewResult
                 {
                     ViewName = "~/Views/UserAuth/Unauthorized.cshtml"

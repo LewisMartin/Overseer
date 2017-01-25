@@ -45,6 +45,7 @@ namespace Overseer.WebApp.Controllers
             return View(viewModel);
         }
 
+        [CustomAuth(Roles = "Administrator, QA")]
         [HttpGet]
         public ActionResult RetrieveMachineOptions(string environmentId)
         {
@@ -77,6 +78,7 @@ namespace Overseer.WebApp.Controllers
             return RedirectToAction("_AlertFilter", new { alertType = submittedFilters.AlertType, envFilter = submittedFilters.EnvironmentFilter, machineFilter = submittedFilters.MachineFilter });
         }
 
+        [CustomAuth(Roles = "Administrator, QA")]
         [HttpGet]
         public PartialViewResult _AlertFilter(string alertType, string envFilter, string machineFilter)
         {
@@ -112,6 +114,7 @@ namespace Overseer.WebApp.Controllers
             return PartialView(viewModel);
         }
 
+        [CustomAuth(Roles = "Administrator, QA")]
         [HttpGet]
         public ActionResult ArchiveAlert(int alertId)
         {

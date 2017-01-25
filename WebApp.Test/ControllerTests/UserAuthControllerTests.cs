@@ -1,25 +1,14 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Web.Mvc;
-
-using Overseer.WebApp;
 using Overseer.WebApp.Controllers;
-using Overseer.WebApp.DAL;
 using Moq;
-using System.Security.Principal;
 using System.Web;
-using Overseer.WebApp.DAL.Core;
 using System.Security.Claims;
-using Overseer.WebApp.ViewModels.Home;
 
-namespace WebApp.Test
+namespace WebApp.Test.ControllerTests
 {
     [TestClass]
-    public class UserAuthConrollerTests
+    public class UserAuthConrollerTests : BaseControllerTests
     {
         // test unauthenticated user is returned the login page
         [TestMethod]
@@ -55,26 +44,9 @@ namespace WebApp.Test
         [TestMethod]
         public void UserAuthController_AuthenticatedUserLoginRedirect()
         {
-            // Arrange:
-            // Mocking a 'ClaimsIdentity' for a logged in user (simulating admin logging in)
-            IList<Claim> MockClaims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, "1"),
-                new Claim(ClaimTypes.Role, "Administrator")
-            };
-
-            var Identity = new ClaimsIdentity(MockClaims, "ApplicationCookie");
-            var Principal = new ClaimsPrincipal(Identity);
-
-            // creating mock 'HttpContextBase' and passing fake user
-            var MockHttpContext = new Mock<HttpContextBase>();
-            MockHttpContext.Setup(t => t.User).Returns(Principal);
-            // creating mock 'ControllerContext' and passing mocked 'HttpContext'
-            var MockContext = new Mock<ControllerContext>();
-            MockContext.Setup(t => t.HttpContext).Returns(MockHttpContext.Object);
-
+            // Arrange
             UserAuthController controller = new UserAuthController();
-            controller.ControllerContext = MockContext.Object;
+            controller.ControllerContext = MockContextAdminUser.Object;
 
             // Act:
             ActionResult result = controller.Login() as ActionResult;

@@ -38,7 +38,6 @@ namespace Overseer.WebApp.DAL
 
             // create default admin account
             UserAccount defaultAdmin = new UserAccount();
-
             defaultAdmin.UserName = "Admin";
             defaultAdmin.FirstName = "Admin";
             defaultAdmin.LastName = "Admin";
@@ -46,12 +45,19 @@ namespace Overseer.WebApp.DAL
             defaultAdmin.Email = "admin@Overseer.WebApp.local";
             defaultAdmin.Password = crypto.Compute("W3lcome");
             defaultAdmin.PasswordSalt = crypto.Salt;
-
-            // add the default Admin user to the db
             context.Users.Add(defaultAdmin);
 
-            UserAccount testUser;
 
+            // create default example environment
+            TestEnvironment exampleEnvironment = new TestEnvironment();
+            exampleEnvironment.EnvironmentName = "Example Environment";
+            exampleEnvironment.Creator = 1;
+            exampleEnvironment.IsPrivate = false;
+            exampleEnvironment.Status = true;
+            context.TestEnvironment.Add(exampleEnvironment);
+
+
+            UserAccount testUser;
             // add 60 test users
             for (int i = 0; i < 25; i++)
             {
@@ -67,7 +73,6 @@ namespace Overseer.WebApp.DAL
 
                 context.Users.Add(testUser);
             }
-
             // save changes after adding default user
             context.SaveChanges();
 
