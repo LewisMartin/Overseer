@@ -21,8 +21,12 @@ namespace Overseer.WebApp.DAL.Core
 
         int GetWarningCount(int userId);
 
-        IEnumerable<MonitoringAlert> GetMostRecentAlerts(int userId, int range, int? sev);
+        int GetAlertAndWarningCount(int userId);
 
-        IEnumerable<MonitoringAlert> AlertFilterQuery(int userId, bool archived, int? severity, int? envId, Guid? machineId);
+        IEnumerable<MonitoringAlert> GetMostRecentAlerts(int userId, int skip, int range, int? sev);
+
+        int AlertFilterQueryCount(int userId, bool archived, int? sev, int? envId, Guid? machineId);
+
+        IEnumerable<MonitoringAlert> AlertFilterQuery(int userId, int skip, int range, bool archived, int? severity, int? envId, Guid? machineId);
     }
 }

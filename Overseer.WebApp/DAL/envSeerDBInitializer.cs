@@ -47,8 +47,7 @@ namespace Overseer.WebApp.DAL
             defaultAdmin.PasswordSalt = crypto.Salt;
             context.Users.Add(defaultAdmin);
 
-
-            // create default example environment
+            // create default example environment (owned by admin)
             TestEnvironment exampleEnvironment = new TestEnvironment();
             exampleEnvironment.EnvironmentName = "Example Environment";
             exampleEnvironment.Creator = 1;
@@ -56,10 +55,42 @@ namespace Overseer.WebApp.DAL
             exampleEnvironment.Status = true;
             context.TestEnvironment.Add(exampleEnvironment);
 
+            // create default QA account
+            UserAccount defaultQA = new UserAccount();
+            defaultQA.UserName = "MHarrington";
+            defaultQA.FirstName = "Michael";
+            defaultQA.LastName = "Harrington";
+            defaultQA.UserRoleID = Int32.Parse("2");
+            defaultQA.Email = "mikeharrington@Overseer.WebApp.local";
+            defaultQA.Password = crypto.Compute("W3lcome");
+            defaultQA.PasswordSalt = crypto.Salt;
+            context.Users.Add(defaultQA);
+
+            // create default Developer account
+            UserAccount defaultDev = new UserAccount();
+            defaultDev.UserName = "AnsonCheung";
+            defaultDev.FirstName = "Anson";
+            defaultDev.LastName = "Cheung";
+            defaultDev.UserRoleID = Int32.Parse("3");
+            defaultDev.Email = "anson@Overseer.WebApp.local";
+            defaultDev.Password = crypto.Compute("W3lcome");
+            defaultDev.PasswordSalt = crypto.Salt;
+            context.Users.Add(defaultAdmin);
+
+            // create default Manager account
+            UserAccount defaultMan = new UserAccount();
+            defaultMan.UserName = "JaneDoe";
+            defaultMan.FirstName = "Jane";
+            defaultMan.LastName = "Doe";
+            defaultMan.UserRoleID = Int32.Parse("4");
+            defaultMan.Email = "janedoe@Overseer.WebApp.local";
+            defaultMan.Password = crypto.Compute("W3lcome");
+            defaultMan.PasswordSalt = crypto.Salt;
+            context.Users.Add(defaultMan);
 
             UserAccount testUser;
             // add 60 test users
-            for (int i = 0; i < 25; i++)
+            for (int i = 0; i < 10; i++)
             {
                 testUser = new UserAccount();
 

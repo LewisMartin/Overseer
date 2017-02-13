@@ -50,8 +50,8 @@
             </button>
         </div>
     }
-    <div id="FilteredAlerts" class="content-area">
-        @Html.Action("_AlertFilter", "Alert", new { alertType = Model.AlertType })
+    <div id="FilteredAlerts">
+        @Html.Action("_AlertFilter", "Alert", new { alertType = Model.AlertType, pageNum = "1" })
     </div>
 
     <div id="ArchiveNotif">

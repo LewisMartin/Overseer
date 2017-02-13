@@ -3,6 +3,7 @@
     detectEnvironmentFilterChange();
     detectAlertFormSubmission();
     detectAlertArchive();
+    detectPagination();
 });
 
 function detectAlertTypeChange() {
@@ -48,7 +49,7 @@ function detectEnvironmentFilterChange() {
 function detectAlertFormSubmission() {
     $('#AlertFilterForm').submit(function () {
         if ($(this).valid()) {
-            $('#AlertFilterForm').find(':submit').attr("disabled", true)
+            $('#AlertFilterForm').find(':submit').attr("disabled", true);
 
             $.ajax({
                 url: this.action,
@@ -62,6 +63,13 @@ function detectAlertFormSubmission() {
 
                     // add click event to all new matched alerts
                     detectAlertArchive();
+
+                    console.log("before");
+
+                    // add click event to pagination button
+                    detectPagination();
+
+                    console.log("after");
                 }
             });
         }
@@ -95,4 +103,37 @@ function whichAlert(element, selector) {
     while ((element = element.parentNode) && !element.classList.contains(selector));
     console.log(element);
     return element;
+}
+
+function detectPagination()
+{
+    $('#alrt-pag').click(function () {
+        console.log("got here");
+
+        $('#AlertFilterForm').find(':submit').attr("disabled", true);
+
+        var appRoot = $('#AlertViewer').data('baseurl');
+
+        var alertType = $(this).data('alrttype');
+        var envFilter = $(this).data('envfilter');
+        var machineFilter = $(this).data('machinefilter');
+        var currentPage = $("#AlertPagination option:selected").val();
+
+        $.ajax({
+            type: "GET",
+            url: appRoot + "/Alert/_AlertFilter",
+            data: ("alertType=" + alertType + "&envFilter=" + envFilter + "&machineFilter=" + machineFilter + "&pageNum=" + currentPage),
+            complete: function () {
+                $('#AlertFilterForm').find(':submit').attr("disabled", false);
+            },
+            success: function (data) {
+                $('#FilteredAlerts').html(data);
+
+                // add click event to all new matched alerts
+                detectAlertArchive();
+                // add click event to pagination button
+                detectPagination();
+            }
+        });
+    });
 }

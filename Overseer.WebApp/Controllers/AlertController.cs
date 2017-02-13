@@ -75,23 +75,38 @@ namespace Overseer.WebApp.Controllers
         [HttpPost]
         public ActionResult AlertViewer(AlertViewerViewModel submittedFilters)
         {
-            return RedirectToAction("_AlertFilter", new { alertType = submittedFilters.AlertType, envFilter = submittedFilters.EnvironmentFilter, machineFilter = submittedFilters.MachineFilter });
+            return RedirectToAction("_AlertFilter", new { alertType = submittedFilters.AlertType, envFilter = submittedFilters.EnvironmentFilter, machineFilter = submittedFilters.MachineFilter, pageNum = "1" });
         }
 
         [CustomAuth(Roles = "Administrator, QA")]
         [HttpGet]
-        public PartialViewResult _AlertFilter(string alertType, string envFilter, string machineFilter)
+        public PartialViewResult _AlertFilter(string alertType, string envFilter, string machineFilter, string pageNum)
         {
-            _AlertFilterViewModel viewModel = new _AlertFilterViewModel();
+            _AlertFilterViewModel viewModel = new _AlertFilterViewModel()
+            {
+                AlertTypePassThru = alertType,
+                EnvFilterPassThru = envFilter,
+                MachineFilterPassThru = machineFilter,
+                CurrentPage = Int32.Parse(pageNum),
+            };
 
             IEnumerable<MonitoringAlert> alerts;
 
             if (alertType == "recent")
-                alerts = _unitOfWork.MonitoringAlerts.GetMostRecentAlerts(GetLoggedInUserId(), 10, null);
+            {
+                viewModel.TotalPages = ((_unitOfWork.MonitoringAlerts.GetAlertAndWarningCount(GetLoggedInUserId())-1) / 10) + 1;
+                alerts = _unitOfWork.MonitoringAlerts.GetMostRecentAlerts(GetLoggedInUserId(), (10 * (Int32.Parse(pageNum)-1)), 10, null);
+            }
             else
             {
                 object[] queryParams = GetAlertFilterQueryParams(alertType, envFilter, machineFilter);
-                alerts = _unitOfWork.MonitoringAlerts.AlertFilterQuery(GetLoggedInUserId(), (bool)queryParams[0], (int?)queryParams[1], (int?)queryParams[2], (Guid?)queryParams[3]);
+                viewModel.TotalPages = ((_unitOfWork.MonitoringAlerts.AlertFilterQueryCount(GetLoggedInUserId(), (bool)queryParams[0], (int?)queryParams[1], (int?)queryParams[2], (Guid?)queryParams[3]) - 1) / 10) + 1;
+                alerts = _unitOfWork.MonitoringAlerts.AlertFilterQuery(GetLoggedInUserId(), (10 * (Int32.Parse(pageNum) - 1)), 10, (bool)queryParams[0], (int?)queryParams[1], (int?)queryParams[2], (Guid?)queryParams[3]);
+            }
+
+            for (int i = 0; i < viewModel.TotalPages; i++)
+            {
+                viewModel.PageOptions.Add(new SelectListItem() { Text = (i+1).ToString(), Value = (i+1).ToString(), Selected = ((i+1) == Int32.Parse(pageNum) ? true : false) });
             }
 
             foreach (var alert in alerts)
@@ -154,7 +169,7 @@ namespace Overseer.WebApp.Controllers
         [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
         public PartialViewResult _WarningDropDown(int totalAlerts)
         {
-            var warnings = _unitOfWork.MonitoringAlerts.GetMostRecentAlerts(GetLoggedInUserId(), 5, 0);
+            var warnings = _unitOfWork.MonitoringAlerts.GetMostRecentAlerts(GetLoggedInUserId(), 0, 5, 0);
 
             _DropDownAlertViewModel viewModel = new _DropDownAlertViewModel()
             {
@@ -184,7 +199,7 @@ namespace Overseer.WebApp.Controllers
         [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
         public PartialViewResult _AlertDropDown(int totalAlerts)
         {
-            var alerts = _unitOfWork.MonitoringAlerts.GetMostRecentAlerts(GetLoggedInUserId(), 5, 1);
+            var alerts = _unitOfWork.MonitoringAlerts.GetMostRecentAlerts(GetLoggedInUserId(), 0, 5, 1);
 
             _DropDownAlertViewModel viewModel = new _DropDownAlertViewModel()
             {
@@ -218,8 +233,8 @@ namespace Overseer.WebApp.Controllers
             {
                 type == null ? false : type == "archived" ? true : false,                                                      // 'archived'
                 type == null ? null : (type == "archived" || type == "all") ? (int?)null : type == "alerts" ? 1 : 0,            // 'severity'
-                env == null ? null : env == "empty" ? (int?)null : Int32.Parse(env),                                           // 'environmentId'
-                machine == null ? null : machine == "empty" ? (Guid?)null : new Guid(machine)                                  // 'machineId'
+                env == null || env == "" ? null : env == "empty" ? (int?)null : Int32.Parse(env),                                           // 'environmentId'
+                machine == null || env == "" ? null : machine == "empty" ? (Guid?)null : new Guid(machine)                                  // 'machineId'
             };
         }
 

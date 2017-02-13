@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Overseer.WebApp.ViewModels.Alert
 {
@@ -10,9 +11,24 @@ namespace Overseer.WebApp.ViewModels.Alert
         public _AlertFilterViewModel()
         {
             MatchedAlerts = new List<AlertInfo>();
+            PageOptions = new List<SelectListItem>();
         }
 
         public List<AlertInfo> MatchedAlerts { get; set; }
+
+        public string AlertTypePassThru { get; set; }
+
+        public string EnvFilterPassThru { get; set; }
+
+        public string MachineFilterPassThru { get; set; }
+
+        public int CurrentPage { get; set; }
+
+        public int TotalPages { get; set; }
+
+        public string PaginationSelection { get; set; }
+
+        public List<SelectListItem> PageOptions { get; set; }
     }
 
     public class AlertInfo
