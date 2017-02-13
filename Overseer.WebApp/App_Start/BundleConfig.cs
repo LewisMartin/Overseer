@@ -32,6 +32,13 @@ namespace Overseer.WebApp
                         "~/Content/Scripts/Custom Scripts/OverseerScripts.js",
                         "~/Content/Scripts/Custom Scripts/ToggleField.js"));
 
+            // bundle for scripts used in site settings page
+            bundles.Add(new ScriptBundle("~/SiteSettings/Scripts").Include(
+                        "~/Content/Scripts/jquery.validate.js",
+                        "~/Content/Scripts/jquery.validate.unobtrusive.js",
+                        "~/Content/Scripts/Custom Scripts/SiteSettingsAjax.js"
+                ));
+
             // bundle for scripts used in profile pages
             bundles.Add(new ScriptBundle("~/UserProfile/Scripts").Include(
                         "~/Content/Scripts/jquery.validate.js",
@@ -41,10 +48,10 @@ namespace Overseer.WebApp
 
             // bundle for scripts used in discovery page
             bundles.Add(new ScriptBundle("~/Discovery/Scripts").Include(
-                    "~/Content/Scripts/jquery.validate.js",
-                    "~/Content/Scripts/jquery.validate.unobtrusive.js",
-                    "~/Content/Scripts/Custom Scripts/DiscoveryAjax.js"
-            ));
+                        "~/Content/Scripts/jquery.validate.js",
+                        "~/Content/Scripts/jquery.validate.unobtrusive.js",
+                        "~/Content/Scripts/Custom Scripts/DiscoveryAjax.js"
+                ));
 
             // bundle for scripts used in all environment pages
             bundles.Add(new ScriptBundle("~/Environment/Scripts").Include(

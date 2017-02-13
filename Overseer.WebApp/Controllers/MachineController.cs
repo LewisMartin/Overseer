@@ -98,10 +98,10 @@ namespace Overseer.WebApp.Controllers
 
                 if (latestPerfReading != null)
                 {
-                    viewModel.PerformanceInfo.AvgCpuUtil = (latestPerfReading.CpuUtil != null ? (float)latestPerfReading.CpuUtil : 101);
-                    viewModel.PerformanceInfo.AvgMemUtil = (latestPerfReading.MemUtil != null ? (float)latestPerfReading.MemUtil : 101);
-                    viewModel.PerformanceInfo.HighCpuUtilIndicator = (latestPerfReading.HighCpuUtilIndicator != null ? (float)latestPerfReading.HighCpuUtilIndicator : 0);
-                    viewModel.PerformanceInfo.HighMemUtilIndicator = (latestPerfReading.HighMemUtilIndicator != null ? (float)latestPerfReading.HighMemUtilIndicator : 0);
+                    viewModel.PerformanceInfo.AvgCpuUtil = (latestPerfReading.CpuUtil != null ? (float)latestPerfReading.CpuUtil : 101).ToString("0.00");
+                    viewModel.PerformanceInfo.AvgMemUtil = (latestPerfReading.MemUtil != null ? (float)latestPerfReading.MemUtil : 101).ToString("0.00");
+                    viewModel.PerformanceInfo.HighCpuUtilIndicator = (latestPerfReading.HighCpuUtilIndicator != null ? (float)latestPerfReading.HighCpuUtilIndicator : 0).ToString("0.00");
+                    viewModel.PerformanceInfo.HighMemUtilIndicator = (latestPerfReading.HighMemUtilIndicator != null ? (float)latestPerfReading.HighMemUtilIndicator : 0).ToString("0.00");
                     viewModel.PerformanceInfo.TotalNumProcesses = (latestPerfReading.TotalProcesses != null ? (int)latestPerfReading.TotalProcesses : 0);
                 }
 

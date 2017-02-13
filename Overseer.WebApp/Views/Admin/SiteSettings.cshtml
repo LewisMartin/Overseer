@@ -1,0 +1,87 @@
+﻿@model Overseer.WebApp.ViewModels.Admin.SiteSettingsViewModel
+
+@section AdditionalScripts
+{
+    @Scripts.Render("~/SiteSettings/Scripts")
+}
+
+@{
+    ViewBag.Title = "SiteSettings";
+}
+
+<div id="Page-Title">
+    <div class="fl-left">
+        <i class="fa fa-cogs a-fw" aria-hidden="true"></i>&nbsp Admin Actions<i class="fa fa-angle-right a-fw breadcrumb-spacer" aria-hidden="true"></i>Site Settings
+    </div>
+</div>
+
+<div id="SiteSettings" class="page-content">
+    <section>
+        <h3>
+            Site Settings
+        </h3>
+
+        <div>
+            @using (Html.BeginForm("SiteSettings", "Admin", FormMethod.Post, new { id = "SiteSettingsForm" }))
+            {
+                <div class="content-area">
+                    <div class="environment-site-settings">
+                        <h4>Basic Info</h4>
+                        <div class="user-info-flex">
+                            <div>
+                                <label for="envName">Environment Limit:</label>
+                                @Html.EditorFor(m => m.EnvironmentLimit)
+                            </div>
+                            <div>
+                                <label for="envName">Machine Limit:</label>
+                                @Html.EditorFor(m => m.MachineLimit)
+                            </div>
+                            <div>
+                                <label for="envName">Monitoring allowed:</label>
+                                @Html.CheckBoxFor(m => m.AllowMonitoring)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="account-site-settings">
+                        <h4>Account Info</h4>
+                        <div class="user-info-flex">
+                            <div>
+                                <label for="envName">Allow users to change role:</label>
+                                @Html.CheckBoxFor(m => m.AllowUserRoleChange)
+                            </div>
+                            <div>
+                                <label for="envName">Allow users to change username:</label>
+                                @Html.CheckBoxFor(m => m.AllowUsernameChange)
+                            </div>
+                    </div>
+
+                    <div class="form-val">
+                        <div class="form-val-msg">
+                            @Html.ValidationMessageFor(m => m.EnvironmentLimit)
+                        </div>
+                        <div class="form-val-msg">
+                            @Html.ValidationMessageFor(m => m.MachineLimit)
+                        </div>
+                        <div class="form-val-msg">
+                            @Html.ValidationMessageFor(m => m.AllowMonitoring)
+                        </div>
+                        <div class="form-val-msg">
+                            @Html.ValidationMessageFor(m => m.AllowUserRoleChange)
+                        </div>
+                        <div class="form-val-msg">
+                            @Html.ValidationMessageFor(m => m.AllowUsernameChange)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-footer">
+                <div id="form-response" class="form-response">
+                    <div id="form-failure" class="form-failure"></div>
+                    <div id="form-success" class="form-success"></div>
+                </div>
+                <input type="submit" value="Save" class="pag-btn" />
+            </div>
+            }
+        </div>
+    </section>
+</div>

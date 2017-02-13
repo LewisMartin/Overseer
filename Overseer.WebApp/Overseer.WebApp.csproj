@@ -220,6 +220,7 @@
     <Compile Include="DAL\Core\IRepository.cs" />
     <Compile Include="DAL\Core\IServiceMonitoringRepository.cs" />
     <Compile Include="DAL\Core\IServiceSettingsRepository.cs" />
+    <Compile Include="DAL\Core\ISiteSettingsRepository.cs" />
     <Compile Include="DAL\Core\ISystemInfoMonitoringRepository.cs" />
     <Compile Include="DAL\Core\ITestEnvironmentRepository.cs" />
     <Compile Include="DAL\Core\IUnitOfWork.cs" />
@@ -240,6 +241,7 @@
     <Compile Include="DAL\DomainModels\ProcessSettings.cs" />
     <Compile Include="DAL\DomainModels\ServiceInfo.cs" />
     <Compile Include="DAL\DomainModels\ServiceSettings.cs" />
+    <Compile Include="DAL\DomainModels\SiteSetting.cs" />
     <Compile Include="DAL\DomainModels\SystemInfo.cs" />
     <Compile Include="DAL\Repositories\CalendarEventRepository.cs" />
     <Compile Include="DAL\Repositories\DiskMonitoringRepository.cs" />
@@ -261,6 +263,7 @@
     <Compile Include="DAL\Core\UnitOfWork.cs" />
     <Compile Include="DAL\Repositories\ServiceMonitoringRepository.cs" />
     <Compile Include="DAL\Repositories\ServiceSettingsRepository.cs" />
+    <Compile Include="DAL\Repositories\SiteSettingsRepository.cs" />
     <Compile Include="DAL\Repositories\SystemInfoMonitoringRepository.cs" />
     <Compile Include="DAL\Repositories\TestEnvironmentRepository.cs" />
     <Compile Include="DAL\Repositories\UserAccountRepository.cs" />
@@ -277,6 +280,7 @@
     <Compile Include="Helpers\AuthHelpers\CustomAPIAuthAttribute.cs" />
     <Compile Include="Helpers\AuthHelpers\CustomAuthAttribute.cs" />
     <Compile Include="Helpers\HtmlHelpers\HtmlHelperExtensions.cs" />
+    <Compile Include="ViewModels\Admin\SiteSettingsViewModel.cs" />
     <Compile Include="ViewModels\Admin\UserDataViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -330,6 +334,7 @@
     <Content Include="Content\Scripts\Custom Scripts\EnvironmentDeletionAjax.js" />
     <Content Include="Content\Scripts\Custom Scripts\ManagementAjax.js" />
     <Content Include="Content\Scripts\Custom Scripts\RefreshMonitoringData.js" />
+    <Content Include="Content\Scripts\Custom Scripts\SiteSettingsAjax.js" />
     <Content Include="Content\Scripts\Custom Scripts\ToggleField.js" />
     <Content Include="Content\Scripts\Custom Scripts\UserProfileAjax.js" />
     <Content Include="Content\Styles\bootstrap.css" />
@@ -416,6 +421,7 @@
     <Content Include="Views\Calendar\CalendarViewer.cshtml" />
     <Content Include="Views\Management\CalendarManagement.cshtml" />
     <Content Include="Views\UserAuth\Unauthorized.cshtml" />
+    <Content Include="Views\Admin\SiteSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

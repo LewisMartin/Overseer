@@ -35,7 +35,7 @@
             <li>
                 <div class="menu-drop-down @if (Model.ActiveController == "Admin") { <text>nav-selected</text> }"><span><i class="fa fa-cogs a-fw" aria-hidden="true"></i></span>&nbsp Admin</div>
                 <ul class="nav-sub-menu @if (Model.ActiveController == "Admin") { <text>nav-sub-menu-open</text> }">
-                    <li>@Html.ActionLink("Site", "Site", "Admin")</li>
+                    <li>@Html.ActionLink("Site", "SiteSettings", "Admin")</li>
                     <li>@Html.ActionLink("Users", "Users", "Admin")</li>
                 </ul>
             </li>

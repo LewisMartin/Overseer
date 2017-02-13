@@ -13,6 +13,19 @@ namespace Overseer.WebApp.DAL
         // overriding the default seed method from 'DropCreateDatabaseAlways' class
         protected override void Seed(OverseerDBContext context)
         {
+            // create site settigns
+            SiteSetting siteSettings = new SiteSetting()
+            {
+                SiteID = 1,
+                EnvironmentLimit = 5,
+                MachineLimit = 10,
+                AllowMonitoring = true,
+                EnableUserRoleChange = true,
+                EnableUsernameChange = true
+            };
+            context.SiteSettings.Add(siteSettings);
+            context.SaveChanges();
+
             // Create a list of default user roles
             List<UserRole> defaultRoles = new List<UserRole>();
 
@@ -27,7 +40,6 @@ namespace Overseer.WebApp.DAL
             {
                 context.UserRoles.Add(defaultRole);
             }
-
             // save changes after adding roles
             context.SaveChanges();
 
@@ -46,14 +58,7 @@ namespace Overseer.WebApp.DAL
             defaultAdmin.Password = crypto.Compute("W3lcome");
             defaultAdmin.PasswordSalt = crypto.Salt;
             context.Users.Add(defaultAdmin);
-
-            // create default example environment (owned by admin)
-            TestEnvironment exampleEnvironment = new TestEnvironment();
-            exampleEnvironment.EnvironmentName = "Example Environment";
-            exampleEnvironment.Creator = 1;
-            exampleEnvironment.IsPrivate = false;
-            exampleEnvironment.Status = true;
-            context.TestEnvironment.Add(exampleEnvironment);
+            context.SaveChanges();
 
             // create default QA account
             UserAccount defaultQA = new UserAccount();
@@ -65,6 +70,7 @@ namespace Overseer.WebApp.DAL
             defaultQA.Password = crypto.Compute("W3lcome");
             defaultQA.PasswordSalt = crypto.Salt;
             context.Users.Add(defaultQA);
+            context.SaveChanges();
 
             // create default Developer account
             UserAccount defaultDev = new UserAccount();
@@ -76,6 +82,7 @@ namespace Overseer.WebApp.DAL
             defaultDev.Password = crypto.Compute("W3lcome");
             defaultDev.PasswordSalt = crypto.Salt;
             context.Users.Add(defaultAdmin);
+            context.SaveChanges();
 
             // create default Manager account
             UserAccount defaultMan = new UserAccount();
@@ -87,6 +94,7 @@ namespace Overseer.WebApp.DAL
             defaultMan.Password = crypto.Compute("W3lcome");
             defaultMan.PasswordSalt = crypto.Salt;
             context.Users.Add(defaultMan);
+            context.SaveChanges();
 
             UserAccount testUser;
             // add 60 test users
@@ -107,7 +115,6 @@ namespace Overseer.WebApp.DAL
             // save changes after adding default user
             context.SaveChanges();
 
-
             // seeding the SupportedOS table:
             List<OperatingSys> supportedOperatingSystems = new List<OperatingSys> {
 
@@ -125,7 +132,6 @@ namespace Overseer.WebApp.DAL
             {
                 context.SupportedOS.Add(OS);
             }
-
             // save changes after adding supported Operating Systems
             context.SaveChanges();
 
@@ -145,8 +151,27 @@ namespace Overseer.WebApp.DAL
             {
                 context.DownTimeCategories.Add(downTimeCat);
             }
-
             // save changes after adding down time categories
+            context.SaveChanges();
+
+            // create default example environment (owned by admin)
+            TestEnvironment exampleEnvironment = new TestEnvironment();
+            exampleEnvironment.EnvironmentID = 1;
+            exampleEnvironment.EnvironmentName = "Example Environment";
+            exampleEnvironment.Creator = 1;
+            exampleEnvironment.IsPrivate = false;
+            exampleEnvironment.Status = true;
+            context.TestEnvironment.Add(exampleEnvironment);
+            context.SaveChanges();
+
+            MonitoringSettings exampleEnvMonSettings = new MonitoringSettings()
+            {
+                EnvironmentID = 1,
+                MonitoringEnabled = false,
+                MonitoringUpdateInterval = 5,
+                MonitoringUpdateSchedule = 5
+            };
+            context.MonitoringSettings.Add(exampleEnvMonSettings);
             context.SaveChanges();
 
             // call the base seed method (although it's my understanding that this does nothing)

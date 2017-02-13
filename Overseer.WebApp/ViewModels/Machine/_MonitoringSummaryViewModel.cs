@@ -30,13 +30,13 @@ namespace Overseer.WebApp.ViewModels.Machine
     {
         public int TotalNumProcesses { get; set; }
 
-        public float AvgCpuUtil { get; set; }
+        public string AvgCpuUtil { get; set; }
 
-        public float AvgMemUtil { get; set; }
+        public string AvgMemUtil { get; set; }
 
-        public float HighCpuUtilIndicator { get; set; }
+        public string HighCpuUtilIndicator { get; set; }
 
-        public float HighMemUtilIndicator { get; set; }
+        public string HighMemUtilIndicator { get; set; }
 
         public HtmlString ReadingTimes { get; set; }
 

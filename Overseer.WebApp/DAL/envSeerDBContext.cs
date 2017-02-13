@@ -13,6 +13,8 @@ namespace Overseer.WebApp.DAL
         }
 
         // DbSets (tables):
+        // Site Settings
+        public DbSet<SiteSetting> SiteSettings { get; set; }
         // User (Rename this to 'UserAccount' at some point)
         public DbSet<UserAccount> Users { get; set; }
         // Role (Rename this to 'UserRole' at some point)

@@ -9,6 +9,8 @@ namespace Overseer.WebApp.DAL.Core
     public interface IUnitOfWork : IDisposable
     {
         // the repositories we want to enforce within our unit of work class
+        ISiteSettingsRepository SiteSettings { get; set; }
+
         // user account repos
         IUserAccountRepository Users { get; set; }
         IUserRoleRepository UserRoles { get; set; }

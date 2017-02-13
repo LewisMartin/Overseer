@@ -12,6 +12,8 @@ namespace Overseer.WebApp.DAL.Core
         private OverseerDBContext _dbContext;
 
         // repository instances
+        public ISiteSettingsRepository SiteSettings { get; set; }
+
         // user account repos
         public IUserAccountRepository Users { get; set; }
         public IUserRoleRepository UserRoles { get; set; }
@@ -48,6 +50,8 @@ namespace Overseer.WebApp.DAL.Core
         {
             _dbContext = context;
             // using the same context across all of our repositories
+            SiteSettings = new SiteSettingsRepository(_dbContext);
+
             Users = new UserAccountRepository(_dbContext);
             UserRoles = new UserRoleRepository(_dbContext);
 

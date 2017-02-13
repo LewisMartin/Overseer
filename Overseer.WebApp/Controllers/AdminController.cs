@@ -17,9 +17,43 @@ namespace Overseer.WebApp.Controllers
     {
         // get request for admin - site page
         [HttpGet]
-        public ActionResult Site()
+        public ActionResult SiteSettings()
         {
-            return View();
+            SiteSetting settings = _unitOfWork.SiteSettings.Get(1);
+
+            SiteSettingsViewModel viewModel = new SiteSettingsViewModel()
+            {
+                EnvironmentLimit = settings.EnvironmentLimit,
+                MachineLimit = settings.MachineLimit,
+                AllowMonitoring = settings.AllowMonitoring,
+                AllowUserRoleChange = settings.EnableUserRoleChange,
+                AllowUsernameChange = settings.EnableUsernameChange
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult SiteSettings(SiteSettingsViewModel viewModel)
+        {
+            try
+            {
+                SiteSetting settings = _unitOfWork.SiteSettings.Get(1);
+
+                settings.EnvironmentLimit = viewModel.EnvironmentLimit;
+                settings.MachineLimit = viewModel.MachineLimit;
+                settings.AllowMonitoring = viewModel.AllowMonitoring;
+                settings.EnableUserRoleChange = viewModel.AllowUserRoleChange;
+                settings.EnableUsernameChange = viewModel.AllowUsernameChange;
+
+                _unitOfWork.Save();
+
+                return Json(new { success = true, responsemsg = ("Site settings updated!") }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, responsemsg = ("Update unsuccessful.") }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         // get request for admin - users page
