@@ -254,38 +254,47 @@ namespace Overseer.WebApp.Controllers
             // a lot of this should be extracted into a service layer..
             TestEnvironment testEnv = _unitOfWork.TestEnvironments.GetWithMonitoringSettings(environmentId);
 
-            var downTimeCategories = _unitOfWork.DownTimeCategories.GetAll();
-
-            List<SelectListItem> downTimeCategoryOptions = new List<SelectListItem>();
-
-            foreach (DownTimeCategory downTimeCat in downTimeCategories)
+            // check if user has permissions on this environment
+            if (GetLoggedInUserId() != testEnv.Creator)
             {
-                downTimeCategoryOptions.Add(new SelectListItem() {
-                    Value = downTimeCat.DownTimeCatID.ToString(),
-                    Text = downTimeCat.Name,
-                    Selected = (downTimeCat.DownTimeCatID == testEnv.DownTimeCatID ? true : false)
-                });
+                return View("~/Views/UserAuth/Unauthorized.cshtml");
             }
-
-            List<SelectListItem> monitoringIntervalOptions = GetMonitoringIntervalOptions(testEnv.MonitoringSettings.MonitoringUpdateInterval);
-
-            EnvironmentConfigurationViewModel viewModel = new EnvironmentConfigurationViewModel()
+            else
             {
-                EnvironmentId = testEnv.EnvironmentID,
-                EnvironmentName = testEnv.EnvironmentName,
-                DiscoverabilityOptions = new List<SelectListItem>()
+                var downTimeCategories = _unitOfWork.DownTimeCategories.GetAll();
+
+                List<SelectListItem> downTimeCategoryOptions = new List<SelectListItem>();
+
+                foreach (DownTimeCategory downTimeCat in downTimeCategories)
+                {
+                    downTimeCategoryOptions.Add(new SelectListItem()
+                    {
+                        Value = downTimeCat.DownTimeCatID.ToString(),
+                        Text = downTimeCat.Name,
+                        Selected = (downTimeCat.DownTimeCatID == testEnv.DownTimeCatID ? true : false)
+                    });
+                }
+
+                List<SelectListItem> monitoringIntervalOptions = GetMonitoringIntervalOptions(testEnv.MonitoringSettings.MonitoringUpdateInterval);
+
+                EnvironmentConfigurationViewModel viewModel = new EnvironmentConfigurationViewModel()
+                {
+                    EnvironmentId = testEnv.EnvironmentID,
+                    EnvironmentName = testEnv.EnvironmentName,
+                    DiscoverabilityOptions = new List<SelectListItem>()
                 {
                     new SelectListItem() { Value = "Public", Text = "Public", Selected = (testEnv.IsPrivate == false ? true : false) },
                     new SelectListItem() { Value = "Private", Text = "Private", Selected = (testEnv.IsPrivate == true ? true : false) }
                 },
-                EnvironmentStatus = testEnv.Status,
-                DownTimeCategoryOptions = downTimeCategoryOptions,
-                MonitoringEnabled = testEnv.MonitoringSettings.MonitoringEnabled,
-                MonitoringIntervalOptions = monitoringIntervalOptions,
-                BaseAppUrl = GetBaseApplicationUrl()
-            };    
+                    EnvironmentStatus = testEnv.Status,
+                    DownTimeCategoryOptions = downTimeCategoryOptions,
+                    MonitoringEnabled = testEnv.MonitoringSettings.MonitoringEnabled,
+                    MonitoringIntervalOptions = monitoringIntervalOptions,
+                    BaseAppUrl = GetBaseApplicationUrl()
+                };
 
-            return View(viewModel);
+                return View(viewModel);
+            }
         }
         // POST:
         [CustomAuth(Roles = "Administrator, QA")]
@@ -295,33 +304,41 @@ namespace Overseer.WebApp.Controllers
             // get the environment to be updated
             TestEnvironment envToUpdate = _unitOfWork.TestEnvironments.GetWithMonitoringSettings(viewModel.EnvironmentId);
 
-            // duplicate environment checking - should be extracted to service layer
-            int loggedInUserId = GetLoggedInUserId();
-            if (envToUpdate.EnvironmentName != viewModel.EnvironmentName)
+            // check if user has permission on this environment
+            if (GetLoggedInUserId() != envToUpdate.Creator)
             {
-                if (_unitOfWork.TestEnvironments.CheckEnvironmentExistsByCreatorAndName(loggedInUserId, viewModel.EnvironmentName))
-                {
-                    return Json(new { success = false, error = "You already have an environment with that name!" }, JsonRequestBehavior.AllowGet);
-                }
+                return Json(new { success = false, successmsg = ("Unauthorized!") }, JsonRequestBehavior.AllowGet);
             }
+            else
+            {
+                // duplicate environment checking - should be extracted to service layer
+                int loggedInUserId = GetLoggedInUserId();
+                if (envToUpdate.EnvironmentName != viewModel.EnvironmentName)
+                {
+                    if (_unitOfWork.TestEnvironments.CheckEnvironmentExistsByCreatorAndName(loggedInUserId, viewModel.EnvironmentName))
+                    {
+                        return Json(new { success = false, error = "You already have an environment with that name!" }, JsonRequestBehavior.AllowGet);
+                    }
+                }
 
-            // update the TestEnvironment table
-            envToUpdate.EnvironmentName = viewModel.EnvironmentName;
-            envToUpdate.IsPrivate = viewModel.Discoverability == "Public" ? false : true;
-            envToUpdate.Status = viewModel.EnvironmentStatus;
-            envToUpdate.MonitoringSettings.MonitoringEnabled = viewModel.MonitoringEnabled;
+                // update the TestEnvironment table
+                envToUpdate.EnvironmentName = viewModel.EnvironmentName;
+                envToUpdate.IsPrivate = viewModel.Discoverability == "Public" ? false : true;
+                envToUpdate.Status = viewModel.EnvironmentStatus;
+                envToUpdate.MonitoringSettings.MonitoringEnabled = viewModel.MonitoringEnabled;
 
-            // if the environment status is set to 'down', we update the cown time category
-            if (viewModel.EnvironmentStatus == false && viewModel.DownTimeCategory != null)
-                envToUpdate.DownTimeCatID = Int32.Parse(viewModel.DownTimeCategory);
+                // if the environment status is set to 'down', we update the cown time category
+                if (viewModel.EnvironmentStatus == false && viewModel.DownTimeCategory != null)
+                    envToUpdate.DownTimeCatID = Int32.Parse(viewModel.DownTimeCategory);
 
-            // if monitoring is enabled, we update the monitoring interval
-            if (viewModel.MonitoringEnabled && viewModel.MonitoringUpdateInterval != null)
-                envToUpdate.MonitoringSettings.MonitoringUpdateInterval = Int32.Parse(viewModel.MonitoringUpdateInterval);
+                // if monitoring is enabled, we update the monitoring interval
+                if (viewModel.MonitoringEnabled && viewModel.MonitoringUpdateInterval != null)
+                    envToUpdate.MonitoringSettings.MonitoringUpdateInterval = Int32.Parse(viewModel.MonitoringUpdateInterval);
 
-            _unitOfWork.Save();
+                _unitOfWork.Save();
 
-            return Json(new { success = true, successmsg = ("Changes made successfully!") }, JsonRequestBehavior.AllowGet);
+                return Json(new { success = true, successmsg = ("Changes made successfully!") }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         // EnvironmentCreation - page for creating new environments
@@ -404,11 +421,18 @@ namespace Overseer.WebApp.Controllers
             var monSetts = _unitOfWork.MonitoringSettings.Get(environmentId);
             var environment = _unitOfWork.TestEnvironments.Get(environmentId);
 
-            _unitOfWork.MonitoringSettings.Delete(monSetts);
-            _unitOfWork.TestEnvironments.Delete(environment);
-            _unitOfWork.Save();
+            if (GetLoggedInUserId() != environment.Creator)
+            {
+                return Json(new { success = false, successmsg = ("Unauthorized!") }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                _unitOfWork.MonitoringSettings.Delete(monSetts);
+                _unitOfWork.TestEnvironments.Delete(environment);
+                _unitOfWork.Save();
 
-            return Json(new { success = true, successmsg = ("Environment '" + environment.EnvironmentName + "' deleted!") }, JsonRequestBehavior.AllowGet);
+                return Json(new { success = true, successmsg = ("Environment '" + environment.EnvironmentName + "' deleted!") }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         private int GetMillisecondsToNextUpdate(int environmentId)

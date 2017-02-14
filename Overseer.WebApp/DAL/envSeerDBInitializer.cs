@@ -122,6 +122,8 @@ namespace Overseer.WebApp.DAL
                 new OperatingSys() { OSName = "Windows 10 x86", Bitness = 32 },
                 new OperatingSys() { OSName = "Windows 8 x64", Bitness = 64 },
                 new OperatingSys() { OSName = "Windows 8 x86", Bitness = 32 },
+                new OperatingSys() { OSName = "Windows 7 x64", Bitness = 64 },
+                new OperatingSys() { OSName = "Windows 7 x86", Bitness = 32 },
                 new OperatingSys() { OSName = "Windows Server 2012", Bitness = 64 },
                 new OperatingSys() { OSName = "Windows Server 2012 R2", Bitness = 64 },
                 new OperatingSys() { OSName = "Windows Server 2016", Bitness = 64 }
@@ -162,6 +164,19 @@ namespace Overseer.WebApp.DAL
             exampleEnvironment.IsPrivate = false;
             exampleEnvironment.Status = true;
             context.TestEnvironment.Add(exampleEnvironment);
+            context.SaveChanges();
+
+            // create default example machine on example environment
+            Machine exampleMachine = new Machine();
+            exampleMachine.ParentEnv = 1;
+            exampleMachine.DisplayName = "Example Machine";
+            exampleMachine.ComputerName = "Example Machine";
+            exampleMachine.IPV4 = "127.0.0.1";
+            exampleMachine.FQDN = "None";
+            exampleMachine.OS = 1;
+            exampleMachine.NumProcessors = 2;
+            exampleMachine.TotalMemGbs = 12;
+            context.Machine.Add(exampleMachine);
             context.SaveChanges();
 
             MonitoringSettings exampleEnvMonSettings = new MonitoringSettings()

@@ -101,8 +101,11 @@
   <ItemGroup>
     <Compile Include="ControllerTests\AlertControllerTests.cs" />
     <Compile Include="ControllerTests\BaseControllerTests.cs" />
+    <Compile Include="ControllerTests\EnvironmentControllerTests.cs" />
     <Compile Include="ControllerTests\HomeControllerTests.cs" />
+    <Compile Include="ControllerTests\MachineControllerTests.cs" />
     <Compile Include="ControllerTests\ManagementControllerTests.cs" />
+    <Compile Include="ControllerTests\OverviewControllerTests.cs" />
     <Compile Include="ControllerTests\SearchControllerTests.cs" />
     <Compile Include="ControllerTests\UserAuthControllerTests.cs" />
     <Compile Include="ControllerTests\UserProfileControllerTests.cs" />

@@ -216,126 +216,132 @@ namespace Overseer.WebApp.Controllers
         public ActionResult MachineConfiguration(Guid machineId)
         {
             Machine machineToUpdate = _unitOfWork.Machines.GetMachineAndParent(machineId);
+            int loggedInUserId = GetLoggedInUserId();
 
-            var userClaims = User.Identity as ClaimsIdentity;
-            int loggedInUserId = Int32.Parse(userClaims.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            var operatingSystems = _unitOfWork.OperatingSystems.GetAll();
-            var environments = _unitOfWork.TestEnvironments.GetEnvironmentsByCreator(loggedInUserId);
-
-            List<SelectListItem> parentEnvOps = new List<SelectListItem>();
-            List<SelectListItem> operatingSysOps = new List<SelectListItem>();
-            List<SelectListItem> currentMonitoredProcs = new List<SelectListItem>();
-            List<SelectListItem> currentMonitoredLogs = new List<SelectListItem>();
-            List<SelectListItem> currentMonitoredServices = new List<SelectListItem>();
-
-            foreach (var environment in environments)
+            // check if user has permission on this environment
+            if (loggedInUserId != machineToUpdate.TestEnvironment.Creator)
             {
-                parentEnvOps.Add(new SelectListItem
-                {
-                    Value = environment.EnvironmentID.ToString(),
-                    Text = environment.EnvironmentName,
-                    Selected = (environment.EnvironmentID == machineToUpdate.ParentEnv ? true : false)
-                });
+                return View("~/Views/UserAuth/Unauthorized.cshtml");
             }
-
-            foreach (var os in operatingSystems)
+            else
             {
-                operatingSysOps.Add(new SelectListItem
-                {
-                    Value = os.OperatingSysID.ToString(),
-                    Text = os.OSName,
-                    Selected = (os.OperatingSysID == machineToUpdate.OperatingSys.OperatingSysID ? true : false)
-                });
-            }
+                var operatingSystems = _unitOfWork.OperatingSystems.GetAll();
+                var environments = _unitOfWork.TestEnvironments.GetEnvironmentsByCreator(loggedInUserId);
 
-            IEnumerable<ProcessSettings> procs = _unitOfWork.ProcessMonitoringSettings.GetByMachine(machineId);
-            if (procs != null)
-            {
-                foreach (ProcessSettings proc in procs)
+                List<SelectListItem> parentEnvOps = new List<SelectListItem>();
+                List<SelectListItem> operatingSysOps = new List<SelectListItem>();
+                List<SelectListItem> currentMonitoredProcs = new List<SelectListItem>();
+                List<SelectListItem> currentMonitoredLogs = new List<SelectListItem>();
+                List<SelectListItem> currentMonitoredServices = new List<SelectListItem>();
+
+                foreach (var environment in environments)
                 {
-                    currentMonitoredProcs.Add(new SelectListItem
+                    parentEnvOps.Add(new SelectListItem
                     {
-                        Value = proc.ProcessName,
-                        Text = proc.ProcessName,
-                        Selected = false
+                        Value = environment.EnvironmentID.ToString(),
+                        Text = environment.EnvironmentName,
+                        Selected = (environment.EnvironmentID == machineToUpdate.ParentEnv ? true : false)
                     });
                 }
-            }
 
-            IEnumerable<EventLogSettings> logs = _unitOfWork.EventLogMonitoringSettings.GetByMachine(machineId);
-            if (logs != null)
-            {
-                foreach (EventLogSettings log in logs)
+                foreach (var os in operatingSystems)
                 {
-                    currentMonitoredLogs.Add(new SelectListItem()
+                    operatingSysOps.Add(new SelectListItem
                     {
-                        Value = log.EventLogName,
-                        Text = log.EventLogName,
-                        Selected = false
+                        Value = os.OperatingSysID.ToString(),
+                        Text = os.OSName,
+                        Selected = (os.OperatingSysID == machineToUpdate.OperatingSys.OperatingSysID ? true : false)
                     });
                 }
-            }
 
-            IEnumerable<ServiceSettings> services = _unitOfWork.ServiceMonitoringSettings.GetByMachine(machineId);
-            if (services != null)
-            {
-                foreach (ServiceSettings service in services)
+                IEnumerable<ProcessSettings> procs = _unitOfWork.ProcessMonitoringSettings.GetByMachine(machineId);
+                if (procs != null)
                 {
-                    currentMonitoredServices.Add(new SelectListItem()
+                    foreach (ProcessSettings proc in procs)
                     {
-                        Value = service.ServiceName,
-                        Text = service.ServiceName,
-                        Selected = false
-                    });
+                        currentMonitoredProcs.Add(new SelectListItem
+                        {
+                            Value = proc.ProcessName,
+                            Text = proc.ProcessName,
+                            Selected = false
+                        });
+                    }
                 }
+
+                IEnumerable<EventLogSettings> logs = _unitOfWork.EventLogMonitoringSettings.GetByMachine(machineId);
+                if (logs != null)
+                {
+                    foreach (EventLogSettings log in logs)
+                    {
+                        currentMonitoredLogs.Add(new SelectListItem()
+                        {
+                            Value = log.EventLogName,
+                            Text = log.EventLogName,
+                            Selected = false
+                        });
+                    }
+                }
+
+                IEnumerable<ServiceSettings> services = _unitOfWork.ServiceMonitoringSettings.GetByMachine(machineId);
+                if (services != null)
+                {
+                    foreach (ServiceSettings service in services)
+                    {
+                        currentMonitoredServices.Add(new SelectListItem()
+                        {
+                            Value = service.ServiceName,
+                            Text = service.ServiceName,
+                            Selected = false
+                        });
+                    }
+                }
+
+                MachineConfigurationViewModel viewModel = new MachineConfigurationViewModel()
+                {
+                    MachineId = machineToUpdate.MachineID,
+                    ParentEnvironmentId = machineToUpdate.ParentEnv.ToString(),
+                    DisplayName = machineToUpdate.DisplayName,
+                    MachineName = machineToUpdate.ComputerName,
+                    IpAddress = machineToUpdate.IPV4,
+                    FQDN = machineToUpdate.FQDN,
+                    OperatingSystemId = machineToUpdate.OperatingSys.OperatingSysID.ToString(),
+                    NumProcessors = machineToUpdate.NumProcessors,
+                    TotalMemGbs = machineToUpdate.TotalMemGbs,
+                    ParentEnvironmentOptions = parentEnvOps,
+                    OperatingSystemOptions = operatingSysOps,
+                    CurrentMonitoredProcesses = currentMonitoredProcs,
+                    CurrentMonitoredEventLogs = currentMonitoredLogs,
+                    CurrentMonitoredServices = currentMonitoredServices,
+                    BaseAppUrl = GetBaseApplicationUrl()
+                };
+
+                PerformanceSettings perfSettings = _unitOfWork.PerformanceMonitoringSettings.Get(machineId);
+                if (perfSettings != null)
+                {
+                    viewModel.AvgCpuUtilAlertsOn = perfSettings.AvgCpuUtilAlertsOn;
+                    viewModel.AvgCpuUtilWarnValue = perfSettings.AvgCpuUtilWarnValue != null ? (int)perfSettings.AvgCpuUtilWarnValue : 0;
+                    viewModel.AvgCpuUtilAlertValue = perfSettings.AvgCpuUtilAlertValue != null ? (int)perfSettings.AvgCpuUtilAlertValue : 0;
+                    viewModel.HighCpuUtilAlertsOn = perfSettings.CpuHighUtilAlertsOn;
+                    viewModel.HighCpuUtilWarnValue = perfSettings.CpuHighUtilWarnValue != null ? (int)perfSettings.CpuHighUtilWarnValue : 0;
+                    viewModel.HighCpuUtilAlertValue = perfSettings.CpuHighUtilAlertValue != null ? (int)perfSettings.CpuHighUtilAlertValue : 0;
+                    viewModel.AvgMemUtilAlertsOn = perfSettings.AvgMemUtilAlertsOn;
+                    viewModel.AvgMemUtilWarnValue = perfSettings.AvgMemUtilWarnValue != null ? (int)perfSettings.AvgMemUtilWarnValue : 0;
+                    viewModel.AvgMemUtilAlertValue = perfSettings.AvgMemUtilAlertValue != null ? (int)perfSettings.AvgMemUtilAlertValue : 0;
+                    viewModel.HighMemUtilAlertsOn = perfSettings.MemHighUtilAlertsOn;
+                    viewModel.HighMemUtilWarnValue = perfSettings.MemHighUtilWarnValue != null ? (int)perfSettings.MemHighUtilWarnValue : 0;
+                    viewModel.HighMemUtilAlertValue = perfSettings.MemHighUtilAlertsValue != null ? (int)perfSettings.MemHighUtilAlertsValue : 0;
+                }
+
+                DiskSettings diskSettings = _unitOfWork.DiskMonitoringSettings.Get(machineId);
+                if (diskSettings != null)
+                {
+                    viewModel.UsedSpaceAlertsOn = diskSettings.UsedSpaceAlertsOn;
+                    viewModel.UsedSpaceWarnValue = diskSettings.UsedSpaceWarningValue;
+                    viewModel.UsedSpaceAlertValue = diskSettings.UsedSpaceAlertValue;
+                }
+
+                return View(viewModel);
             }
-
-            MachineConfigurationViewModel viewModel = new MachineConfigurationViewModel()
-            {
-                MachineId = machineToUpdate.MachineID,
-                ParentEnvironmentId = machineToUpdate.ParentEnv.ToString(),
-                DisplayName = machineToUpdate.DisplayName,
-                MachineName = machineToUpdate.ComputerName,
-                IpAddress = machineToUpdate.IPV4,
-                FQDN = machineToUpdate.FQDN,
-                OperatingSystemId = machineToUpdate.OperatingSys.OperatingSysID.ToString(),
-                NumProcessors = machineToUpdate.NumProcessors,
-                TotalMemGbs = machineToUpdate.TotalMemGbs,
-                ParentEnvironmentOptions = parentEnvOps,
-                OperatingSystemOptions = operatingSysOps,
-                CurrentMonitoredProcesses = currentMonitoredProcs,
-                CurrentMonitoredEventLogs = currentMonitoredLogs,
-                CurrentMonitoredServices = currentMonitoredServices,
-                BaseAppUrl = GetBaseApplicationUrl()
-            };
-
-            PerformanceSettings perfSettings = _unitOfWork.PerformanceMonitoringSettings.Get(machineId);
-            if (perfSettings != null)
-            {
-                viewModel.AvgCpuUtilAlertsOn = perfSettings.AvgCpuUtilAlertsOn;
-                viewModel.AvgCpuUtilWarnValue = perfSettings.AvgCpuUtilWarnValue != null ? (int)perfSettings.AvgCpuUtilWarnValue : 0;
-                viewModel.AvgCpuUtilAlertValue = perfSettings.AvgCpuUtilAlertValue != null ? (int)perfSettings.AvgCpuUtilAlertValue : 0;
-                viewModel.HighCpuUtilAlertsOn = perfSettings.CpuHighUtilAlertsOn;
-                viewModel.HighCpuUtilWarnValue = perfSettings.CpuHighUtilWarnValue != null ? (int)perfSettings.CpuHighUtilWarnValue : 0;
-                viewModel.HighCpuUtilAlertValue = perfSettings.CpuHighUtilAlertValue != null ? (int)perfSettings.CpuHighUtilAlertValue : 0;
-                viewModel.AvgMemUtilAlertsOn = perfSettings.AvgMemUtilAlertsOn;
-                viewModel.AvgMemUtilWarnValue = perfSettings.AvgMemUtilWarnValue != null ? (int)perfSettings.AvgMemUtilWarnValue : 0;
-                viewModel.AvgMemUtilAlertValue = perfSettings.AvgMemUtilAlertValue != null ? (int)perfSettings.AvgMemUtilAlertValue : 0;
-                viewModel.HighMemUtilAlertsOn = perfSettings.MemHighUtilAlertsOn;
-                viewModel.HighMemUtilWarnValue = perfSettings.MemHighUtilWarnValue != null ? (int)perfSettings.MemHighUtilWarnValue : 0;
-                viewModel.HighMemUtilAlertValue = perfSettings.MemHighUtilAlertsValue != null ? (int)perfSettings.MemHighUtilAlertsValue : 0;
-            }
-
-            DiskSettings diskSettings = _unitOfWork.DiskMonitoringSettings.Get(machineId);
-            if (diskSettings != null)
-            {
-                viewModel.UsedSpaceAlertsOn = diskSettings.UsedSpaceAlertsOn;
-                viewModel.UsedSpaceWarnValue = diskSettings.UsedSpaceWarningValue;
-                viewModel.UsedSpaceAlertValue = diskSettings.UsedSpaceAlertValue;
-            }
-
-            return View(viewModel);
         }
         // POST:
         [CustomAuth(Roles = "Administrator, QA")]
@@ -345,145 +351,153 @@ namespace Overseer.WebApp.Controllers
             Machine machineToUpdate = _unitOfWork.Machines.Get(viewModel.MachineId);
             TestEnvironment parentEnvironment = _unitOfWork.TestEnvironments.GetWithMonitoringSettings(Int32.Parse(viewModel.ParentEnvironmentId));
 
-            // if a machine with the new name already exists for the environment
-            if (viewModel.DisplayName != machineToUpdate.DisplayName)
+            // check if user has permission on this environment
+            if (GetLoggedInUserId() != parentEnvironment.Creator)
             {
-                if (_unitOfWork.Machines.CheckMachineExistsByEnvironmentAndDisplayName(Int32.Parse(viewModel.ParentEnvironmentId), viewModel.DisplayName))
-                {
-                    return Json(new { success = false, error = "'" + parentEnvironment.EnvironmentName + "' already contains a machine with that name." }, JsonRequestBehavior.AllowGet);
-                }
+                return Json(new { success = false, error = ("Unauthorized!") }, JsonRequestBehavior.AllowGet);
             }
-
-            // update machine details
-            machineToUpdate.ParentEnv = Int32.Parse(viewModel.ParentEnvironmentId);
-            machineToUpdate.DisplayName = viewModel.DisplayName;
-            machineToUpdate.ComputerName = viewModel.MachineName;
-            machineToUpdate.IPV4 = viewModel.IpAddress;
-            machineToUpdate.FQDN = viewModel.FQDN;
-            machineToUpdate.OS = Int32.Parse(viewModel.OperatingSystemId);
-            machineToUpdate.NumProcessors = viewModel.NumProcessors;
-            machineToUpdate.TotalMemGbs = viewModel.TotalMemGbs;
-
-            // updating/maintaining performance & disk monitoring settings
-            var tempPerfSetting = _unitOfWork.PerformanceMonitoringSettings.Get(viewModel.MachineId);
-            if (tempPerfSetting != null)
+            else
             {
-                _unitOfWork.PerformanceMonitoringSettings.Delete(tempPerfSetting);
-            }
-            var tempDiskSetting = _unitOfWork.DiskMonitoringSettings.Get(viewModel.MachineId);
-            if (tempDiskSetting != null)
-            {
-                _unitOfWork.DiskMonitoringSettings.Delete(tempDiskSetting);
-            }
-
-            _unitOfWork.PerformanceMonitoringSettings.Add(new PerformanceSettings()
-            {
-                MachineID = viewModel.MachineId,
-                AvgCpuUtilAlertsOn = viewModel.AvgCpuUtilAlertsOn,
-                AvgCpuUtilWarnValue = viewModel.AvgCpuUtilWarnValue,
-                AvgCpuUtilAlertValue = viewModel.AvgCpuUtilAlertValue,
-                CpuHighUtilAlertsOn = viewModel.HighCpuUtilAlertsOn,
-                CpuHighUtilWarnValue = viewModel.HighCpuUtilWarnValue,
-                CpuHighUtilAlertValue = viewModel.HighCpuUtilAlertValue,
-                AvgMemUtilAlertsOn = viewModel.AvgMemUtilAlertsOn,
-                AvgMemUtilWarnValue = viewModel.AvgMemUtilWarnValue,
-                AvgMemUtilAlertValue = viewModel.AvgMemUtilAlertValue,
-                MemHighUtilAlertsOn = viewModel.HighMemUtilAlertsOn,
-                MemHighUtilWarnValue = viewModel.HighMemUtilWarnValue,
-                MemHighUtilAlertsValue = viewModel.HighMemUtilAlertValue
-            });
-            // update disk monitoring settings
-            _unitOfWork.DiskMonitoringSettings.Add(new DiskSettings()
-            {
-                MachineID = viewModel.MachineId,
-                UsedSpaceAlertsOn = viewModel.UsedSpaceAlertsOn,
-                UsedSpaceWarningValue = viewModel.UsedSpaceWarnValue,
-                UsedSpaceAlertValue = viewModel.UsedSpaceAlertValue
-            });
-
-            // updating/maintaining dynamic monitoring settings (process/event-log/service)
-            var procSettings = _unitOfWork.ProcessMonitoringSettings.GetByMachine(viewModel.MachineId);
-
-            foreach (var setting in procSettings)
-            {
-                if (!viewModel.UpdatedMonitoredProcesses.Contains(setting.ProcessName))
+                // if a machine with the new name already exists for the environment
+                if (viewModel.DisplayName != machineToUpdate.DisplayName)
                 {
-                    _unitOfWork.ProcessMonitoringSettings.Delete(setting);  // process no longer in monitored list - remove from db
-                }
-                else
-                {
-                    viewModel.UpdatedMonitoredProcesses.Remove(setting.ProcessName);    // process already exists - remove from list so it's not added again
-                }
-            }
-
-            if (viewModel.UpdatedMonitoredProcesses != null)
-            {
-                foreach (string procName in viewModel.UpdatedMonitoredProcesses)
-                {
-                    _unitOfWork.ProcessMonitoringSettings.Add(new ProcessSettings()
+                    if (_unitOfWork.Machines.CheckMachineExistsByEnvironmentAndDisplayName(Int32.Parse(viewModel.ParentEnvironmentId), viewModel.DisplayName))
                     {
-                        MachineID = viewModel.MachineId,
-                        ProcessName = procName
-                    });
+                        return Json(new { success = false, error = "'" + parentEnvironment.EnvironmentName + "' already contains a machine with that name." }, JsonRequestBehavior.AllowGet);
+                    }
                 }
-            }
 
-            var logSettings = _unitOfWork.EventLogMonitoringSettings.GetByMachine(viewModel.MachineId);
+                // update machine details
+                machineToUpdate.ParentEnv = Int32.Parse(viewModel.ParentEnvironmentId);
+                machineToUpdate.DisplayName = viewModel.DisplayName;
+                machineToUpdate.ComputerName = viewModel.MachineName;
+                machineToUpdate.IPV4 = viewModel.IpAddress;
+                machineToUpdate.FQDN = viewModel.FQDN;
+                machineToUpdate.OS = Int32.Parse(viewModel.OperatingSystemId);
+                machineToUpdate.NumProcessors = viewModel.NumProcessors;
+                machineToUpdate.TotalMemGbs = viewModel.TotalMemGbs;
 
-            foreach (var setting in logSettings)
-            {
-                if (!viewModel.UpdatedMonitoredEventLogs.Contains(setting.EventLogName))
+                // updating/maintaining performance & disk monitoring settings
+                var tempPerfSetting = _unitOfWork.PerformanceMonitoringSettings.Get(viewModel.MachineId);
+                if (tempPerfSetting != null)
                 {
-                    _unitOfWork.EventLogMonitoringSettings.Delete(setting);
+                    _unitOfWork.PerformanceMonitoringSettings.Delete(tempPerfSetting);
                 }
-                else
+                var tempDiskSetting = _unitOfWork.DiskMonitoringSettings.Get(viewModel.MachineId);
+                if (tempDiskSetting != null)
                 {
-                    viewModel.UpdatedMonitoredEventLogs.Remove(setting.EventLogName);
+                    _unitOfWork.DiskMonitoringSettings.Delete(tempDiskSetting);
                 }
-            }
 
-            if (viewModel.UpdatedMonitoredEventLogs != null)
-            {
-                foreach (string eventLogName in viewModel.UpdatedMonitoredEventLogs)
+                _unitOfWork.PerformanceMonitoringSettings.Add(new PerformanceSettings()
                 {
-                    _unitOfWork.EventLogMonitoringSettings.Add(new EventLogSettings()
+                    MachineID = viewModel.MachineId,
+                    AvgCpuUtilAlertsOn = viewModel.AvgCpuUtilAlertsOn,
+                    AvgCpuUtilWarnValue = viewModel.AvgCpuUtilWarnValue,
+                    AvgCpuUtilAlertValue = viewModel.AvgCpuUtilAlertValue,
+                    CpuHighUtilAlertsOn = viewModel.HighCpuUtilAlertsOn,
+                    CpuHighUtilWarnValue = viewModel.HighCpuUtilWarnValue,
+                    CpuHighUtilAlertValue = viewModel.HighCpuUtilAlertValue,
+                    AvgMemUtilAlertsOn = viewModel.AvgMemUtilAlertsOn,
+                    AvgMemUtilWarnValue = viewModel.AvgMemUtilWarnValue,
+                    AvgMemUtilAlertValue = viewModel.AvgMemUtilAlertValue,
+                    MemHighUtilAlertsOn = viewModel.HighMemUtilAlertsOn,
+                    MemHighUtilWarnValue = viewModel.HighMemUtilWarnValue,
+                    MemHighUtilAlertsValue = viewModel.HighMemUtilAlertValue
+                });
+                // update disk monitoring settings
+                _unitOfWork.DiskMonitoringSettings.Add(new DiskSettings()
+                {
+                    MachineID = viewModel.MachineId,
+                    UsedSpaceAlertsOn = viewModel.UsedSpaceAlertsOn,
+                    UsedSpaceWarningValue = viewModel.UsedSpaceWarnValue,
+                    UsedSpaceAlertValue = viewModel.UsedSpaceAlertValue
+                });
+
+                // updating/maintaining dynamic monitoring settings (process/event-log/service)
+                var procSettings = _unitOfWork.ProcessMonitoringSettings.GetByMachine(viewModel.MachineId);
+
+                foreach (var setting in procSettings)
+                {
+                    if (!viewModel.UpdatedMonitoredProcesses.Contains(setting.ProcessName))
                     {
-                        MachineID = viewModel.MachineId,
-                        EventLogName = eventLogName,
-                        EventBacklogSize = 100
-                    });
-                }
-            }
-
-            var serviceSettings = _unitOfWork.ServiceMonitoringSettings.GetByMachine(viewModel.MachineId);
-
-            foreach (var setting in serviceSettings)
-            {
-                if (!viewModel.UpdatedMonitoredServices.Contains(setting.ServiceName))
-                {
-                    _unitOfWork.ServiceMonitoringSettings.Delete(setting);
-                }
-                else
-                {
-                    viewModel.UpdatedMonitoredServices.Remove(setting.ServiceName);
-                }
-            }
-
-            if (viewModel.UpdatedMonitoredServices != null)
-            {
-                foreach (string serviceName in viewModel.UpdatedMonitoredServices)
-                {
-                    _unitOfWork.ServiceMonitoringSettings.Add(new ServiceSettings()
+                        _unitOfWork.ProcessMonitoringSettings.Delete(setting);  // process no longer in monitored list - remove from db
+                    }
+                    else
                     {
-                        MachineID = viewModel.MachineId,
-                        ServiceName = serviceName
-                    });
+                        viewModel.UpdatedMonitoredProcesses.Remove(setting.ProcessName);    // process already exists - remove from list so it's not added again
+                    }
                 }
+
+                if (viewModel.UpdatedMonitoredProcesses != null)
+                {
+                    foreach (string procName in viewModel.UpdatedMonitoredProcesses)
+                    {
+                        _unitOfWork.ProcessMonitoringSettings.Add(new ProcessSettings()
+                        {
+                            MachineID = viewModel.MachineId,
+                            ProcessName = procName
+                        });
+                    }
+                }
+
+                var logSettings = _unitOfWork.EventLogMonitoringSettings.GetByMachine(viewModel.MachineId);
+
+                foreach (var setting in logSettings)
+                {
+                    if (!viewModel.UpdatedMonitoredEventLogs.Contains(setting.EventLogName))
+                    {
+                        _unitOfWork.EventLogMonitoringSettings.Delete(setting);
+                    }
+                    else
+                    {
+                        viewModel.UpdatedMonitoredEventLogs.Remove(setting.EventLogName);
+                    }
+                }
+
+                if (viewModel.UpdatedMonitoredEventLogs != null)
+                {
+                    foreach (string eventLogName in viewModel.UpdatedMonitoredEventLogs)
+                    {
+                        _unitOfWork.EventLogMonitoringSettings.Add(new EventLogSettings()
+                        {
+                            MachineID = viewModel.MachineId,
+                            EventLogName = eventLogName,
+                            EventBacklogSize = 100
+                        });
+                    }
+                }
+
+                var serviceSettings = _unitOfWork.ServiceMonitoringSettings.GetByMachine(viewModel.MachineId);
+
+                foreach (var setting in serviceSettings)
+                {
+                    if (!viewModel.UpdatedMonitoredServices.Contains(setting.ServiceName))
+                    {
+                        _unitOfWork.ServiceMonitoringSettings.Delete(setting);
+                    }
+                    else
+                    {
+                        viewModel.UpdatedMonitoredServices.Remove(setting.ServiceName);
+                    }
+                }
+
+                if (viewModel.UpdatedMonitoredServices != null)
+                {
+                    foreach (string serviceName in viewModel.UpdatedMonitoredServices)
+                    {
+                        _unitOfWork.ServiceMonitoringSettings.Add(new ServiceSettings()
+                        {
+                            MachineID = viewModel.MachineId,
+                            ServiceName = serviceName
+                        });
+                    }
+                }
+
+                _unitOfWork.Save();
+
+                return Json(new { success = true, successmsg = ("Changes made successfully!") }, JsonRequestBehavior.AllowGet);
             }
-
-            _unitOfWork.Save();
-
-            return Json(new { success = true, successmsg = ("Changes made successfully!") }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
@@ -671,30 +685,38 @@ namespace Overseer.WebApp.Controllers
         {
             TestEnvironment parentEnvironment = _unitOfWork.TestEnvironments.GetWithMonitoringSettings(Int32.Parse(viewModel.ParentEnvironmentId));
 
-            // if a machine with this name already exists for the environment
-            if (_unitOfWork.Machines.CheckMachineExistsByEnvironmentAndDisplayName(Int32.Parse(viewModel.ParentEnvironmentId), viewModel.DisplayName))
+            // check if user has permission on this environment
+            if (GetLoggedInUserId() != parentEnvironment.Creator)
             {
-                return Json(new { success = false, error = "'" + parentEnvironment.EnvironmentName + "' already contains a machine with that name." }, JsonRequestBehavior.AllowGet);
+                return Json(new { success = false, error = ("Unauthorized!") }, JsonRequestBehavior.AllowGet);
             }
             else
             {
-                // add the new machine to the database
-                Machine newMachine = new Machine()
+                // if a machine with this name already exists for the environment
+                if (_unitOfWork.Machines.CheckMachineExistsByEnvironmentAndDisplayName(Int32.Parse(viewModel.ParentEnvironmentId), viewModel.DisplayName))
                 {
-                    ParentEnv = Int32.Parse(viewModel.ParentEnvironmentId),
-                    DisplayName = viewModel.DisplayName,
-                    ComputerName = viewModel.MachineName,
-                    IPV4 = viewModel.IpAddress,
-                    FQDN = viewModel.FQDN,
-                    OS = Int32.Parse(viewModel.OperatingSystemId),
-                    NumProcessors = viewModel.NumProcessors,
-                    TotalMemGbs = viewModel.TotalMemGbs
-                };
+                    return Json(new { success = false, error = "'" + parentEnvironment.EnvironmentName + "' already contains a machine with that name." }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    // add the new machine to the database
+                    Machine newMachine = new Machine()
+                    {
+                        ParentEnv = Int32.Parse(viewModel.ParentEnvironmentId),
+                        DisplayName = viewModel.DisplayName,
+                        ComputerName = viewModel.MachineName,
+                        IPV4 = viewModel.IpAddress,
+                        FQDN = viewModel.FQDN,
+                        OS = Int32.Parse(viewModel.OperatingSystemId),
+                        NumProcessors = viewModel.NumProcessors,
+                        TotalMemGbs = viewModel.TotalMemGbs
+                    };
 
-                _unitOfWork.Machines.Add(newMachine);
-                _unitOfWork.Save();
+                    _unitOfWork.Machines.Add(newMachine);
+                    _unitOfWork.Save();
 
-                return Json(new { success = true, successmsg = (viewModel.DisplayName + "' has been successfully added to '" + parentEnvironment.EnvironmentName) }, JsonRequestBehavior.AllowGet);
+                    return Json(new { success = true, successmsg = (viewModel.DisplayName + "' has been successfully added to '" + parentEnvironment.EnvironmentName) }, JsonRequestBehavior.AllowGet);
+                }
             }
         }
 
@@ -731,6 +753,12 @@ namespace Overseer.WebApp.Controllers
             int nextUpdateDue = (int)timeDifference.TotalMilliseconds;
 
             return (nextUpdateDue + 60000);
+        }
+
+        // Method used in unit testing.
+        public Guid GetExampleMachineGuid()
+        {
+            return _unitOfWork.Machines.GetMachineByEnvironmentAndDisplayName(1, "Example Machine").MachineID;
         }
     }
 }
