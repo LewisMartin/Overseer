@@ -21,7 +21,7 @@
             Site Settings
         </h3>
 
-        <div>
+        <div class="system-info">
             @using (Html.BeginForm("SiteSettings", "Admin", FormMethod.Post, new { id = "SiteSettingsForm" }))
             {
                 <div class="content-area">
@@ -36,7 +36,7 @@
                                 <label for="envName">Machine Limit:</label>
                                 @Html.EditorFor(m => m.MachineLimit)
                             </div>
-                            <div>
+                            <div class="chkbox-pair">
                                 <label for="envName">Monitoring allowed:</label>
                                 @Html.CheckBoxFor(m => m.AllowMonitoring)
                             </div>
@@ -45,11 +45,11 @@
                     <div class="account-site-settings">
                         <h4>Account Info</h4>
                         <div class="user-info-flex">
-                            <div>
+                            <div class="chkbox-pair">
                                 <label for="envName">Allow users to change role:</label>
                                 @Html.CheckBoxFor(m => m.AllowUserRoleChange)
                             </div>
-                            <div>
+                            <div class="chkbox-pair">
                                 <label for="envName">Allow users to change username:</label>
                                 @Html.CheckBoxFor(m => m.AllowUsernameChange)
                             </div>

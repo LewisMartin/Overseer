@@ -19,7 +19,7 @@
                 <canvas id="MemChart" height="180"></canvas>
             </div>
             <div class="perf-footer">
-                <span>Current Usage: @(Model.PerformanceInfo.AvgMemUtil)% </span>
+                <span>Current Usage: @(Model.PerformanceInfo.AvgMemUtil)%</span>
                 <span>High util: @(Model.PerformanceInfo.HighMemUtilIndicator)%</span>
             </div>
         </div>
@@ -80,9 +80,9 @@
                                             <td>@proc.StartTime</td>
                                             <td>@proc.CpuTime</td>
                                             <td>@proc.ThreadCount</td>
-                                            <td>@(proc.WorkingSet/1024) kb</td>
-                                            <td>@(proc.PrivateBytes/1024) kb</td>
-                                            <td>@(proc.VirtualBytes/1024) kb</td>
+                                            <td>@(string.Format("{0:n0}", (proc.WorkingSet / 1024))) kb</td>
+                                            <td>@(string.Format("{0:n0}", (proc.PrivateBytes / 1024))) kb</td>
+                                            <td>@(string.Format("{0:n0}", (proc.VirtualBytes / 1024))) kb</td>
                                         </tr>
                                     }
                                 }
@@ -206,7 +206,7 @@
             data: {
                 labels: labelData,
                 datasets: [{
-                    label: 'cpu',
+                    label: '% Cpu Util',
                     data: cpuData,
                     backgroundColor: null,
                     borderColor: '#f39c12',

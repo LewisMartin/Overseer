@@ -108,14 +108,14 @@ namespace Overseer.WebApp.Controllers
                 if (machine.PerformanceData != null)
                 {
                     List<string> readingTimes = new List<string>();
-                    List<float> cpuChartData = new List<float>(), memChartData = new List<float>();
+                    List<decimal> cpuChartData = new List<decimal>(), memChartData = new List<decimal>();
 
                     int i = 1;
                     foreach (PerformanceInfo perfInfo in machine.PerformanceData)
                     {
                         readingTimes.Add(perfInfo.ReadingDateTime.ToString("HH:mm"));
-                        cpuChartData.Add((float)perfInfo.CpuUtil);
-                        memChartData.Add((float)perfInfo.MemUtil);
+                        cpuChartData.Add(Math.Round((decimal)perfInfo.CpuUtil, 2));
+                        memChartData.Add(Math.Round((decimal)perfInfo.MemUtil, 2));
                         i++;
                     }
 
@@ -134,9 +134,9 @@ namespace Overseer.WebApp.Controllers
                             VolumeLabel = disk.VolumeLabel,
                             DriveType = disk.DriveType,
                             DriveFormat = disk.DriveFormat,
-                            TotalSpace = (decimal)disk.TotalSpace,
-                            FreeSpace = (decimal)disk.FreeSpace,
-                            UsedSpace = (decimal)disk.UsedSpace
+                            TotalSpace = Math.Round((decimal)disk.TotalSpace, 2),
+                            FreeSpace = Math.Round((decimal)disk.FreeSpace, 2),
+                            UsedSpace = Math.Round((decimal)disk.UsedSpace, 2)
                         });
                     }
                 }

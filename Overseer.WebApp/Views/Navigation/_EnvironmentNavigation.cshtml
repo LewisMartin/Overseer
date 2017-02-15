@@ -5,12 +5,12 @@
 @foreach (var environment in Model.environmentNavDetails)
 {
     // need to add action link which links to the environmentseer page passing the environment id as a param
-    <li class="env-menu-item">@Html.ActionLink("-" + environment.EnvironmentName, "Environmentseer", "Environment", new { environmentId = environment.EnvironmentId }, null)
+    <li class="env-menu-item">@Html.ActionLink("- " + environment.EnvironmentName, "Environmentseer", "Environment", new { environmentId = environment.EnvironmentId }, null)
         <div class="pop-out-menu">
             <ul>
                 @foreach (var childMachine in environment.ChildMachines)
                 {
-                    <li>@Html.ActionLink("--" + childMachine.DisplayName, "Machineseer", "Machine", new { machineId = childMachine.MachineId }, null)</li>
+                    <li>@Html.ActionLink(childMachine.DisplayName, "Machineseer", "Machine", new { machineId = childMachine.MachineId }, null)</li>
                 }
             </ul>
         </div>

@@ -1,6 +1,11 @@
-﻿$(document).ready(function () {
+﻿var activeUserOps = 0;
+var activeEnvOps = 0;
+var activeMachineOps = 0;
+
+$(document).ready(function () {
     detectSearchTypeChange();
     detectSearchFormSubmission();
+    updateActiveSearchOptions();
 });
 
 function detectSearchTypeChange(){
@@ -47,12 +52,47 @@ function toggleAdvOpsDisplay(searchType) {
     switch (searchType) {
         case 'user':
             $('#UserAdvOps').show();
+            $(".active-search-options").html(activeUserOps + ' active');
             break;
         case 'environment':
             $('#EnvironmentAdvOps').show();
+            $(".active-search-options").html(activeEnvOps + ' active');
             break;
         case 'machine':
             $('#MachineAdvOps').show();
+            $(".active-search-options").html(activeMachineOps + ' active');
             break;
     }
+}
+
+function updateActiveSearchOptions() {
+    $(".user-search-option").change(function () {
+        if (this.checked) {
+            activeUserOps++;
+            $(".active-search-options").html(activeUserOps + ' active');
+        } else {
+            activeUserOps--;
+            $(".active-search-options").html(activeUserOps + ' active');
+        }
+    })
+
+    $(".env-search-option").change(function () {
+        if (this.checked) {
+            activeEnvOps++;
+            $(".active-search-options").html(activeEnvOps + ' active');
+        } else {
+            activeEnvOps--;
+            $(".active-search-options").html(activeEnvOps + ' active');
+        }
+    })
+
+    $(".machine-search-option").change(function () {
+        if (this.checked) {
+            activeMachineOps++;
+            $(".active-search-options").html(activeMachineOps + ' active');
+        } else {
+            activeMachineOps--;
+            $(".active-search-options").html(activeMachineOps + ' active');
+        }
+    })
 }

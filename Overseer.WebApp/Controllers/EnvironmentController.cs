@@ -88,12 +88,12 @@ namespace Overseer.WebApp.Controllers
 
             // data for performance graphs
             List<string> perfMachineNames = new List<string>();
-            List<float> cpuChartData = new List<float>(), memChartData = new List<float>();
+            List<decimal> cpuChartData = new List<decimal>(), memChartData = new List<decimal>();
 
             // data for disk monitoring graphs
             List<string> diskMachineNames = new List<string>();
             List<List<string>> diskLabelData = new List<List<string>>();
-            List<List<float>> diskChartData = new List<List<float>>();
+            List<List<decimal>> diskChartData = new List<List<decimal>>();
 
             // data for process monitoring charts
             List<string> processMachineNames = new List<string>(), processNames = new List<string>();
@@ -114,8 +114,8 @@ namespace Overseer.WebApp.Controllers
                     if ((machine.PerformanceData != null) && (machine.PerformanceData.Count > 0))    // permitting a machine has some performance readings
                     {
                         perfMachineNames.Add(machine.DisplayName);
-                        cpuChartData.Add((float)(machine.PerformanceData.ElementAt(0).CpuUtil));    // most recent cpu reading
-                        memChartData.Add((float)(machine.PerformanceData.ElementAt(0).MemUtil));    // most recent mem reading
+                        cpuChartData.Add(Math.Round((decimal)(machine.PerformanceData.ElementAt(0).CpuUtil), 2));    // most recent cpu reading
+                        memChartData.Add(Math.Round((decimal)(machine.PerformanceData.ElementAt(0).MemUtil), 2));    // most recent mem reading
                     }
 
                     // disk data
@@ -131,10 +131,10 @@ namespace Overseer.WebApp.Controllers
                         {
                             if (diskChartData.Count <= diskCount) // add a list to store 1st/2nd/3rd/4th...nth disk readings for all machines
                             {
-                                diskChartData.Add(new List<float>());
+                                diskChartData.Add(new List<decimal>());
                             }
 
-                            diskChartData[diskCount].Add((100 - (float)((disk.FreeSpace / disk.TotalSpace) * 100)));
+                            diskChartData[diskCount].Add(Math.Round((100 - (decimal)((disk.FreeSpace / disk.TotalSpace) * 100)), 2));
 
                             tempDiskLabelList.Add(disk.DriveLetter);
                             diskCount++;
