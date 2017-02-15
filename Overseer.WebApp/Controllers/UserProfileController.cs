@@ -54,17 +54,26 @@ namespace Overseer.WebApp.Controllers
             if (userId == GetLoggedInUserId())
             {
                 var user = _unitOfWork.Users.GetWithUserRole(userId);
+                var siteSettings = _unitOfWork.SiteSettings.Get(1);
 
                 ProfileEditorViewModel viewModel = new ProfileEditorViewModel()
                 {
                     UserId = user.UserID,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
+                    UsernameChangeAllowed = siteSettings.EnableUsernameChange,
                     UserName = user.UserName,
                     EmailAddress = user.Email,
                     PasswordChanged = false,
-                    RoleChoices = CreateUserRoleSelectList(_unitOfWork.UserRoles.GetAll(), user.UserRole.RoleName)
+                    RoleChangeAllowed = siteSettings.EnableUserRoleChange,
+                    RoleChoices = new List<SelectListItem>(),
+                    ChosenRoleID = user.UserRoleID.ToString()
                 };
+
+                if(userId == 1)
+                    viewModel.RoleChoices = CreateUserRoleSelectList(_unitOfWork.UserRoles.GetAll(), user.UserRole.RoleName).Where(s => s.Value == "1");
+                else 
+                    viewModel.RoleChoices = CreateUserRoleSelectList(_unitOfWork.UserRoles.GetAll(), user.UserRole.RoleName).Where(s => s.Value != "1");
 
                 return View(viewModel);
             }

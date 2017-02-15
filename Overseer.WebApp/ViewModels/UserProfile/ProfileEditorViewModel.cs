@@ -20,6 +20,8 @@ namespace Overseer.WebApp.ViewModels.UserProfile
         [Required(ErrorMessage = "Enter user's last name.")]
         public string LastName { get; set; }
 
+        public bool UsernameChangeAllowed { get; set; }
+
         [MaxLength(20)]
         [Required(ErrorMessage = "Enter a Username.")]
         public string UserName { get; set; }
@@ -36,6 +38,8 @@ namespace Overseer.WebApp.ViewModels.UserProfile
 
         [MaxLength(20), MinLength(6)]
         public string ConfirmPassword { get; set; }
+
+        public bool RoleChangeAllowed { get; set; }
 
         [Required(ErrorMessage = "Choose a role.")]
         public string ChosenRoleID { get; set; }

@@ -50,19 +50,36 @@
                         </div>
                     </div>
                 </div>
-                <div class="user-account">
-                    <h4>Account Info</h4>
-                    <div class="user-info-flex">
-                        <div>
-                            <label for="envName">Username:</label>
-                            @Html.TextBoxFor(m => m.UserName, new { placeholder = "Username" })
-                        </div>
-                        <div>
-                            <label for="envName">Account Role:</label>
-                            @Html.DropDownListFor(m => m.ChosenRoleID, Model.RoleChoices, "Choose a role..")
+                @if (Model.RoleChangeAllowed || Model.UsernameChangeAllowed)
+                {
+                    <div class="user-account">
+                        <h4>Account Info</h4>
+                        <div class="user-info-flex">
+                            @if (Model.UsernameChangeAllowed)
+                            {
+                                <div>
+                                    <label for="envName">Username:</label>
+                                    @Html.TextBoxFor(m => m.UserName, new { placeholder = "Username" })
+                                </div>
+                            }
+                            else
+                            {
+                                @Html.HiddenFor(m => m.UserName)
+                            }
+                            @if (Model.RoleChangeAllowed)
+                            {
+                                <div>
+                                    <label for="envName">Account Role:</label>
+                                    @Html.DropDownListFor(m => m.ChosenRoleID, Model.RoleChoices, "Choose a role..")
+                                </div>
+                            }
+                            else
+                            {
+                                @Html.HiddenFor(m => m.ChosenRoleID)
+                            }
                         </div>
                     </div>
-                </div>
+                }
                 <div class="user-security">
                     <h4>Security</h4>
                     <div class="user-info-flex">
