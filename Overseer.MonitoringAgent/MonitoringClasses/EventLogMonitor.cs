@@ -90,11 +90,17 @@ namespace Overseer.MonitoringAgent.MonitoringClasses
                         case "Information":
                             infos++;
                             break;
+                        case "0":
+                            infos++;
+                            break;
                         case "Warning":
                             warnings++;
                             break;
                         case "Error":
                             errors++;
+                            break;
+                        default:
+                            _Logger.Log("Unrecognized entry type: " + log.Entries[i].EntryType.ToString());
                             break;
                     }
                 }

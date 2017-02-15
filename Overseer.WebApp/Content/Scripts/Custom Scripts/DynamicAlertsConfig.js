@@ -57,7 +57,7 @@
                                     $(successMsg).html(result['successmsg']);
                                 }
                                 else {
-                                    $(errorMsg).html(result['error']);
+                                    $(errorMsg).html(result['errormsg']);
                                 }
 
                                 $(formResponse).show(200);

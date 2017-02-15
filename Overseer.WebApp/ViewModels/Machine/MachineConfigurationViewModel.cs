@@ -20,53 +20,66 @@ namespace Overseer.WebApp.ViewModels.Machine
 
         public string MachineName { get; set; }
 
+        [RegularExpression(@"^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$", ErrorMessage = "IP Address must be valid.")]
         public string IpAddress { get; set; }
 
         public string FQDN { get; set; }
 
         public string OperatingSystemId { get; set; }
 
+        [Range(1, 100)]
         public int NumProcessors { get; set; }
+
+        [Range(1, 250)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:#.#}")]
+        public float TotalMemGbs { get; set; }
 
         // performance monitoring alerts
         [Required]
         public bool AvgCpuUtilAlertsOn { get; set; }
 
+        [Range(0, 100)]
         public int AvgCpuUtilWarnValue { get; set; }
 
+        [Range(0, 100)]
         public int AvgCpuUtilAlertValue { get; set; }
 
         [Required]
         public bool HighCpuUtilAlertsOn { get; set; }
 
+        [Range(0, 100)]
         public int HighCpuUtilWarnValue { get; set; }
 
+        [Range(0, 100)]
         public int HighCpuUtilAlertValue { get; set; }
 
         [Required]
         public bool AvgMemUtilAlertsOn { get; set; }
 
+        [Range(0, 100)]
         public int AvgMemUtilWarnValue { get; set; }
 
+        [Range(0, 100)]
         public int AvgMemUtilAlertValue { get; set; }
 
         [Required]
         public bool HighMemUtilAlertsOn { get; set; }
 
+        [Range(0, 100)]
         public int HighMemUtilWarnValue { get; set; }
 
+        [Range(0, 100)]
         public int HighMemUtilAlertValue { get; set; }
 
         [Required]
         public bool UsedSpaceAlertsOn { get; set; }
 
+        [Range(0, 100)]
         public int UsedSpaceWarnValue { get; set; }
 
+        [Range(0, 100)]
         public int UsedSpaceAlertValue { get; set; }
 
-
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:#.#}")]
-        public float TotalMemGbs { get; set; }
 
         public IEnumerable<SelectListItem> ParentEnvironmentOptions { get; set; }
 

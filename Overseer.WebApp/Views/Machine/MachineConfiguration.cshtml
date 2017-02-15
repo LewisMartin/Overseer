@@ -146,14 +146,34 @@
                                     <div class="alert-config flex-container">
                                         <div class="alert-fields">
                                             <label>High CPU readings alerts:</label>
-                                            <label class="sub-label">Warning threshold (count):</label>
+                                            <label class="sub-label">Warning threshold (%):</label>
                                             @Html.EditorFor(m => m.HighCpuUtilWarnValue, true)
-                                            <label class="sub-label">Alert threshold (count):</label>
+                                            <label class="sub-label">Alert threshold (%):</label>
                                             @Html.EditorFor(m => m.HighCpuUtilAlertValue, true)
                                         </div>
                                         <div class="alert-checkbox">
                                             @Html.CheckBoxFor(m => m.HighCpuUtilAlertsOn, true)
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="form-val">
+                                    <div class="form-val-msg">
+                                        @Html.ValidationMessageFor(m => m.AvgCpuUtilWarnValue)
+                                    </div>
+                                    <div class="form-val-msg">
+                                        @Html.ValidationMessageFor(m => m.AvgCpuUtilAlertValue)
+                                    </div>
+                                    <div class="form-val-msg">
+                                        @Html.ValidationMessageFor(m => m.AvgCpuUtilAlertsOn)
+                                    </div>
+                                    <div class="form-val-msg">
+                                        @Html.ValidationMessageFor(m => m.HighCpuUtilWarnValue)
+                                    </div>
+                                    <div class="form-val-msg">
+                                        @Html.ValidationMessageFor(m => m.HighCpuUtilAlertValue)
+                                    </div>
+                                    <div class="form-val-msg">
+                                        @Html.ValidationMessageFor(m => m.HighCpuUtilAlertsOn)
                                     </div>
                                 </div>
                             </div>
@@ -175,14 +195,34 @@
                                     <div class="alert-config flex-container">
                                         <div class="alert-fields">
                                             <label>High MEM readings alerts:</label>
-                                            <label class="sub-label">Warning threshold (count):</label>
+                                            <label class="sub-label">Warning threshold (%):</label>
                                             @Html.EditorFor(m => m.HighMemUtilWarnValue, true)
-                                            <label class="sub-label">Alert threshold (count):</label>
+                                            <label class="sub-label">Alert threshold (%):</label>
                                             @Html.EditorFor(m => m.HighMemUtilAlertValue, true)
                                         </div>
                                         <div class="alert-checkbox">
                                             @Html.CheckBoxFor(m => m.HighMemUtilAlertsOn, true)
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="form-val">
+                                    <div class="form-val-msg">
+                                        @Html.ValidationMessageFor(m => m.AvgMemUtilWarnValue)
+                                    </div>
+                                    <div class="form-val-msg">
+                                        @Html.ValidationMessageFor(m => m.AvgMemUtilAlertValue)
+                                    </div>
+                                    <div class="form-val-msg">
+                                        @Html.ValidationMessageFor(m => m.AvgMemUtilAlertsOn)
+                                    </div>
+                                    <div class="form-val-msg">
+                                        @Html.ValidationMessageFor(m => m.HighMemUtilWarnValue)
+                                    </div>
+                                    <div class="form-val-msg">
+                                        @Html.ValidationMessageFor(m => m.HighMemUtilAlertValue)
+                                    </div>
+                                    <div class="form-val-msg">
+                                        @Html.ValidationMessageFor(m => m.HighMemUtilAlertsOn)
                                     </div>
                                 </div>
                             </div>
@@ -200,6 +240,17 @@
                                         <div class="alert-checkbox">
                                             @Html.CheckBoxFor(m => m.UsedSpaceAlertsOn, true)
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="form-val">
+                                    <div class="form-val-msg">
+                                        @Html.ValidationMessageFor(m => m.UsedSpaceWarnValue)
+                                    </div>
+                                    <div class="form-val-msg">
+                                        @Html.ValidationMessageFor(m => m.UsedSpaceAlertValue)
+                                    </div>
+                                    <div class="form-val-msg">
+                                        @Html.ValidationMessageFor(m => m.UsedSpaceAlertsOn)
                                     </div>
                                 </div>
                             </div>

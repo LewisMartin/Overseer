@@ -580,6 +580,13 @@ namespace Overseer.WebApp.Controllers
         [HttpPost]
         public ActionResult DynamicMonitoringAlertsConfig(_DynamicMonitoringAlertsConfigViewModel viewModel)
         {
+            // validate
+            if (!ValidateDynamicProcessConfig(viewModel.ProcessAlertSettings))
+                return Json(new { success = false, errormsg = ("Process monitoring values must be between 0 and 1,000,000 kbs.") }, JsonRequestBehavior.AllowGet);
+            if(!ValidateDynamicEventLogConfig(viewModel.EventLogAlertSettings))
+                return Json(new { success = false, errormsg = ("Event log counters must be between 0 and 1000 events.") }, JsonRequestBehavior.AllowGet);
+
+            // update settings
             var procSettings = _unitOfWork.ProcessMonitoringSettings.GetByMachine(viewModel.MachineId);
             var logSettings = _unitOfWork.EventLogMonitoringSettings.GetByMachine(viewModel.MachineId);
             var serviceSettings = _unitOfWork.ServiceMonitoringSettings.GetByMachine(viewModel.MachineId);
@@ -638,6 +645,44 @@ namespace Overseer.WebApp.Controllers
             _unitOfWork.Save();
 
             return Json(new { success = true, successmsg = ("Dynamic monitoring alerts configured!") }, JsonRequestBehavior.AllowGet);
+        }
+
+        private bool ValidateDynamicProcessConfig(List<MonitoredProcessAlertSettings> procSetList)
+        {
+            foreach (var procSets in procSetList)
+            {
+                if (procSets.WSWarnValue > 1000000 || procSets.WSWarnValue < 0)
+                    return false;
+                if (procSets.WSAlertValue > 1000000 || procSets.WSAlertValue < 0)
+                    return false;
+                if (procSets.PBWarnValue > 1000000 || procSets.PBWarnValue < 0)
+                    return false;
+                if (procSets.PBAlertValue > 1000000 || procSets.PBAlertValue < 0)
+                    return false;
+                if (procSets.VBWarnValue > 1000000 || procSets.VBWarnValue < 0)
+                    return false;
+                if (procSets.VBAlertValue > 1000000 || procSets.VBAlertValue < 0)
+                    return false;
+            }
+
+            return true;
+        }
+
+        private bool ValidateDynamicEventLogConfig(List<MonitoredEventLogAlertSettings> logSetList)
+        {
+            foreach (var logSets in logSetList)
+            {
+                if (logSets.ErrorCountWarnValue > 1000 || logSets.ErrorCountWarnValue < 0)
+                    return false;
+                if (logSets.ErrorCountAlertValue > 1000 || logSets.ErrorCountAlertValue < 0)
+                    return false;
+                if (logSets.WarningCountWarnValue > 1000 || logSets.WarningCountWarnValue < 0)
+                    return false;
+                if (logSets.WarningCountAlertValue > 1000 || logSets.WarningCountAlertValue < 0)
+                    return false;
+            }
+
+            return true;
         }
 
         // MachineCreation - page for creating new machines

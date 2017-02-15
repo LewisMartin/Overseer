@@ -35,22 +35,28 @@ namespace Overseer.WebApp.ViewModels.Machine
         [Required]
         public bool WorkingSetAlertsOn { get; set; }
 
+        [Range(0, 1000000)]
         public int WSWarnValue { get; set; }
 
+        [Range(0, 1000000)]
         public int WSAlertValue { get; set; }
 
         [Required]
         public bool PrivateBytesAlertsOn { get; set; }
 
+        [Range(0, 1000000)]
         public int PBWarnValue { get; set; }
 
+        [Range(0, 1000000)]
         public int PBAlertValue { get; set; }
 
         [Required]
         public bool VirtualBytesAlertsOn { get; set; }
 
+        [Range(0, 1000000)]
         public int VBWarnValue { get; set; }
 
+        [Range(0, 1000000)]
         public int VBAlertValue { get; set; }
     }
 
@@ -61,15 +67,19 @@ namespace Overseer.WebApp.ViewModels.Machine
         [Required]
         public bool WarningCountAlertsOn { get; set; }
 
+        [Range(0, 1000)]
         public int WarningCountWarnValue { get; set; }
 
+        [Range(0, 1000)]
         public int WarningCountAlertValue { get; set; }
 
         [Required]
         public bool ErrorCountAlertsOn { get; set; }
 
+        [Range(0, 1000)]
         public int ErrorCountWarnValue { get; set; }
 
+        [Range(0, 1000)]
         public int ErrorCountAlertValue { get; set; }
 
         [Required]
