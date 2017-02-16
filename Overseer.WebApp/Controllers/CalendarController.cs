@@ -64,7 +64,7 @@ namespace Overseer.WebApp.Controllers
             {
                 for (int i = 0; i < events.Count(); i++)
                 {
-                    viewModel.Events[events.ElementAt(i).EventDate.Day] = new EventInfo()
+                    viewModel.Events[(events.ElementAt(i).EventDate.Day)-1] = new EventInfo()
                     {
                         Title = events.ElementAt(i).Title,
                         DaysEffort = events.ElementAt(i).DaysEffort
@@ -74,7 +74,7 @@ namespace Overseer.WebApp.Controllers
                     {
                         Title = events.ElementAt(i).Title,
                         Date = events.ElementAt(i).EventDate.ToString("dd/MM/yyyy"),
-                        Day = events.ElementAt(i).EventDate.Day,
+                        Day = (events.ElementAt(i).EventDate.Day)-1,
                         Description = events.ElementAt(i).Description,
                         DaysEffort = events.ElementAt(i).DaysEffort
                     });

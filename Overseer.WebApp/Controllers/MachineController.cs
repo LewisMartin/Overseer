@@ -775,10 +775,15 @@ namespace Overseer.WebApp.Controllers
             var DiskMonSet = _unitOfWork.DiskMonitoringSettings.Get(machineId);
             var PerfMonSet = _unitOfWork.PerformanceMonitoringSettings.Get(machineId);
 
-            _unitOfWork.MonitoringAgentCredentials.Delete(machineCred);
-            _unitOfWork.SystemInfoMonitoring.Delete(sysInfoMon);
-            _unitOfWork.DiskMonitoringSettings.Delete(DiskMonSet);
-            _unitOfWork.PerformanceMonitoringSettings.Delete(PerfMonSet);
+            if(machineCred != null)
+                _unitOfWork.MonitoringAgentCredentials.Delete(machineCred);
+            if(sysInfoMon != null)
+                _unitOfWork.SystemInfoMonitoring.Delete(sysInfoMon);
+            if(DiskMonSet != null)
+                _unitOfWork.DiskMonitoringSettings.Delete(DiskMonSet);
+            if(PerfMonSet != null)
+                _unitOfWork.PerformanceMonitoringSettings.Delete(PerfMonSet);
+
             _unitOfWork.Machines.Delete(machine);
             _unitOfWork.Save();
 

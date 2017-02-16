@@ -346,25 +346,25 @@ namespace Overseer.WebApp.WebApi
 
                 if (procSet.WorkingSetAlertsOn)
                 {
-                    if (proc.WorkingSet >= procSet.WSAlertValue)
+                    if ((proc.WorkingSet/1024) >= procSet.WSAlertValue)
                         procAlerts.Add(CreateMonitoringAlert(machineId, 2, proc.Name, 1, "WorkingSet", (proc.WorkingSet/1024).ToString() + " kb"));
-                    else if (proc.WorkingSet >= procSet.WSWarnValue)
+                    else if ((proc.WorkingSet/1024) >= procSet.WSWarnValue)
                         procAlerts.Add(CreateMonitoringAlert(machineId, 2, proc.Name, 0, "WorkingSet", (proc.WorkingSet/1024).ToString() + " kb"));
                 }
 
                 if (procSet.PrivateBytesAlertsOn)
                 {
-                    if(proc.PrivateBytes >= procSet.PBAlertValue)
+                    if((proc.PrivateBytes/1024) >= procSet.PBAlertValue)
                         procAlerts.Add(CreateMonitoringAlert(machineId, 2, proc.Name, 1, "PrivateBytes", (proc.PrivateBytes/1024).ToString() + " kb"));
-                    else if(proc.PrivateBytes >= procSet.PBWarnValue)
+                    else if((proc.PrivateBytes/1024) >= procSet.PBWarnValue)
                         procAlerts.Add(CreateMonitoringAlert(machineId, 2, proc.Name, 0, "PrivateBytes", (proc.PrivateBytes/1024).ToString() + " kb"));
                 }
 
                 if (procSet.VirtualBytesAlertsOn)
                 {
-                    if(proc.VirtualBytes >= procSet.VBAlertValue)
+                    if((proc.VirtualBytes/1024) >= procSet.VBAlertValue)
                         procAlerts.Add(CreateMonitoringAlert(machineId, 2, proc.Name, 1, "VirtualBytes", (proc.VirtualBytes/1024).ToString() + " kb"));
-                    else if(proc.VirtualBytes >= procSet.VBWarnValue)
+                    else if((proc.VirtualBytes/1024) >= procSet.VBWarnValue)
                         procAlerts.Add(CreateMonitoringAlert(machineId, 2, proc.Name, 0, "VirtualBytes", (proc.VirtualBytes/1024).ToString() + " kb"));
                 }
             }

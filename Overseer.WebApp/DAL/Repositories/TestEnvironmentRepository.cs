@@ -40,7 +40,7 @@ namespace Overseer.WebApp.DAL.Repositories
 
         public TestEnvironment GetEnvironmentMonitoringSummaryData(int id)
         {
-            return dbContext.TestEnvironment
+            var matchedEnvironment = dbContext.TestEnvironment
                 .Include(e => e.Machines.Select(m => m.PerformanceData))
                 .Include(e => e.Machines.Select(m => m.DiskData))
                 .Include(e => e.Machines.Select(m => m.ProcessConfig))
@@ -50,6 +50,13 @@ namespace Overseer.WebApp.DAL.Repositories
                 .Include(e => e.Machines.Select(m => m.ServiceConfig))
                 .Include(e => e.Machines.Select(m => m.ServiceData))
                 .FirstOrDefault(e => e.EnvironmentID == id);
+
+            foreach (var machine in matchedEnvironment.Machines)
+            {
+                machine.PerformanceData = machine.PerformanceData.OrderByDescending(m => m.ReadingNumber).ToList();
+            }
+
+            return matchedEnvironment;
         }
 
         public bool CheckEnvironmentExistsByCreatorAndName(int userId, string name)

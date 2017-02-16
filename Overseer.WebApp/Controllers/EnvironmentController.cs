@@ -108,6 +108,9 @@ namespace Overseer.WebApp.Controllers
             // populating the above with data
             if (env.Machines != null)
             {
+                // keep track of the number of machne's data we've processed
+                int machineCount = 0;
+
                 foreach (Machine machine in env.Machines)
                 {
                     // performance data
@@ -124,14 +127,18 @@ namespace Overseer.WebApp.Controllers
                         diskMachineNames.Add(machine.DisplayName);
 
                         List<string> tempDiskLabelList = new List<string>();
-                        List<float> tempDiskUsageList = new List<float>();
+                        //List<float> tempDiskUsageList = new List<float>();
 
                         int diskCount = 0;
                         foreach (DiskInfo disk in machine.DiskData)
                         {
                             if (diskChartData.Count <= diskCount) // add a list to store 1st/2nd/3rd/4th...nth disk readings for all machines
                             {
-                                diskChartData.Add(new List<decimal>());
+                                List<decimal> tempList = new List<decimal>();
+                                for (int i = 0; i < machineCount; i++)
+                                    tempList.Add(0);
+
+                                diskChartData.Add(tempList);
                             }
 
                             diskChartData[diskCount].Add(Math.Round((100 - (decimal)((disk.FreeSpace / disk.TotalSpace) * 100)), 2));
@@ -151,10 +158,15 @@ namespace Overseer.WebApp.Controllers
                         // loop over process settings to get list of processes
                         foreach (ProcessSettings procSetting in machine.ProcessConfig)
                         {
-                            if (!(processNames.Contains(procSetting.ProcessName)))
+                            if (!(processNames.Contains(procSetting.ProcessName)))  // the first time this process has been encountered
                             {
                                 processNames.Add(procSetting.ProcessName);
-                                processData.Add(new List<int>());
+
+                                List<int> tempList = new List<int>();
+                                for (int i = 0; i < machineCount; i++)
+                                    tempList.Add(0);
+
+                                processData.Add(tempList);   //pad it out with 0's for the number of machines already processed (they had no instances of this proc)
                             }
                         }
 
@@ -217,6 +229,8 @@ namespace Overseer.WebApp.Controllers
                             }
                         }
                     }
+
+                    machineCount++;
                 }
 
                 // map performance data to view model
