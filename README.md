@@ -1,13 +1,13 @@
 # Overseer
 
-A prototype level Test environment management system to enable better tracking, monitoring and management of an engineering teams test resources.
+A prototype level Test Environment Management system to enable better tracking, monitoring and management of an engineering teams test resources.
 
 # Monitoring Agent
 - Windows service developed to collect information on end systems within a test environment.
-- Performance Utilization
-- Disk Usage
-- Windows Service Monitoring
-- Event Log Summaries
+- Performance Utilization.
+- Disk Usage.
+- Windows Service Monitoring.
+- Event Log Summaries.
 - Custom Process Monitoring.
 
 # Monitoring Agent Configuration Wizard
